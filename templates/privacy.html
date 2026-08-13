@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% if session.get('lang') == 'hi' %}
+        गोपनीयता नीति - Smart Medical System
+    {% else %}
+        Privacy Policy - Smart Medical System
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="main-container">
+    <div class="text-center mb-5">
+        <h1 class="display-4 mb-3">
+            <i class="bi bi-shield-lock text-primary"></i>
+            {% if session.get('lang') == 'hi' %}
+                गोपनीयता नीति
+            {% else %}
+                Privacy Policy
+            {% endif %}
+        </h1>
+        <p class="text-muted">
+            {% if session.get('lang') == 'hi' %}
+                अंतिम अपडेट: जनवरी 2026
+            {% else %}
+                Last Updated: January 2026
+            {% endif %}
+        </p>
+    </div>
+
+    <div class="card p-4">
+        <h3 class="mb-4">
+            {% if session.get('lang') == 'hi' %}
+                1. डेटा संग्रह
+            {% else %}
+                1. Data Collection
+            {% endif %}
+        </h3>
+        <p>
+            {% if session.get('lang') == 'hi' %}
+                हम केवल आवश्यक जानकारी एकत्र करते हैं:
+                <ul>
+                    <li>आधार नंबर (सत्यापन के लिए)</li>
+                    <li>नाम, पता, संपर्क नंबर</li>
+                    <li>मेडिकल रिपोर्ट्स और दस्तावेज़</li>
+                    <li>उपचार और क्लेम से संबंधित जानकारी</li>
+                </ul>
+            {% else %}
+                We collect only necessary information:
+                <ul>
+                    <li>Aadhaar Number (for verification)</li>
+                    <li>Name, Address, Contact Number</li>
+                    <li>Medical Reports and Documents</li>
+                    <li>Treatment and Claim related information</li>
+                </ul>
+            {% endif %}
+        </p>
+
+        <h3 class="mb-4 mt-5">
+            {% if session.get('lang') == 'hi' %}
+                2. डेटा सुरक्षा
+            {% else %}
+                2. Data Security
+            {% endif %}
+        </h3>
+        <p>
+            {% if session.get('lang') == 'hi' %}
+                आपका सभी डेटा पूरी तरह सुरक्षित है:
+                <ul>
+                    <li>सभी डेटा एन्क्रिप्टेड है</li>
+                    <li>केवल सत्यापित अस्पतालों को पहुंच दी जाती है</li>
+                    <li>आधार नंबर सुरक्षित रूप से संग्रहीत किया जाता है</li>
+                    <li>नियमित सुरक्षा ऑडिट किए जाते हैं</li>
+                </ul>
+            {% else %}
+                All your data is fully secure:
+                <ul>
+                    <li>All data is encrypted</li>
+                    <li>Only accessible to verified hospitals</li>
+                    <li>Aadhaar numbers are stored securely</li>
+                    <li>Regular security audits are conducted</li>
+                </ul>
+            {% endif %}
+        </p>
+
+        <h3 class="mb-4 mt-5">
+            {% if session.get('lang') == 'hi' %}
+                3. डेटा उपयोग
+            {% else %}
+                3. Data Usage
+            {% endif %}
+        </h3>
+        <p>
+            {% if session.get('lang') == 'hi' %}
+                आपका डेटा केवल निम्नलिखित उद्देश्यों के लिए उपयोग किया जाता है:
+                <ul>
+                    <li>चिकित्सा उपचार प्रदान करना</li>
+                    <li>क्लेम प्रक्रिया को संसाधित करना</li>
+                    <li>सरकारी योजनाओं के लाभ प्रदान करना</li>
+                    <li>सेवा में सुधार करना</li>
+                </ul>
+            {% else %}
+                Your data is used only for the following purposes:
+                <ul>
+                    <li>Providing medical treatment</li>
+                    <li>Processing claim procedures</li>
+                    <li>Providing benefits of government schemes</li>
+                    <li>Improving services</li>
+                </ul>
+            {% endif %}
+        </p>
+
+        <h3 class="mb-4 mt-5">
+            {% if session.get('lang') == 'hi' %}
+                4. डेटा साझाकरण
+            {% else %}
+                4. Data Sharing
+            {% endif %}
+        </h3>
+        <p>
+            {% if session.get('lang') == 'hi' %}
+                हम आपका डेटा किसी तीसरे पक्ष के साथ साझा नहीं करते हैं, सिवाय:
+                <ul>
+                    <li>सत्यापित अस्पतालों के साथ (उपचार के लिए)</li>
+                    <li>सरकारी अधिकारियों के साथ (कानूनी आवश्यकताओं के लिए)</li>
+                    <li>आपकी स्पष्ट सहमति के साथ</li>
+                </ul>
+            {% else %}
+                We do not share your data with third parties, except:
+                <ul>
+                    <li>With verified hospitals (for treatment)</li>
+                    <li>With government authorities (for legal requirements)</li>
+                    <li>With your explicit consent</li>
+                </ul>
+            {% endif %}
+        </p>
+
+        <div class="alert alert-info mt-4">
+            <i class="bi bi-info-circle"></i>
+            {% if session.get('lang') == 'hi' %}
+                <strong>नोट:</strong> यदि आपके पास गोपनीयता से संबंधित कोई प्रश्न हैं, तो कृपया हमसे संपर्क करें।
+            {% else %}
+                <strong>Note:</strong> If you have any questions regarding privacy, please contact us.
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

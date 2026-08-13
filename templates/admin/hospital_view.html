@@ -1,0 +1,259 @@
+{% extends "admin_base.html" %}
+
+{% block title %}View Hospital - Admin{% endblock %}
+
+{% block navbar %}
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+    <div class="container">
+        <a class="navbar-brand" href="/admin/dashboard">
+            <i class="bi bi-shield-lock"></i> Admin Panel
+        </a>
+        <div class="navbar-nav ms-auto">
+            <a class="nav-link" href="/">
+                <i class="bi bi-house"></i> Home
+            </a>
+            <a class="nav-link" href="/admin/dashboard">Dashboard</a>
+            <a class="nav-link" href="/admin/hospitals">Hospitals</a>
+            <a class="nav-link" href="/admin/logout">Logout</a>
+        </div>
+    </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="main-container">
+    <div class="mb-3">
+        <a href="/admin/hospitals" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Hospitals List
+        </a>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">
+            <i class="bi bi-hospital"></i> Hospital Registration Details
+        </h2>
+        <div>
+            {% if not hospital.admin_approved and not hospital.rejected_at %}
+                <span class="badge bg-warning fs-6">Pending Approval</span>
+            {% elif hospital.admin_approved %}
+                <span class="badge bg-success fs-6">Approved</span>
+            {% elif hospital.rejected_at %}
+                <span class="badge bg-danger fs-6">Rejected</span>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Basic Hospital Details -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0"><i class="bi bi-info-circle"></i> Basic Hospital Details</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Hospital ID:</strong> #{{ hospital.hospital_id }}</p>
+                    <p><strong>Hospital Name:</strong> {{ hospital.name }}</p>
+                    <p><strong>Email:</strong> {{ hospital.email }}</p>
+                    <p><strong>Contact:</strong> {{ hospital.contact }}</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Address:</strong> {{ hospital.address }}</p>
+                    <p><strong>Registered On:</strong> {{ hospital.created_at.strftime('%d %b %Y, %I:%M %p') if hospital.created_at else 'N/A' }}</p>
+                    {% if hospital.admin_approved_at %}
+                        <p><strong>Approved On:</strong> {{ hospital.admin_approved_at.strftime('%d %b %Y, %I:%M %p') }}</p>
+                        {% if approved_by_admin %}
+                            <p><strong>Approved By:</strong> {{ approved_by_admin.username }}</p>
+                        {% endif %}
+                    {% endif %}
+                    {% if hospital.rejected_at %}
+                        <p><strong>Rejected On:</strong> {{ hospital.rejected_at.strftime('%d %b %Y, %I:%M %p') }}</p>
+                        {% if rejected_by_admin %}
+                            <p><strong>Rejected By:</strong> {{ rejected_by_admin.username }}</p>
+                        {% endif %}
+                        {% if hospital.rejection_reason %}
+                            <p><strong>Rejection Reason:</strong> 
+                                <span class="text-danger">{{ hospital.rejection_reason }}</span>
+                            </p>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Selected Specialties -->
+    <div class="card mb-4">
+        <div class="card-header bg-info text-white">
+            <h5 class="mb-0"><i class="bi bi-star"></i> Selected Specialties</h5>
+        </div>
+        <div class="card-body">
+            {% if specialties %}
+                <div class="d-flex flex-wrap gap-2">
+                    {% for spec in specialties %}
+                        {% if spec.strip() %}
+                            <span class="badge bg-info p-2">{{ spec.strip() }}</span>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-muted">No specialties selected</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Selected Diseases -->
+    <div class="card mb-4">
+        <div class="card-header bg-success text-white">
+            <h5 class="mb-0"><i class="bi bi-activity"></i> Diseases We Treat</h5>
+        </div>
+        <div class="card-body">
+            {% if selected_diseases %}
+                <div class="d-flex flex-wrap gap-2">
+                    {% for disease in selected_diseases %}
+                        <span class="badge bg-success p-2">{{ disease }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-muted">No diseases selected</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Doctors Details -->
+    <div class="card mb-4">
+        <div class="card-header bg-secondary text-white">
+            <h5 class="mb-0"><i class="bi bi-person-badge"></i> Doctors Details ({{ doctors|length }})</h5>
+        </div>
+        <div class="card-body">
+            {% if doctors %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Qualification</th>
+                                <th>Specialization</th>
+                                <th>Photo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for doctor in doctors %}
+                                <tr>
+                                    <td><strong>{{ doctor.name }}</strong></td>
+                                    <td>{{ doctor.qualification or 'N/A' }}</td>
+                                    <td>{{ doctor.specialization or 'N/A' }}</td>
+                                    <td>
+                                        {% if doctor.image_url %}
+                                            <img src="/{{ doctor.image_url }}" alt="{{ doctor.name }}" 
+                                                 class="img-thumbnail" style="max-width: 100px; max-height: 100px;">
+                                        {% else %}
+                                            <span class="text-muted">No photo</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-muted">No doctors added</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Admin Actions -->
+    {% if not hospital.admin_approved and not hospital.rejected_at %}
+    <div class="card mb-4">
+        <div class="card-header bg-warning text-dark">
+            <h5 class="mb-0"><i class="bi bi-shield-check"></i> Admin Actions</h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <form method="POST" action="/admin/hospital/{{ hospital.hospital_id }}/approve" 
+                          onsubmit="return confirm('Are you sure you want to APPROVE this hospital? This will make it visible to patients.');">
+                        <button type="submit" class="btn btn-success btn-lg w-100">
+                            <i class="bi bi-check-circle"></i> Approve Hospital
+                        </button>
+                    </form>
+                </div>
+                <div class="col-md-6">
+                    <button type="button" class="btn btn-danger btn-lg w-100" 
+                            data-bs-toggle="modal" data-bs-target="#rejectModal">
+                        <i class="bi bi-x-circle"></i> Reject Hospital
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% elif hospital.rejected_at %}
+    <div class="card mb-4">
+        <div class="card-header bg-danger text-white">
+            <h5 class="mb-0"><i class="bi bi-info-circle"></i> Hospital Status</h5>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-danger">
+                <strong>This hospital has been rejected.</strong><br>
+                <strong>Reason:</strong> {{ hospital.rejection_reason }}<br>
+                <strong>Rejected on:</strong> {{ hospital.rejected_at.strftime('%d %b %Y, %I:%M %p') }}
+            </div>
+            <form method="POST" action="/admin/hospital/{{ hospital.hospital_id }}/approve" 
+                  onsubmit="return confirm('Are you sure you want to APPROVE this previously rejected hospital?');">
+                <button type="submit" class="btn btn-success">
+                    <i class="bi bi-check-circle"></i> Approve Now
+                </button>
+            </form>
+        </div>
+    </div>
+    {% elif hospital.admin_approved %}
+    <div class="card mb-4">
+        <div class="card-header bg-success text-white">
+            <h5 class="mb-0"><i class="bi bi-check-circle"></i> Hospital Status</h5>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-success">
+                <strong>This hospital is approved and active.</strong><br>
+                <strong>Approved on:</strong> {{ hospital.admin_approved_at.strftime('%d %b %Y, %I:%M %p') }}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Reject Modal -->
+    <div class="modal fade" id="rejectModal" tabindex="-1" aria-labelledby="rejectModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="rejectModalLabel">
+                        <i class="bi bi-x-circle"></i> Reject Hospital Registration
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="POST" action="/admin/hospital/{{ hospital.hospital_id }}/reject">
+                    <div class="modal-body">
+                        <div class="alert alert-warning">
+                            <i class="bi bi-exclamation-triangle"></i> 
+                            <strong>Warning:</strong> Rejecting this hospital will prevent it from being visible to patients.
+                        </div>
+                        <div class="mb-3">
+                            <label for="rejection_reason" class="form-label">
+                                <strong>Rejection Reason *</strong>
+                            </label>
+                            <textarea class="form-control" id="rejection_reason" name="rejection_reason" 
+                                      rows="4" placeholder="Enter reason for rejection..." required></textarea>
+                            <small class="text-muted">This reason will be sent to the hospital.</small>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-danger" 
+                                onclick="return confirm('Are you sure you want to REJECT this hospital?');">
+                            <i class="bi bi-x-circle"></i> Reject Hospital
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

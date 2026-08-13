@@ -1,0 +1,319 @@
+{% extends "patient_base.html" %}
+
+{% block title %}
+{% if session.get('lang') == 'hi' %}
+रोगी पैनल - {{ patient.name }}
+{% else %}
+Patient Panel - {{ patient.name }}
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="main-container">
+
+    <!-- HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-0">
+                <i class="bi bi-person-circle"></i>
+                {% if session.get('lang') == 'hi' %} रोगी पैनल {% else %} Patient Panel {% endif %}
+            </h2>
+            <p class="text-muted mb-0">
+                {% if session.get('lang') == 'hi' %}
+                    रोगी:
+                {% else %}
+                    Patient:
+                {% endif %}
+                <strong>{{ patient.name }}</strong>
+            </p>
+        </div>
+        <a href="/" class="btn btn-outline-primary">
+            <i class="bi bi-house"></i>
+            {% if session.get('lang') == 'hi' %} होम {% else %} Home {% endif %}
+        </a>
+    </div>
+
+    <!-- PATIENT INFO -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">
+                {% if session.get('lang') == 'hi' %} रोगी जानकारी {% else %} Patient Information {% endif %}
+            </h5>
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>{% if session.get('lang') == 'hi' %}नाम{% else %}Name{% endif %}:</strong> {{ patient.name }}</p>
+                    <p><strong>{% if session.get('lang') == 'hi' %}फोन{% else %}Phone{% endif %}:</strong> {{ patient.phone }}</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>{% if session.get('lang') == 'hi' %}पता{% else %}Address{% endif %}:</strong> {{ patient.address }}</p>
+                    <p><strong>{% if session.get('lang') == 'hi' %}आधार{% else %}Aadhaar{% endif %}:</strong> {{ patient.aadhar_no }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NOTIFICATIONS -->
+    {% if unread_notifications %}
+    <div class="card mb-4 border-warning">
+        <div class="card-header bg-warning d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">
+                <i class="bi bi-bell-fill"></i>
+                {% if session.get('lang') == 'hi' %}
+                    नई सूचनाएँ ({{ unread_notifications|length }})
+                {% else %}
+                    New Notifications ({{ unread_notifications|length }})
+                {% endif %}
+            </h5>
+            <button type="button" class="btn btn-sm btn-outline-danger" onclick="clearAllNotifications()">
+                <i class="bi bi-trash"></i>
+                {% if session.get('lang') == 'hi' %} सभी साफ करें {% else %} Clear All {% endif %}
+            </button>
+        </div>
+        <div class="card-body">
+            {% for notification in unread_notifications %}
+            <div class="alert 
+                {% if notification.notification_type == 'request_accepted' %}alert-success
+                {% elif notification.notification_type == 'request_rejected' %}alert-danger
+                {% else %}alert-info{% endif %} mb-2"
+                id="notification_{{ notification.notification_id }}">
+                
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <strong>{{ notification.title }}</strong><br>
+                        {{ notification.message }}
+                        <small class="d-block mt-1">
+                            {{ notification.created_at.strftime('%d %b %Y, %I:%M %p') }}
+                        </small>
+                    </div>
+                    <button class="btn btn-sm btn-link text-danger"
+                            onclick="deleteNotification({{ notification.notification_id }})">
+                        <i class="bi bi-x-circle"></i>
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- MEDICAL REQUESTS -->
+    <h3 class="mb-3">
+        {% if session.get('lang') == 'hi' %} मेरे मेडिकल अनुरोध {% else %} My Medical Requests {% endif %}
+    </h3>
+
+    {% if requests %}
+    <div class="row g-4">
+        {% for req in requests %}
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-header d-flex justify-content-between">
+                    <span>
+                        {% if session.get('lang') == 'hi' %} अनुरोध {% else %} Request {% endif %}
+                        #{{ req.request_id }}
+                    </span>
+                    <span class="badge bg-secondary">{{ req.status|title }}</span>
+                </div>
+                <div class="card-body">
+                    <h6>{{ req.disease.name }}</h6>
+                    <p class="text-muted">
+                        <i class="bi bi-hospital"></i> {{ req.hospital.name }}
+                    </p>
+
+                    {% set treatment_report = req.treatment_reports[0] if req.treatment_reports else None %}
+                    {% if treatment_report and treatment_report.status == 'submitted' %}
+                    <div class="alert alert-success">
+                        {% if session.get('lang') == 'hi' %}
+                            उपचार पूरा हो चुका है। अब आप क्लेम फॉर्म जमा कर सकते हैं।
+                        {% else %}
+                            Treatment completed. You can submit claim form now.
+                        {% endif %}
+                    </div>
+                    <a href="/patient-claim/{{ treatment_report.report_id }}" class="btn btn-sm btn-success">
+                        <i class="bi bi-file-earmark-check"></i>
+                        {% if session.get('lang') == 'hi' %} क्लेम जमा करें {% else %} Submit Claim {% endif %}
+                    </a>
+                    {% endif %}
+
+                    <a href="/request-success/{{ req.request_id }}" class="btn btn-sm btn-primary mt-2">
+                        <i class="bi bi-eye"></i>
+                        {% if session.get('lang') == 'hi' %} विवरण देखें {% else %} View Details {% endif %}
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+        {% if session.get('lang') == 'hi' %}
+            कोई अनुरोध नहीं मिला।
+        {% else %}
+            No medical requests found.
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- MEDICINE SECTION -->
+    <h3 class="mb-3 mt-5">
+        <i class="bi bi-capsule"></i>
+        {% if session.get('lang') == 'hi' %} मेरी दवाएं {% else %} My Medicines {% endif %}
+    </h3>
+
+    {% if requests %}
+    <div class="row g-4">
+        {% for req in requests %}
+            {% set treatment_report = req.treatment_reports[0] if req.treatment_reports else None %}
+            {% if treatment_report and treatment_report.work_done %}
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-header bg-success text-white">
+                        <h6 class="mb-0">
+                            <i class="bi bi-capsule"></i>
+                            {% if session.get('lang') == 'hi' %}
+                                {{ req.disease.name }} - दवाएं
+                            {% else %}
+                                {{ req.disease.name }} - Medicines
+                            {% endif %}
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-2">
+                            <strong>
+                                <i class="bi bi-hospital"></i>
+                                {% if session.get('lang') == 'hi' %}अस्पताल:{% else %}Hospital:{% endif %}
+                            </strong>
+                            {{ req.hospital.name }}
+                        </p>
+                        <div class="border rounded p-3 bg-light">
+                            <h6 class="mb-2">
+                                <i class="bi bi-prescription"></i>
+                                {% if session.get('lang') == 'hi' %}दवाएं और उपचार:{% else %}Medicines & Treatment:{% endif %}
+                            </h6>
+                            <p class="mb-0" style="white-space: pre-line;">{{ treatment_report.work_done }}</p>
+                        </div>
+                        {% if treatment_report.admission_date and treatment_report.discharge_date %}
+                        <p class="text-muted small mt-2 mb-0">
+                            <i class="bi bi-calendar"></i>
+                            {% if session.get('lang') == 'hi' %}
+                                {{ treatment_report.admission_date.strftime('%d-%m-%Y') }} से {{ treatment_report.discharge_date.strftime('%d-%m-%Y') }} तक
+                            {% else %}
+                                From {{ treatment_report.admission_date.strftime('%d-%m-%Y') }} to {{ treatment_report.discharge_date.strftime('%d-%m-%Y') }}
+                            {% endif %}
+                        </p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if accident_cases %}
+        {% for case in accident_cases %}
+            {% set treatment_report = accident_treatment_reports.get(case.accident_id, [None])[0] if accident_treatment_reports.get(case.accident_id) else None %}
+            {% if treatment_report and treatment_report.work_done %}
+            <div class="row g-4 mt-2">
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-header bg-danger text-white">
+                            <h6 class="mb-0">
+                                <i class="bi bi-capsule"></i>
+                                {% if session.get('lang') == 'hi' %}
+                                    दुर्घटना केस #{{ case.accident_id }} - दवाएं
+                                {% else %}
+                                    Accident Case #{{ case.accident_id }} - Medicines
+                                {% endif %}
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <p class="mb-2">
+                                <strong>
+                                    <i class="bi bi-hospital"></i>
+                                    {% if session.get('lang') == 'hi' %}अस्पताल:{% else %}Hospital:{% endif %}
+                                </strong>
+                                {{ case.hospital.name }}
+                            </p>
+                            <div class="border rounded p-3 bg-light">
+                                <h6 class="mb-2">
+                                    <i class="bi bi-prescription"></i>
+                                    {% if session.get('lang') == 'hi' %}दवाएं और उपचार:{% else %}Medicines & Treatment:{% endif %}
+                                </h6>
+                                <p class="mb-0" style="white-space: pre-line;">{{ treatment_report.work_done }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
+    {% if not requests and not accident_cases %}
+    <div class="alert alert-info">
+        {% if session.get('lang') == 'hi' %}
+            अभी तक कोई दवा जानकारी उपलब्ध नहीं है।
+        {% else %}
+            No medicine information available yet.
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- ACCIDENT CASES -->
+    <h3 class="mb-3 mt-5">
+        {% if session.get('lang') == 'hi' %} मेरे दुर्घटना केस {% else %} My Accident Cases {% endif %}
+    </h3>
+
+    {% if accident_cases %}
+    <div class="row g-4">
+        {% for case in accident_cases %}
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-header d-flex justify-content-between">
+                    <span>
+                        {% if session.get('lang') == 'hi' %} दुर्घटना केस {% else %} Accident Case {% endif %}
+                        #{{ case.accident_id }}
+                    </span>
+                    <span class="badge bg-warning">{{ case.status|title }}</span>
+                </div>
+                <div class="card-body">
+                    <p><i class="bi bi-hospital"></i> {{ case.hospital.name }}</p>
+                    <a href="/accident-case-detail/{{ case.accident_id }}" class="btn btn-sm btn-primary">
+                        <i class="bi bi-eye"></i>
+                        {% if session.get('lang') == 'hi' %} विवरण देखें {% else %} View Details {% endif %}
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+        {% if session.get('lang') == 'hi' %}
+            कोई दुर्घटना केस नहीं मिला।
+        {% else %}
+            No accident cases found.
+        {% endif %}
+    </div>
+    {% endif %}
+
+</div>
+
+<script>
+function deleteNotification(id) {
+    fetch(`/api/delete-notification/${id}`, { method: 'POST' })
+    .then(() => document.getElementById(`notification_${id}`).remove());
+}
+
+function clearAllNotifications() {
+    fetch('/api/clear-all-notifications', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            user_type: 'patient',
+            user_id: {{ patient.patient_id }}
+        })
+    }).then(() => location.reload());
+}
+</script>
+{% endblock %}

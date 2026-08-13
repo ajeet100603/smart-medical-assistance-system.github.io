@@ -1,0 +1,278 @@
+{% extends "patient_base.html" %}
+
+{% block title %}
+{% if session.get('lang') == 'hi' %}
+{{ disease.name }} - स्मार्ट मेडिकल सिस्टम
+{% else %}
+{{ disease.name }} - Smart Medical System
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="main-container">
+
+    <!-- TOP BUTTONS -->
+    <div class="mb-3">
+        <a href="/search-disease" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i>
+            {% if session.get('lang') == 'hi' %} खोज पर वापस जाएं {% else %} Back to Search {% endif %}
+        </a>
+        <a href="/" class="btn btn-outline-primary ms-2">
+            <i class="bi bi-house"></i>
+            {% if session.get('lang') == 'hi' %} होम {% else %} Home {% endif %}
+        </a>
+    </div>
+
+    <!-- DISEASE DETAILS -->
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-body">
+
+                    <h2 class="card-title">
+                        <i class="bi bi-activity text-danger"></i>
+                        {{ disease.name }}
+                    </h2>
+
+                    {% if disease.speciality %}
+                    <p class="text-muted">
+                        <i class="bi bi-tag"></i>
+                        <strong>
+                            {% if session.get('lang') == 'hi' %}
+                                विशेषज्ञता:
+                            {% else %}
+                                Speciality:
+                            {% endif %}
+                        </strong>
+                        {{ disease.speciality }}
+                    </p>
+                    {% endif %}
+
+                    {% if disease.symptoms %}
+                    <div class="mt-3">
+                        <h5>
+                            <i class="bi bi-exclamation-triangle"></i>
+                            {% if session.get('lang') == 'hi' %}
+                                लक्षण
+                            {% else %}
+                                Symptoms
+                            {% endif %}
+                        </h5>
+                        <p>{{ disease.symptoms }}</p>
+                    </div>
+                    {% endif %}
+
+                    {% if disease.treatment %}
+                    <div class="mt-3">
+                        <h5>
+                            <i class="bi bi-heart-pulse"></i>
+                            {% if session.get('lang') == 'hi' %}
+                                उपचार
+                            {% else %}
+                                Treatment
+                            {% endif %}
+                        </h5>
+                        <p>{{ disease.treatment }}</p>
+                    </div>
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+
+        <!-- QUICK INFO -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="bi bi-info-circle"></i>
+                        {% if session.get('lang') == 'hi' %}
+                            त्वरित जानकारी
+                        {% else %}
+                            Quick Info
+                        {% endif %}
+                    </h5>
+                    <p class="text-muted">
+                        {% if session.get('lang') == 'hi' %}
+                            नीचे दिए गए अस्पतालों में से किसी एक का चयन कर उपचार के लिए पंजीकरण करें।
+                        {% else %}
+                            Select a hospital below to register for treatment.
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- HOSPITAL LIST -->
+    <div class="mt-4">
+        <h3 class="mb-4">
+            <i class="bi bi-hospital"></i>
+            {% if session.get('lang') == 'hi' %}
+                अनुशंसित अस्पताल
+            {% else %}
+                Recommended Hospitals
+            {% endif %}
+        </h3>
+
+        {% if hospitals %}
+        <div class="row g-4">
+            {% for hospital in hospitals %}
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-body">
+
+                        <h5 class="card-title">
+                            <i class="bi bi-hospital text-primary"></i>
+                            {{ hospital.name }}
+                        </h5>
+
+                        <p class="text-muted">
+                            <i class="bi bi-geo-alt"></i>
+                            {{ hospital.address }}
+                        </p>
+
+                        {% if hospital.speciality %}
+                        <p class="text-muted">
+                            <i class="bi bi-tag"></i>
+                            {{ hospital.speciality }}
+                        </p>
+                        {% endif %}
+
+                        <p class="text-muted">
+                            <i class="bi bi-telephone"></i>
+                            {{ hospital.contact }}
+                        </p>
+
+                        <!-- Doctor Information Button -->
+                        {% if hospital_doctors.get(hospital.hospital_id) %}
+                        <div class="mb-3">
+                            <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#doctorsModal{{ hospital.hospital_id }}">
+                                <i class="bi bi-person-badge"></i>
+                                {% if session.get('lang') == 'hi' %}
+                                    डॉक्टर जानकारी देखें
+                                {% else %}
+                                    View Doctor Information
+                                {% endif %}
+                            </button>
+                        </div>
+                        {% endif %}
+
+                        <div class="d-flex gap-2 flex-wrap">
+                            <a href="/patient-register/{{ disease.disease_id }}/{{ hospital.hospital_id }}"
+                               class="btn btn-primary">
+                                <i class="bi bi-person-plus"></i>
+                                {% if session.get('lang') == 'hi' %}
+                                    यहाँ पंजीकरण करें
+                                {% else %}
+                                    Register Here
+                                {% endif %}
+                            </a>
+
+                            <a href="tel:{{ hospital.contact }}" class="btn btn-outline-success">
+                                <i class="bi bi-telephone"></i>
+                                {% if session.get('lang') == 'hi' %}
+                                    कॉल करें
+                                {% else %}
+                                    Call Hospital
+                                {% endif %}
+                            </a>
+
+                            <a href="/search-disease" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left"></i>
+                                {% if session.get('lang') == 'hi' %}
+                                    वापस जाएं
+                                {% else %}
+                                    Back
+                                {% endif %}
+                            </a>
+                        </div>
+
+                        <!-- Doctors Modal -->
+                        {% if hospital_doctors.get(hospital.hospital_id) %}
+                        <div class="modal fade" id="doctorsModal{{ hospital.hospital_id }}" tabindex="-1">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">
+                                            <i class="bi bi-person-badge"></i>
+                                            {% if session.get('lang') == 'hi' %}
+                                                {{ hospital.name }} - डॉक्टर जानकारी
+                                            {% else %}
+                                                {{ hospital.name }} - Doctor Information
+                                            {% endif %}
+                                        </h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row g-3">
+                                            {% for doctor in hospital_doctors[hospital.hospital_id] %}
+                                            <div class="col-md-6">
+                                                <div class="card">
+                                                    <div class="card-body text-center">
+                                                        {% if doctor.image_url %}
+                                                        <img src="/{{ doctor.image_url }}" alt="{{ doctor.name }}" class="img-thumbnail mb-2" style="width: 100px; height: 100px; object-fit: cover;">
+                                                        {% else %}
+                                                        <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center mb-2" style="width: 100px; height: 100px;">
+                                                            <i class="bi bi-person-circle" style="font-size: 60px;"></i>
+                                                        </div>
+                                                        {% endif %}
+                                                        <h6 class="card-title">{{ doctor.name }}</h6>
+                                                        {% if doctor.qualification %}
+                                                        <p class="text-muted small mb-1">
+                                                            <i class="bi bi-award"></i> {{ doctor.qualification }}
+                                                        </p>
+                                                        {% endif %}
+                                                        {% if doctor.specialization %}
+                                                        <p class="text-muted small">
+                                                            <i class="bi bi-heart-pulse"></i> {{ doctor.specialization }}
+                                                        </p>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                            {% if session.get('lang') == 'hi' %}बंद करें{% else %}Close{% endif %}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% else %}
+        <!-- NO HOSPITAL -->
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle"></i>
+            {% if session.get('lang') == 'hi' %}
+                इस बीमारी के लिए कोई अस्पताल उपलब्ध नहीं है। कृपया एडमिन से संपर्क करें।
+            {% else %}
+                No hospitals found for this disease speciality. Please contact admin.
+            {% endif %}
+        </div>
+
+        <div class="mt-3">
+            <a href="/search-disease" class="btn btn-outline-primary">
+                <i class="bi bi-arrow-left"></i>
+                {% if session.get('lang') == 'hi' %}
+                    दूसरी बीमारी खोजें
+                {% else %}
+                    Search Another Disease
+                {% endif %}
+            </a>
+        </div>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}

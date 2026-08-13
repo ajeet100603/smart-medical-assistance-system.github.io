@@ -1,0 +1,42 @@
+{% extends "hospital_base.html" %}
+{% block title %}Hospital - Smart Medical System{% endblock %}
+
+{% block content %}
+<div class="main-container">
+  <div class="text-center py-4">
+    <h2 class="fw-bold mb-2">
+      <i class="bi bi-hospital text-primary"></i>
+      {% if session.get('lang') == 'hi' %} अस्पताल पैनल {% else %} Hospital Panel {% endif %}
+    </h2>
+    <p class="text-muted mb-4">
+      {% if session.get('lang') == 'hi' %}
+        रिक्वेस्ट और ट्रीटमेंट रिपोर्ट्स के लिए लॉगिन करें
+      {% else %}
+        Login to manage requests and treatment reports
+      {% endif %}
+    </p>
+
+    <div class="row g-3 justify-content-center">
+      <div class="col-md-5">
+        <a class="btn btn-primary btn-lg w-100" href="/hospital/login">
+          <i class="bi bi-box-arrow-in-right"></i>
+          {% if session.get('lang') == 'hi' %} अस्पताल लॉगिन {% else %} Hospital Login {% endif %}
+        </a>
+      </div>
+      <div class="col-md-5">
+        <a class="btn btn-success btn-lg w-100" href="/hospital/register">
+          <i class="bi bi-person-plus"></i>
+          {% if session.get('lang') == 'hi' %} नया अस्पताल रजिस्टर {% else %} Register Hospital {% endif %}
+        </a>
+      </div>
+      <div class="col-12 mt-3">
+        <a class="btn btn-outline-secondary" href="/">
+          <i class="bi bi-house"></i>
+          {% if session.get('lang') == 'hi' %} मेन होम {% else %} Main Home {% endif %}
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

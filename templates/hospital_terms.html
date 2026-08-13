@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}
+{% if session.get('lang') == 'hi' %}
+    हॉस्पिटल नियम व शर्तें
+{% else %}
+    Hospital Terms & Conditions
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="main-container">
+    <div class="card p-4">
+
+
+
+        
+<a href="{{ url_for('hospital_register') }}"
+   class="btn btn-outline-secondary btn-sm px-2 py-1">
+    ← Back
+</a>
+
+
+
+
+        <h2 class="mb-3">
+            {% if session.get('lang') == 'hi' %}
+                हॉस्पिटल नियम व शर्तें
+            {% else %}
+                Hospital Terms & Conditions
+            {% endif %}
+        </h2>
+
+        {% if session.get('lang') == 'hi' %}
+        <ul>
+             <li>Admin और Hospital के बीच की सभी बातचीत, जानकारी और दस्तावेज़ पूरी तरह गोपनीय (Confidential) रहेंगे।</li>
+            <li>Admin की लिखित अनुमति के बिना कोई भी डेटा, रिपोर्ट या जानकारी किसी तीसरे पक्ष को साझा नहीं की जाएगी।</li>
+
+            <li>Admin द्वारा दिया गया कोई भी लॉगिन, सिस्टम एक्सेस या तकनीकी जानकारी सुरक्षित रखना हॉस्पिटल की जिम्मेदारी होगी।</li>
+            <li>डेटा लीक, गलत उपयोग या अनधिकृत एक्सेस की पूरी जिम्मेदारी हॉस्पिटल की होगी।</li>
+
+            <li>मरीज के साथ किसी भी प्रकार का दुर्व्यवहार, बदतमीज़ी, लापरवाही या अपमानजनक व्यवहार होने पर हॉस्पिटल और उसका स्टाफ स्वयं जिम्मेदार होगा।</li>
+            <li>मरीज से संबंधित किसी भी शिकायत, विवाद, गलत इलाज या नुकसान के लिए Admin या सिस्टम जिम्मेदार नहीं होगा।</li>
+
+            <li>हॉस्पिटल यह सुनिश्चित करेगा कि उसका पूरा स्टाफ मरीजों के साथ सम्मानजनक, मानवीय और पेशेवर व्यवहार करे।</li>
+            <li>मरीज की व्यक्तिगत जानकारी (नाम, मोबाइल नंबर, मेडिकल रिकॉर्ड आदि) को गोपनीय रखा जाएगा।</li>
+
+            <li>हॉस्पिटल द्वारा अपलोड किए गए सभी दस्तावेज़ (लाइसेंस, रजिस्ट्रेशन प्रमाण पत्र आदि) वैध और अद्यतन होने चाहिए।</li>
+            <li>गलत या भ्रामक जानकारी पाए जाने पर हॉस्पिटल का पंजीकरण बिना पूर्व सूचना के रद्द किया जा सकता है।</li>
+
+            <li>किसी भी नियम के उल्लंघन की स्थिति में Admin को हॉस्पिटल अकाउंट निलंबित (Suspend) या स्थायी रूप से बंद (Terminate) करने का पूरा अधिकार होगा।</li>
+        </ul>
+        {% else %}
+        <ul>
+             <li>All communication, data, and documents shared between Admin and Hospital shall remain strictly confidential.</li>
+            <li>No data, reports, or information shall be shared with any third party without written permission from Admin.</li>
+
+            <li>The hospital is responsible for securing all login credentials, system access, and technical information provided by Admin.</li>
+            <li>The hospital shall be fully liable for any data leakage, misuse, or unauthorized access.</li>
+
+            <li>Any misbehavior, negligence, or inappropriate conduct toward patients shall be the sole responsibility of the hospital and its staff.</li>
+            <li>The Admin or system shall not be liable for patient complaints, disputes, malpractice, or treatment-related issues.</li>
+
+            <li>The hospital must ensure respectful, humane, and professional conduct by all staff members.</li>
+            <li>Patient personal data (name, contact details, medical records, etc.) must be kept confidential.</li>
+
+            <li>All documents uploaded by the hospital (licenses, registration certificates, etc.) must be valid and up to date.</li>
+            <li>Providing false or misleading information may result in immediate cancellation of registration.</li>
+
+            <li>Violation of these terms may result in suspension or permanent termination of the hospital account.</li>
+        </ul>
+        {% endif %}
+
+
+         <div class="alert alert-info mt-4">
+            {% if session.get('lang') == 'hi' %}
+                <strong>नोट:</strong> हॉस्पिटल पंजीकरण या सिस्टम का उपयोग जारी रखने का अर्थ है कि आप इन सभी नियमों और शर्तों से पूर्ण रूप से सहमत हैं।
+            {% else %}
+                <strong>Note:</strong> Continued use of the system implies full acceptance of all the above terms and conditions.
+            {% endif %}
+        </div>
+
+    </div>
+</div>
+{% endblock %}

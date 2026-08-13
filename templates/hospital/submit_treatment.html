@@ -1,0 +1,564 @@
+{% extends "hospital_base.html" %}
+
+{% block title %}Submit Treatment Report - Hospital{% endblock %}
+
+{% block navbar %}
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+    <div class="container">
+        <a class="navbar-brand" href="/hospital/dashboard">
+            <i class="bi bi-hospital"></i> {{ session.hospital_name }}
+        </a>
+        <div class="navbar-nav ms-auto">
+            <a class="nav-link" href="/hospital/dashboard">Dashboard</a>
+            {% if request %}
+            <a class="nav-link" href="/hospital/request/{{ request.request_id }}">Back to Request</a>
+            {% elif accident_case %}
+            <a class="nav-link" href="/hospital/accident-case/{{ accident_case.accident_id }}">Back to Accident Case</a>
+            {% endif %}
+            <a class="nav-link" href="/hospital/logout">Logout</a>
+        </div>
+    </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="main-container">
+
+    <div class="mb-3">
+        {% if request %}
+        <a href="/hospital/request/{{ request.request_id }}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Request Details
+        </a>
+        {% elif accident_case %}
+        <a href="/hospital/accident-case/{{ accident_case.accident_id }}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Accident Case Details
+        </a>
+        {% endif %}
+    </div>
+
+    <h2 class="mb-4">
+        <i class="bi bi-file-medical"></i> Submit Treatment Report to Admin
+    </h2>
+
+    {% if request %}
+    <div class="alert alert-info">
+        <strong>Patient:</strong> {{ request.patient.name }}<br>
+        <strong>Disease:</strong> {{ request.disease.name }}<br>
+        <strong>Request ID:</strong> #{{ request.request_id }}<br>
+        <strong>Case Type:</strong> Normal Case
+    </div>
+    {% elif accident_case %}
+    <div class="alert alert-danger">
+        <strong>Patient:</strong> {{ accident_case.patient_name }}<br>
+        <strong>Case Type:</strong> Accident Case<br>
+        <strong>Accident ID:</strong> #{{ accident_case.accident_id }}<br>
+        <strong>Condition:</strong> {{ accident_case.current_condition[:50] }}...
+    </div>
+    {% endif %}
+
+    <form method="POST"
+          enctype="multipart/form-data"
+          action="{% if request %}/hospital/request/{{ request.request_id }}/submit-treatment{% elif accident_case %}/hospital/accident-case/{{ accident_case.accident_id }}/submit-treatment{% endif %}">
+
+        <!-- Patient Information -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Patient Information / रोगी की जानकारी</h5>
+            </div>
+            <div class="card-body">
+
+                <div class="mb-3">
+                    <label class="form-label">Patient Serial Number / रोगी सीरियल नंबर *</label>
+                    <input type="text" class="form-control"
+                           name="patient_serial_number"
+                           value="{{ existing_report.patient_serial_number if existing_report else (request.patient_serial_number if request else '') }}"
+                           required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Patient Name / रोगी का नाम *</label>
+                    <input type="text" class="form-control"
+                           name="patient_name"
+                           value="{{ existing_report.patient_name if existing_report else (request.patient.name if request else accident_case.patient_name if accident_case else '') }}"
+                           required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Disease / Injury *</label>
+                    <input type="text" class="form-control"
+                           name="disease_injury"
+                           value="{{ existing_report.disease_injury if existing_report else (request.disease.name if request else accident_case.current_condition[:50] if accident_case else '') }}"
+                           required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Medical Report Upload</label>
+                    <input type="file" class="form-control" name="medical_report">
+                    {% if existing_report and existing_report.medical_report_url %}
+                    <a href="/{{ existing_report.medical_report_url }}" target="_blank"
+                       class="btn btn-sm btn-outline-primary mt-2">
+                        View Current Report
+                    </a>
+                    {% endif %}
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Treatment Details -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Treatment Details / उपचार विवरण</h5>
+            </div>
+            <div class="card-body">
+
+                <div class="mb-3">
+                    <label class="form-label">Treatment Details *</label>
+                    <textarea class="form-control" name="treatment_details" rows="4" required>{{ existing_report.treatment_details if existing_report else '' }}</textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Work Done</label>
+                    <textarea class="form-control" name="work_done" rows="3">{{ existing_report.work_done if existing_report else '' }}</textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Final Treatment Report</label>
+                    <textarea class="form-control" name="final_treatment_report" rows="4">{{ existing_report.final_treatment_report if existing_report else '' }}</textarea>
+                </div>
+
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-success">
+            <i class="bi bi-send"></i> Submit Report
+        </button>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="mb-0">Admission & Discharge Details</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="admission_date" class="form-label">Admission Date / भर्ती की तारीख</label>
+                <input type="date" class="form-control" id="admission_date" name="admission_date" 
+                       value="{{ existing_report.admission_date.strftime('%Y-%m-%d') if existing_report and existing_report.admission_date else '' }}">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="discharge_date" class="form-label">Discharge Date / छुट्टी की तारीख</label>
+                <input type="date" class="form-control" id="discharge_date" name="discharge_date"
+                       value="{{ existing_report.discharge_date.strftime('%Y-%m-%d') if existing_report and existing_report.discharge_date else '' }}">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Case Type Selection (MANDATORY FIRST) -->
+<div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">
+            <i class="bi bi-exclamation-circle"></i> Case Type Selection / केस प्रकार चुनें * (Required First)
+        </h5>
+    </div>
+    <div class="card-body">
+        <div class="mb-3">
+            <label class="form-label">Select Case Type / केस प्रकार चुनें *</label>
+            <div class="form-check mb-2">
+                <input class="form-check-input" type="radio" name="case_type" id="case_type_government" value="Government" 
+                       {% if existing_report and existing_report.case_type == 'Government' %}checked{% endif %} required>
+                <label class="form-check-label" for="case_type_government">
+                    <i class="bi bi-building"></i> <strong>Government Case / सरकारी केस</strong>
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="case_type" id="case_type_private" value="Private"
+                       {% if existing_report and existing_report.case_type == 'Private' %}checked{% endif %} required>
+                <label class="form-check-label" for="case_type_private">
+                    <i class="bi bi-hospital"></i> <strong>Private Case / निजी केस</strong>
+                </label>
+            </div>
+            <small class="text-danger">Please select case type first / कृपया पहले केस प्रकार चुनें</small>
+        </div>
+    </div>
+</div>
+
+<!-- Government Case Section -->
+<div class="card mb-4" id="government_case_section" style="display: none;">
+    <div class="card-header bg-warning text-dark">
+        <h5 class="mb-0">
+            <i class="bi bi-building"></i> Government Case - Financial Details / सरकारी केस - वित्तीय विवरण *
+        </h5>
+    </div>
+    <div class="card-body">
+        <div class="mb-3">
+            <label for="total_expense" class="form-label">Total Treatment Amount / कुल उपचार राशि (₹) *</label>
+            <input type="number" step="0.01" class="form-control" id="total_expense" name="total_expense" 
+                   placeholder="Enter total treatment amount / कुल उपचार राशि दर्ज करें"
+                   value="{{ existing_report.total_expense if existing_report and existing_report.total_expense else '' }}">
+            <small class="text-muted">Enter the total treatment amount / कुल उपचार राशि दर्ज करें</small>
+        </div>
+
+        <!-- Auto-calculated 10% Amount -->
+        <div class="mb-3">
+            <label class="form-label">10% Amount / 10% राशि</label>
+            <div class="alert alert-info" id="amount_10_percent_display">
+                <strong>₹0.00</strong>
+                <small class="text-muted">(This will be calculated automatically when you enter total amount)</small>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="bill_document" class="form-label">Bill Document Upload / बिल दस्तावेज़ अपलोड करें *</label>
+            <input type="file" class="form-control" id="bill_document" name="bill_document" accept=".pdf,.jpg,.jpeg,.png">
+            <small class="text-muted">Upload overall hospital bill / अस्पताल का कुल बिल अपलोड करें</small>
+            {% if existing_report and existing_report.bill_document_url %}
+            <div class="mt-2">
+                <a href="/{{ existing_report.bill_document_url }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                    <i class="bi bi-download"></i> View Current Bill
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Private Case Section -->
+<div class="card mb-4" id="private_case_section" style="display: none;">
+    <div class="card-header bg-info text-white">
+        <h5 class="mb-0">
+            <i class="bi bi-hospital"></i> Private Case - Detailed Billing / निजी केस - विस्तृत बिलिंग *
+        </h5>
+    </div>
+    <div class="card-body">
+
+        <!-- Hospital Bill -->
+        <div class="mb-4 border p-3 rounded">
+            <h6 class="mb-3"><i class="bi bi-file-earmark-medical"></i> 1. Hospital Bill / अस्पताल बिल *</h6>
+            <div class="mb-3">
+                <label for="hospital_bill" class="form-label">Hospital Bill Upload / अस्पताल बिल अपलोड करें *</label>
+                <input type="file" class="form-control" id="hospital_bill" name="hospital_bill" accept=".pdf,.jpg,.jpeg,.png">
+                <small class="text-muted">Upload hospital bill / अस्पताल बिल अपलोड करें</small>
+                {% if existing_report and existing_report.hospital_bill_url %}
+                <div class="mt-2">
+                    <a href="/{{ existing_report.hospital_bill_url }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-download"></i> View Current Bill
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+            <div class="mb-3">
+                <label for="hospital_bill_amount" class="form-label">Hospital Bill Amount (₹) / अस्पताल बिल राशि *</label>
+                <input type="number" step="0.01" class="form-control private-bill-amount" id="hospital_bill_amount" name="hospital_bill_amount" 
+                       placeholder="Enter hospital bill amount / अस्पताल बिल राशि दर्ज करें"
+                       value="{{ existing_report.hospital_bill_amount if existing_report and existing_report.hospital_bill_amount else '' }}">
+            </div>
+        </div>
+
+        <!-- Test Bill -->
+        <div class="mb-4 border p-3 rounded">
+            <h6 class="mb-3"><i class="bi bi-clipboard-data"></i> 2. Test Bill / परीक्षण बिल *</h6>
+            <div class="mb-3">
+                <label for="test_bill" class="form-label">Test Bill Upload / परीक्षण बिल अपलोड करें *</label>
+                <input type="file" class="form-control" id="test_bill" name="test_bill" accept=".pdf,.jpg,.jpeg,.png">
+                <small class="text-muted">Upload test bill / परीक्षण बिल अपलोड करें</small>
+                {% if existing_report and existing_report.test_bill_url %}
+                <div class="mt-2">
+                    <a href="/{{ existing_report.test_bill_url }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-download"></i> View Current Bill
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+            <div class="mb-3">
+                <label for="test_bill_amount" class="form-label">Test Bill Amount (₹) / परीक्षण बिल राशि *</label>
+                <input type="number" step="0.01" class="form-control private-bill-amount" id="test_bill_amount" name="test_bill_amount" 
+                       placeholder="Enter test bill amount / परीक्षण बिल राशि दर्ज करें"
+                       value="{{ existing_report.test_bill_amount if existing_report and existing_report.test_bill_amount else '' }}">
+            </div>
+        </div>
+
+        <!-- Medical Bill -->
+        <div class="mb-4 border p-3 rounded">
+            <h6 class="mb-3"><i class="bi bi-capsule"></i> 3. Medical Bill / दवा बिल *</h6>
+            <div class="mb-3">
+                <label for="medical_bill" class="form-label">Medical Bill Upload / दवा बिल अपलोड करें *</label>
+                <input type="file" class="form-control" id="medical_bill" name="medical_bill" accept=".pdf,.jpg,.jpeg,.png">
+                <small class="text-muted">Upload medical bill / दवा बिल अपलोड करें</small>
+                {% if existing_report and existing_report.medical_bill_url %}
+                <div class="mt-2">
+                    <a href="/{{ existing_report.medical_bill_url }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-download"></i> View Current Bill
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+            <div class="mb-3">
+                <label for="medical_bill_amount" class="form-label">Medical Bill Amount (₹) / दवा बिल राशि *</label>
+                <input type="number" step="0.01" class="form-control private-bill-amount" id="medical_bill_amount" name="medical_bill_amount" 
+                       placeholder="Enter medical bill amount / दवा बिल राशि दर्ज करें"
+                       value="{{ existing_report.medical_bill_amount if existing_report and existing_report.medical_bill_amount else '' }}">
+                <small class="text-info">This amount will be deducted from total / यह राशि कुल से घटाई जाएगी</small>
+            </div>
+        </div>
+
+        <!-- Private Case Calculation Display -->
+        <div class="mb-3">
+            <div class="alert alert-success">
+                <h6 class="mb-2"><i class="bi bi-calculator"></i> Calculation Summary / गणना सारांश</h6>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="mb-1"><strong>Total Bills Amount / कुल बिल राशि:</strong></p>
+                        <p class="mb-1"><strong>Medical Bill Deducted / दवा बिल घटाया गया:</strong></p>
+                        <p class="mb-1"><strong>Net Amount / शुद्ध राशि:</strong></p>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <p class="mb-1" id="total_bills_display"><strong>₹0.00</strong></p>
+                        <p class="mb-1" id="medical_deducted_display"><strong>₹0.00</strong></p>
+                        <p class="mb-1" id="net_amount_display"><strong>₹0.00</strong></p>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="mb-0"><strong>10% Final Payable Amount / 10% अंतिम देय राशि:</strong></p>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <p class="mb-0" id="private_10_percent_display"><strong>₹0.00</strong></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- Payment Section (Common for Both Cases) -->
+<div class="card mb-4" id="payment_section" style="display: none;">
+    <div class="card-header bg-success text-white">
+        <h5 class="mb-0">
+            <i class="bi bi-credit-card"></i> Payment Details / भुगतान विवरण *
+        </h5>
+    </div>
+    <div class="card-body">
+        <!-- Payment Options (UPI / QR Code) -->
+        <div class="mb-3">
+            <label class="form-label">Payment Option / भुगतान विकल्प *</label>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="payment_method" id="payment_upi" value="upi" 
+                       {% if existing_report and existing_report.payment_method == 'upi' %}checked{% endif %}>
+                <label class="form-check-label" for="payment_upi">
+                    <i class="bi bi-phone"></i> UPI
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="payment_method" id="payment_qr" value="qr_code"
+                       {% if existing_report and existing_report.payment_method == 'qr_code' %}checked{% endif %}>
+                <label class="form-check-label" for="payment_qr">
+                    <i class="bi bi-qr-code"></i> QR Code
+                </label>
+            </div>
+            <small class="text-muted">Select one payment option / एक भुगतान विकल्प चुनें</small>
+        </div>
+
+        <!-- Payment Receipt Upload (Mandatory) -->
+        <div class="mb-3">
+            <label for="payment_receipt" class="form-label">Payment Receipt Upload / भुगतान रसीद अपलोड करें *</label>
+            <input type="file" class="form-control" id="payment_receipt" name="payment_receipt" accept=".pdf,.jpg,.jpeg,.png">
+            <small class="text-danger">Receipt upload is mandatory / रसीद अपलोड करना अनिवार्य है</small>
+            {% if existing_report and existing_report.payment_screenshot_url %}
+            <div class="mt-2">
+                <a href="/{{ existing_report.payment_screenshot_url }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                    <i class="bi bi-download"></i> View Current Receipt
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+// Case Type Selection Handler
+function handleCaseTypeChange() {
+    const caseType = document.querySelector('input[name="case_type"]:checked');
+    const governmentSection = document.getElementById('government_case_section');
+    const privateSection = document.getElementById('private_case_section');
+    const paymentSection = document.getElementById('payment_section');
+    
+    if (!caseType) {
+        governmentSection.style.display = 'none';
+        privateSection.style.display = 'none';
+        paymentSection.style.display = 'none';
+        return;
+    }
+    
+    if (caseType.value === 'Government') {
+        governmentSection.style.display = 'block';
+        privateSection.style.display = 'none';
+        paymentSection.style.display = 'block';
+    } else if (caseType.value === 'Private') {
+        governmentSection.style.display = 'none';
+        privateSection.style.display = 'block';
+        paymentSection.style.display = 'block';
+    }
+}
+
+// Listen to case type changes
+document.querySelectorAll('input[name="case_type"]').forEach(radio => {
+    radio.addEventListener('change', handleCaseTypeChange);
+});
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+    handleCaseTypeChange();
+});
+
+// Government Case: Auto-calculate 10% amount when total expense is entered
+const totalExpenseInput = document.getElementById('total_expense');
+if (totalExpenseInput) {
+    totalExpenseInput.addEventListener('input', function() {
+        const totalAmount = parseFloat(this.value) || 0;
+        const tenPercent = totalAmount * 0.10;
+        const displayElement = document.getElementById('amount_10_percent_display');
+        if (totalAmount > 0) {
+            displayElement.innerHTML = '<strong>₹' + tenPercent.toFixed(2) + '</strong>';
+        } else {
+            displayElement.innerHTML = '<strong>₹0.00</strong> <small class="text-muted">(This will be calculated automatically when you enter total amount)</small>';
+        }
+    });
+}
+
+function calculatePrivateCase() {
+    const hospitalBill = parseFloat(document.getElementById('hospital_bill_amount').value) || 0;
+    const testBill = parseFloat(document.getElementById('test_bill_amount').value) || 0;
+    const medicalBill = parseFloat(document.getElementById('medical_bill_amount').value) || 0;
+
+    // ✅ Total bills = Hospital + Test only
+    const totalBills = hospitalBill + testBill;
+
+    // ✅ Medical bill sirf deduction ke liye
+    let netAmount = totalBills - medicalBill;
+    if (netAmount < 0) netAmount = 0;
+
+    // ✅ 10% of net amount
+    const tenPercent = netAmount * 0.10;
+
+    // Update display
+    document.getElementById('total_bills_display').innerHTML =
+        '<strong>₹' + totalBills.toFixed(2) + '</strong>';
+
+    document.getElementById('medical_deducted_display').innerHTML =
+        '<strong>₹' + medicalBill.toFixed(2) + '</strong>';
+
+    document.getElementById('net_amount_display').innerHTML =
+        '<strong>₹' + netAmount.toFixed(2) + '</strong>';
+
+    document.getElementById('private_10_percent_display').innerHTML =
+        '<strong>₹' + tenPercent.toFixed(2) + '</strong>';
+}
+
+// Listen to private bill amount changes
+document.querySelectorAll('.private-bill-amount').forEach(input => {
+    input.addEventListener('input', calculatePrivateCase);
+});
+
+// Form validation before submit
+document.querySelector('form').addEventListener('submit', function(e) {
+    const caseType = document.querySelector('input[name="case_type"]:checked');
+    const paymentMethod = document.querySelector('input[name="payment_method"]:checked');
+    const paymentReceipt = document.getElementById('payment_receipt').files.length;
+    
+    let errorMessage = '';
+    
+    // Case type validation
+    if (!caseType) {
+        errorMessage += '❌ Please select case type (Government or Private).\n';
+    }
+    
+    // Government case validation
+    if (caseType && caseType.value === 'Government') {
+        const totalExpense = document.getElementById('total_expense').value;
+        const billDocument = document.getElementById('bill_document').files.length;
+        
+        if (!totalExpense || parseFloat(totalExpense) <= 0) {
+            errorMessage += '❌ Please enter total treatment amount.\n';
+        }
+        
+        if (!billDocument) {
+            errorMessage += '❌ Please upload bill document.\n';
+        }
+    }
+    
+    // Private case validation
+    if (caseType && caseType.value === 'Private') {
+        const hospitalBill = document.getElementById('hospital_bill').files.length;
+        const hospitalBillAmount = document.getElementById('hospital_bill_amount').value;
+        const testBill = document.getElementById('test_bill').files.length;
+        const testBillAmount = document.getElementById('test_bill_amount').value;
+        const medicalBill = document.getElementById('medical_bill').files.length;
+        const medicalBillAmount = document.getElementById('medical_bill_amount').value;
+        
+        if (!hospitalBill) {
+            errorMessage += '❌ Please upload hospital bill.\n';
+        }
+        if (!hospitalBillAmount || parseFloat(hospitalBillAmount) <= 0) {
+            errorMessage += '❌ Please enter hospital bill amount.\n';
+        }
+        
+        if (!testBill) {
+            errorMessage += '❌ Please upload test bill.\n';
+        }
+        if (!testBillAmount || parseFloat(testBillAmount) <= 0) {
+            errorMessage += '❌ Please enter test bill amount.\n';
+        }
+        
+        if (!medicalBill) {
+            errorMessage += '❌ Please upload medical bill.\n';
+        }
+        if (!medicalBillAmount || parseFloat(medicalBillAmount) <= 0) {
+            errorMessage += '❌ Please enter medical bill amount.\n';
+        }
+    }
+    
+    // Payment validation (common for both)
+    if (!paymentMethod) {
+        errorMessage += '❌ Please select a payment option (UPI or QR Code).\n';
+    }
+    
+    if (!paymentReceipt) {
+        errorMessage += '❌ Please upload payment receipt.\n';
+    }
+    
+    if (errorMessage) {
+        e.preventDefault();
+        alert('❌ Error: Please complete all required fields before submitting.\n\n' + errorMessage);
+        return false;
+    }
+});
+</script>
+
+<div class="d-flex gap-2">
+    <button type="submit" class="btn btn-primary btn-lg">
+        <i class="bi bi-check-circle"></i> Submit to Admin / एडमिन को सबमिट करें
+    </button>
+    {% if request %}
+    <a href="/hospital/request/{{ request.request_id }}" class="btn btn-outline-secondary btn-lg">
+        <i class="bi bi-x-circle"></i> Cancel / रद्द करें
+    </a>
+    {% elif accident_case %}
+    <a href="/hospital/accident-case/{{ accident_case.accident_id }}" class="btn btn-outline-secondary btn-lg">
+        <i class="bi bi-x-circle"></i> Cancel / रद्द करें
+    </a>
+    {% endif %}
+</div>
+
+
+
+
+
+
+
+
+
+    </form>
+</div>
+{% endblock %}

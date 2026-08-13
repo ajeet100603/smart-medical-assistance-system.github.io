@@ -1,0 +1,113 @@
+{% extends "patient_base.html" %}
+
+{% block title %}
+{% if session.get('lang') == 'hi' %}
+दुर्घटना केस – अस्पताल चुनें
+{% else %}
+Accident Case – Select Hospital
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="main-container">
+
+    <!-- BACK BUTTON -->
+    <div class="mb-3">
+        <a href="/" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i>
+            {% if session.get('lang') == 'hi' %}
+                होम पर वापस जाएं
+            {% else %}
+                Back to Home
+            {% endif %}
+        </a>
+    </div>
+
+    <!-- HEADING -->
+    <h2 class="mb-4">
+        <i class="bi bi-exclamation-triangle text-danger"></i>
+        {% if session.get('lang') == 'hi' %}
+            दुर्घटना केस – अस्पताल चुनें
+        {% else %}
+            Accident Case – Select Hospital
+        {% endif %}
+    </h2>
+
+    <!-- IMPORTANT INFO -->
+    <div class="alert alert-warning">
+        <i class="bi bi-info-circle"></i>
+        <strong>
+            {% if session.get('lang') == 'hi' %}
+                महत्वपूर्ण:
+            {% else %}
+                Important:
+            {% endif %}
+        </strong>
+        <br>
+        {% if session.get('lang') == 'hi' %}
+            कृपया दुर्घटना उपचार के लिए अस्पताल चुनें। चयन के बाद आप दुर्घटना विवरण फॉर्म भरेंगे।
+        {% else %}
+            Please select a hospital for accident treatment. You will fill the accident details form after selection.
+        {% endif %}
+    </div>
+
+    <!-- HOSPITAL LIST -->
+    {% if hospitals %}
+    <div class="row g-4">
+        {% for hospital in hospitals %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100">
+                <div class="card-body">
+
+                    <h5 class="card-title">
+                        <i class="bi bi-hospital text-primary"></i>
+                        {{ hospital.name }}
+                    </h5>
+
+                    <p class="text-muted mb-2">
+                        <i class="bi bi-geo-alt"></i>
+                        {{ hospital.address }}
+                    </p>
+
+                    {% if hospital.speciality %}
+                    <p class="text-muted mb-2">
+                        <i class="bi bi-stethoscope"></i>
+                        {{ hospital.speciality }}
+                    </p>
+                    {% endif %}
+
+                    <p class="text-muted mb-3">
+                        <i class="bi bi-telephone"></i>
+                        {{ hospital.contact }}
+                    </p>
+
+                    <a href="/accident-register/{{ hospital.hospital_id }}"
+                       class="btn btn-danger w-100">
+                        <i class="bi bi-check-circle"></i>
+                        {% if session.get('lang') == 'hi' %}
+                            चुनें
+                        {% else %}
+                            Select
+                        {% endif %}
+                    </a>
+
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% else %}
+    <!-- NO HOSPITAL -->
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle"></i>
+        {% if session.get('lang') == 'hi' %}
+            इस समय कोई अस्पताल उपलब्ध नहीं है।
+        {% else %}
+            No hospitals available at the moment.
+        {% endif %}
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

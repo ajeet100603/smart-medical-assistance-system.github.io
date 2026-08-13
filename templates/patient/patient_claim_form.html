@@ -1,0 +1,195 @@
+{% extends "patient_base.html" %}
+
+{% block title %}
+{% if session.get('lang') == 'hi' %}
+रोगी क्लेम फॉर्म
+{% else %}
+Patient Claim Form
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="main-container">
+
+    <!-- BACK BUTTON -->
+    <div class="mb-3">
+        {% if treatment_report.case_source == 'normal' %}
+        <a href="/patient/panel?aadhar_no={{ treatment_report.patient.aadhar_no }}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i>
+            {% if session.get('lang') == 'hi' %}वापस जाएं{% else %}Back{% endif %}
+        </a>
+        {% else %}
+        <a href="/accident-case-detail/{{ treatment_report.accident_id }}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i>
+            {% if session.get('lang') == 'hi' %}वापस जाएं{% else %}Back{% endif %}
+        </a>
+        {% endif %}
+    </div>
+
+    <!-- HEADING -->
+    <h2 class="mb-4">
+        <i class="bi bi-file-earmark-check text-success"></i>
+        {% if session.get('lang') == 'hi' %}
+            रोगी पुष्टिकरण एवं क्लेम फॉर्म
+        {% else %}
+            Patient Confirmation & Claim Form
+        {% endif %}
+    </h2>
+
+    <!-- CASE INFO -->
+    <div class="alert alert-info">
+        <strong>
+            {% if session.get('lang') == 'hi' %}
+                {{ 'सामान्य केस' if treatment_report.case_source == 'normal' else 'दुर्घटना केस' }}
+            {% else %}
+                {{ case_type_display }}
+            {% endif %}
+        </strong>
+        <br>
+
+        {% if treatment_report.case_source == 'normal' %}
+        <strong>{% if session.get('lang') == 'hi' %}अनुरोध ID{% else %}Request ID{% endif %}:</strong>
+        #{{ treatment_report.request_id }}
+        {% else %}
+        <strong>{% if session.get('lang') == 'hi' %}दुर्घटना ID{% else %}Accident ID{% endif %}:</strong>
+        #{{ treatment_report.accident_id }}
+        {% endif %}
+
+        <br>
+        <strong>{% if session.get('lang') == 'hi' %}अस्पताल{% else %}Hospital{% endif %}:</strong>
+        {{ treatment_report.hospital.name }}
+
+        <br>
+        <strong>{% if session.get('lang') == 'hi' %}उपचार रिपोर्ट ID{% else %}Treatment Report ID{% endif %}:</strong>
+        #{{ treatment_report.report_id }}
+    </div>
+
+    <!-- FORM -->
+    <form method="POST" enctype="multipart/form-data" action="/patient-claim/{{ treatment_report.report_id }}">
+
+        <!-- PATIENT DETAILS -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>
+                    <i class="bi bi-person-check"></i>
+                    {% if session.get('lang') == 'hi' %}
+                        रोगी विवरण
+                    {% else %}
+                        Patient Details
+                    {% endif %}
+                </h5>
+            </div>
+
+            <div class="card-body">
+
+                <div class="mb-3">
+                    <label class="form-label">
+                        {% if session.get('lang') == 'hi' %}रोगी सीरियल नंबर{% else %}Patient Serial Number{% endif %} *
+                    </label>
+                    <input type="text" class="form-control" name="patient_serial_number"
+                           value="{{ treatment_report.patient_serial_number or '' }}" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">
+                        {% if session.get('lang') == 'hi' %}नाम{% else %}Name{% endif %} *
+                    </label>
+                    <input type="text" class="form-control" name="patient_name"
+                           value="{{ treatment_report.patient_name }}" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">
+                        {% if session.get('lang') == 'hi' %}पता{% else %}Address{% endif %} *
+                    </label>
+                    <textarea class="form-control" name="address" rows="3" required></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">
+                        {% if session.get('lang') == 'hi' %}बीमारी / चोट{% else %}Disease / Injury{% endif %} *
+                    </label>
+                    <input type="text" class="form-control" name="disease_injury"
+                           value="{{ treatment_report.disease_injury }}" required>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">
+                            {% if session.get('lang') == 'hi' %}उपचार प्रारंभ तिथि{% else %}Treatment From Date{% endif %} *
+                        </label>
+                        <input type="date" class="form-control" name="treatment_from_date"
+                               value="{{ treatment_report.admission_date.strftime('%Y-%m-%d') }}" required>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">
+                            {% if session.get('lang') == 'hi' %}उपचार समाप्ति तिथि{% else %}Treatment To Date{% endif %} *
+                        </label>
+                        <input type="date" class="form-control" name="treatment_to_date"
+                               value="{{ treatment_report.discharge_date.strftime('%Y-%m-%d') }}" required>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">
+                        {% if session.get('lang') == 'hi' %}वर्तमान स्थिति{% else %}Current Condition{% endif %} *
+                    </label>
+                    <textarea class="form-control" name="current_condition" rows="3" required></textarea>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- CLAIM TYPE -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>
+                    {% if session.get('lang') == 'hi' %}
+                        क्लेम प्रकार चुनें (केवल एक)
+                    {% else %}
+                        Select Claim Type (Only One)
+                    {% endif %}
+                </h5>
+            </div>
+
+            <div class="card-body">
+
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="radio" name="claim_type" value="paisa_claim" required>
+                    <label class="form-check-label">
+                        💰 {% if session.get('lang') == 'hi' %}पैसा क्लेम (वित्तीय सहायता){% else %}Paisa Claim (Financial Help){% endif %}
+                    </label>
+                </div>
+
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="radio" name="claim_type" value="samaan_claim" required>
+                    <label class="form-check-label">
+                        🧺 {% if session.get('lang') == 'hi' %}सामान क्लेम (खाना / आवश्यक वस्तुएँ){% else %}Samaan Claim (Food / Essentials){% endif %}
+                    </label>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- BUTTONS -->
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-success btn-lg">
+                <i class="bi bi-check-circle"></i>
+                {% if session.get('lang') == 'hi' %}क्लेम जमा करें{% else %}Submit Claim{% endif %}
+            </button>
+
+            {% if treatment_report.case_source == 'normal' %}
+            <a href="/patient/panel?aadhar_no={{ treatment_report.patient.aadhar_no }}" class="btn btn-outline-secondary btn-lg">
+                {% if session.get('lang') == 'hi' %}रद्द करें{% else %}Cancel{% endif %}
+            </a>
+            {% else %}
+            <a href="/accident-case-detail/{{ treatment_report.accident_id }}" class="btn btn-outline-secondary btn-lg">
+                {% if session.get('lang') == 'hi' %}रद्द करें{% else %}Cancel{% endif %}
+            </a>
+            {% endif %}
+        </div>
+
+    </form>
+</div>
+{% endblock %}

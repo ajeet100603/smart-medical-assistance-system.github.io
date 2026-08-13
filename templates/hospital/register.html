@@ -1,0 +1,701 @@
+{% extends "hospital_base.html" %}
+
+{% block title %}Hospital Registration - Smart Medical System{% endblock %}
+
+{% block content %}
+<div class="main-container" style="max-width: 1000px;">
+    <div class="card">
+        <div class="card-body p-5">
+            <div class="text-center mb-4">
+    <i class="bi bi-hospital display-1 text-primary"></i>
+ 
+
+
+           
+
+                
+
+
+
+
+
+
+    <h2 class="mt-3">
+        {% if session.get('lang') == 'hi' %}
+            अस्पताल पंजीकरण
+        {% else %}
+            Hospital Registration
+        {% endif %}
+    </h2>
+
+    <p class="text-muted">
+        {% if session.get('lang') == 'hi' %}
+            अपना अस्पताल खाता बनाएँ
+        {% else %}
+            Create your hospital account
+        {% endif %}
+    </p>
+</div>
+
+
+
+<div id="formError"
+     class="alert alert-danger d-none"
+     role="alert">
+</div>
+
+
+<form method="POST">
+    <div class="mb-3">
+        <label for="name" class="form-label">
+            {% if session.get('lang') == 'hi' %}
+                अस्पताल का नाम *
+            {% else %}
+                Hospital Name *
+            {% endif %}
+        </label>
+
+        <input type="text" class="form-control" id="name" name="name"
+               placeholder="{% if session.get('lang') == 'hi' %}
+               अस्पताल का नाम दर्ज करें
+               {% else %}
+               Enter hospital name
+               {% endif %}"
+               required>
+    </div>
+
+    <div class="mb-3">
+        <label for="address" class="form-label">
+            {% if session.get('lang') == 'hi' %}
+                पता *
+            {% else %}
+                Address *
+            {% endif %}
+        </label>
+
+       <input class="form-control" id="address" name="address" rows="2"
+                  placeholder="{% if session.get('lang') == 'hi' %}
+                  अस्पताल का पता दर्ज करें
+                  {% else %}
+                  Enter hospital address
+                  {% endif %}"
+                  required>
+               
+    </div>
+
+
+
+
+
+
+
+
+              
+
+
+
+
+<div class="mb-3">
+    <label for="contact" class="form-label">
+        {% if session.get('lang') == 'hi' %}
+            संपर्क नंबर *
+        {% else %}
+            Contact Number *
+        {% endif %}
+    </label>
+
+    <input type="tel" class="form-control" id="contact" name="contact"
+           placeholder="{% if session.get('lang') == 'hi' %}
+           संपर्क नंबर दर्ज करें
+           {% else %}
+           Enter contact number
+           {% endif %}"
+           required>
+</div>
+
+<div class="mb-3">
+    <label for="email" class="form-label">
+        {% if session.get('lang') == 'hi' %}
+            ईमेल पता *
+        {% else %}
+            Email Address *
+        {% endif %}
+    </label>
+
+    <input type="email" class="form-control" id="email" name="email"
+           placeholder="{% if session.get('lang') == 'hi' %}
+           ईमेल पता दर्ज करें
+           {% else %}
+           Enter email address
+           {% endif %}"
+           required>
+
+
+    
+
+    <small class="text-muted">
+        {% if session.get('lang') == 'hi' %}
+            यह लॉगिन के लिए उपयोग किया जाएगा
+        {% else %}
+            This will be used for login
+        {% endif %}
+    </small>
+</div>
+<div class="mb-3">
+    <label for="password" class="form-label">
+        {% if session.get('lang') == 'hi' %}
+            पासवर्ड *
+        {% else %}
+            Password *
+        {% endif %}
+    </label>
+
+    <input type="password"
+           class="form-control"
+           id="password"
+           name="password"
+           required
+           minlength="6"
+           pattern="(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&]).{6,}"
+           title="{% if session.get('lang') == 'hi' %}
+           पासवर्ड में कम से कम 1 बड़ा अक्षर, 1 नंबर और 1 विशेष चिन्ह (@#$!) होना चाहिए
+           {% else %}
+           Password must contain at least 1 uppercase letter, 1 number, and 1 special character (@#$!)
+           {% endif %}"
+           placeholder="{% if session.get('lang') == 'hi' %}
+           Example@23424
+           {% else %}
+           Example@23424
+           {% endif %}">
+
+    <small class="text-muted">
+        {% if session.get('lang') == 'hi' %}
+            पासवर्ड में कम से कम 1 बड़ा अक्षर, 1 नंबर और 1 विशेष चिन्ह (@#$!) होना चाहिए  
+            <br>उदाहरण: <strong>Example@23424</strong>
+        {% else %}
+            Password must contain at least 1 uppercase letter, 1 number, and 1 special character  
+            <br>Example: <strong>Example@23424</strong>
+        {% endif %}
+    </small>
+</div>
+
+<div class="mb-3">
+    <label for="confirm_password" class="form-label">
+        {% if session.get('lang') == 'hi' %}
+            पासवर्ड की पुष्टि करें *
+        {% else %}
+            Confirm Password *
+        {% endif %}
+    </label>
+
+    <input type="password" class="form-control" id="confirm_password" name="confirm_password"
+           placeholder="{% if session.get('lang') == 'hi' %}
+           पासवर्ड फिर से दर्ज करें
+           {% else %}
+           Re-enter password
+           {% endif %}"
+           required>
+</div>
+
+<!-- Disease Selection Section -->
+<div class="card mb-4 mt-4">
+    <div class="card-header bg-success text-white">
+        <h5 class="mb-0">
+            <i class="bi bi-activity"></i>
+            {% if session.get('lang') == 'hi' %}
+                बीमारियाँ / रोग जिनका इलाज करते हैं *
+            {% else %}
+                Diseases / Conditions We Treat *
+            {% endif %}
+        </h5>
+    </div>
+    <div class="card-body">
+        <p class="text-muted small">
+            {% if session.get('lang') == 'hi' %}
+                वे बीमारियाँ चुनें जिनका आपका अस्पताल इलाज करता है
+            {% else %}
+                Select the diseases/conditions your hospital treats
+            {% endif %}
+        </p>
+        
+        <div class="mb-3">
+            <input type="text" 
+                   class="form-control" 
+                   id="diseaseInput" 
+                   placeholder="{% if session.get('lang') == 'hi' %}बीमारी का नाम टाइप करें (जैसे: डेंगू, कैंसर, हृदय रोग){% else %}Type disease name (e.g., Dengue, Cancer, Heart Disease){% endif %}"
+                   onkeypress="if(event.key === 'Enter') { event.preventDefault(); addDisease(); }">
+            <button type="button" class="btn btn-primary mt-2" onclick="addDisease()">
+                <i class="bi bi-plus-circle"></i>
+                {% if session.get('lang') == 'hi' %}बीमारी जोड़ें{% else %}Add Disease{% endif %}
+            </button>
+        </div>
+        
+        <div id="selectedDiseases" class="d-flex flex-wrap gap-2 mb-3"></div>
+        <input type="hidden" name="diseases[]" id="diseasesInput">
+    </div>
+</div>
+
+                <!-- Doctor Details Section -->
+<div class="card mb-4 mt-4">
+    <div class="card-header bg-info text-black">
+        <h5 class="mb-0">
+            <i class="bi bi-person-badge"></i>
+            {% if session.get('lang') == 'hi' %}
+                डॉक्टर विवरण
+            {% else %}
+                Doctor Details
+            {% endif %}
+        </h5>
+    </div>
+
+
+
+
+
+    <div class="card-body">
+        <div id="doctorsContainer">
+            <!-- Doctor entry will be added here dynamically -->
+        </div>
+
+        <button type="button" class="btn btn-outline-primary" onclick="addDoctorField()">
+            <i class="bi bi-plus-circle"></i>
+            {% if session.get('lang') == 'hi' %}
+                डॉक्टर जोड़ें
+            {% else %}
+                Add Doctor
+            {% endif %}
+        </button>
+    </div>
+</div>
+<div class="mb-3">
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="agreement" name="agreement" required>
+        <label class="form-check-label" for="agreement">
+            {% if session.get('lang') == 'hi' %}
+                मैं <a href="{{ url_for('hospital_terms') }}" target="_blank">नियम और शर्तें</a> से सहमत हूँ <span class="text-danger">*</span>
+            {% else %}
+                I agree to the <a href="{{ url_for('hospital_terms') }}" target="_blank">Terms & Conditions</a> <span class="text-danger">*</span>
+            {% endif %}
+        </label>
+    </div>
+</div>
+
+
+<!-- Simple Captcha -->
+<div class="mb-3">
+    <label class="form-label">
+        {% if session.get('lang') == 'hi' %}
+            सुरक्षा सत्यापन *
+        {% else %}
+            Security Verification *
+        {% endif %}
+    </label>
+
+    <div class="d-flex align-items-center gap-3">
+        <div class="border p-2 bg-light" id="captchaDisplay"
+             style="font-size: 24px; font-weight: bold; letter-spacing: 5px; min-width: 120px; text-align: center;">
+            <!-- Captcha will be generated here -->
+        </div>
+
+        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="generateCaptcha()">
+            <i class="bi bi-arrow-clockwise"></i>
+            {% if session.get('lang') == 'hi' %}
+                रिफ्रेश
+            {% else %}
+                Refresh
+            {% endif %}
+        </button>
+    </div>
+
+    <input type="text" class="form-control mt-2" id="captchaInput" name="captcha"
+           placeholder="{% if session.get('lang') == 'hi' %}
+           ऊपर दिया गया कोड दर्ज करें
+           {% else %}
+           Enter the code above
+           {% endif %}"
+           required>
+
+    <input type="hidden" id="captchaAnswer" name="captcha_answer">
+</div>
+
+<button type="submit" class="btn btn-primary w-100 btn-lg" onclick="return validateForm()">
+    <i class="bi bi-person-plus"></i>
+    {% if session.get('lang') == 'hi' %}
+        खाता बनाएँ
+    {% else %}
+        Create Account
+    {% endif %}
+</button>
+</form>
+
+<div class="mt-4 text-center">
+    <p class="text-muted">
+        {% if session.get('lang') == 'hi' %}
+            पहले से खाता है?
+        {% else %}
+            Already have an account?
+        {% endif %}
+    </p>
+
+    <a href="/hospital/login" class="btn btn-outline-primary">
+        <i class="bi bi-box-arrow-in-right"></i>
+        {% if session.get('lang') == 'hi' %}
+            यहाँ लॉगिन करें
+        {% else %}
+            Login Here
+        {% endif %}
+    </a>
+</div>
+<div class="mt-3 text-center">
+    <a href="/hospital" class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-house"></i>
+        {% if session.get('lang') == 'hi' %}
+            होम पर वापस जाएँ
+        {% else %}
+            Back to Home
+        {% endif %}
+    </a>
+</div>
+
+
+
+<script>
+/* ===================== GLOBAL ===================== */
+let selectedSpecialities = [];
+let selectedDiseases = [];
+let doctorCount = 0;
+let doctorSpecializations = {};
+let captchaValue = "";
+
+/* ===================== DISEASES ===================== */
+function addDisease() {
+    const input = document.getElementById("diseaseInput");
+    const diseaseName = input.value.trim();
+    
+    if (diseaseName && !selectedDiseases.includes(diseaseName)) {
+        selectedDiseases.push(diseaseName);
+        updateDiseasesUI();
+        input.value = "";
+    } else if (selectedDiseases.includes(diseaseName)) {
+        alert("{% if session.get('lang') == 'hi' %}यह बीमारी पहले से जोड़ी गई है{% else %}This disease is already added{% endif %}");
+    }
+}
+
+function removeDisease(disease) {
+    selectedDiseases = selectedDiseases.filter(d => d !== disease);
+    updateDiseasesUI();
+}
+
+function updateDiseasesUI() {
+    const box = document.getElementById("selectedDiseases");
+    const hidden = document.getElementById("diseasesInput");
+    box.innerHTML = "";
+
+    selectedDiseases.forEach(d => {
+        box.innerHTML += `
+            <span class="badge bg-success p-2 me-2 mb-2">
+                ${d}
+                <i class="bi bi-x-circle ms-1" style="cursor:pointer"
+                   onclick="removeDisease('${d.replace(/'/g, "\\'")}')"></i>
+            </span>`;
+    });
+
+    // Update hidden input with all selected diseases
+    const hiddenInputs = box.parentElement.querySelectorAll('input[name="diseases[]"]');
+    hiddenInputs.forEach(input => {
+        if (input.id !== 'diseasesInput') input.remove();
+    });
+    
+    selectedDiseases.forEach(disease => {
+        const hiddenInput = document.createElement('input');
+        hiddenInput.type = 'hidden';
+        hiddenInput.name = 'diseases[]';
+        hiddenInput.value = disease;
+        box.parentElement.appendChild(hiddenInput);
+    });
+}
+
+/* ===================== SPECIALITIES ===================== */
+function addSpeciality(speciality) {
+    if (!selectedSpecialities.includes(speciality)) {
+        selectedSpecialities.push(speciality);
+        updateSpecialitiesUI();
+    }
+}
+
+function removeSpeciality(speciality) {
+    selectedSpecialities = selectedSpecialities.filter(s => s !== speciality);
+    updateSpecialitiesUI();
+}
+
+function updateSpecialitiesUI() {
+    const box = document.getElementById("selectedSpecialities");
+    const hidden = document.getElementById("specialitiesInput");
+    box.innerHTML = "";
+
+    selectedSpecialities.forEach(s => {
+        box.innerHTML += `
+            <span class="badge bg-primary p-2 me-2">
+                ${s}
+                <i class="bi bi-x-circle ms-1" style="cursor:pointer"
+                   onclick="removeSpeciality('${s}')"></i>
+            </span>`;
+    });
+
+    hidden.value = selectedSpecialities.join(",");
+}
+
+/* ===================== DOCTOR ===================== */
+function addDoctorField() {
+    doctorCount++;
+    doctorSpecializations[doctorCount] = [];
+
+    const container = document.getElementById("doctorsContainer");
+    const div = document.createElement("div");
+    div.className = "card mb-3";
+    div.id = `doctor_${doctorCount}`;
+
+    div.innerHTML = `
+        <div class="card-body">
+            <div class="d-flex justify-content-between">
+                <h6>Doctor ${doctorCount}</h6>
+                <button class="btn btn-sm btn-danger"
+                        onclick="removeDoctor(${doctorCount})">
+                    Remove
+                </button>
+            </div>
+
+            <input class="form-control mb-2"
+                   name="doctor_name[]"
+                   placeholder="Doctor Name" required>
+
+            <input class="form-control mb-2"
+                   name="doctor_qualification[]"
+                   placeholder="Qualification (MBBS, MD)" required>
+
+            <!-- Selected Specialities -->
+            <div class="mt-3">
+                <strong>
+                    {% if session.get('lang') == 'hi' %}
+                        चुनी गई विशेषज्ञताएँ:
+                    {% else %}
+                        Selected Specialities:
+                    {% endif %}
+                </strong>
+                <div id="selectedSpecialities" class="mt-2 d-flex flex-wrap gap-2"></div>
+            </div>
+
+            <!-- Hidden Input -->
+            <input type="hidden" name="Specialities" id="specialitiesInput">
+        </div>
+
+        <div class="d-flex gap-2">
+            <select class="form-select"
+                    id="specializationSelect_${doctorCount}">
+                <option value="">-- Select Specialization --</option>
+                <option>सामान्य चिकित्सक</option>
+                <option>हृदय रोग विशेषज्ञ</option>
+                <option>न्यूरोलॉजिस्ट</option>
+                <option>हड्डी रोग विशेषज्ञ</option>
+                <option>बाल रोग विशेषज्ञ</option>
+                <option>नेत्र रोग विशेषज्ञ</option>
+                <option>दंत चिकित्सक</option>
+                <option>स्त्री रोग विशेषज्ञ</option>
+                <option>फेफड़े रोग विशेषज्ञ</option>
+                <option>त्वचा रोग विशेषज्ञ</option>
+                <option>कान-नाक-गला विशेषज्ञ</option>
+                <option>मनोचिकित्सक</option>
+                <option>कैंसर विशेषज्ञ</option>
+                <option>पाचन रोग विशेषज्ञ</option>
+                <option>डायबिटीज / हार्मोन विशेषज्ञ</option>
+                <option>मूत्र रोग विशेषज्ञ</option>
+                <option>रक्त रोग विशेषज्ञ</option>
+                <option>पैथोलॉजिस्ट</option>
+                <option>फिजियोथेरेपिस्ट</option>
+                <option>सर्जन</option>
+                <option>किडनी रोग विशेषज्ञ</option>
+                <option>न्यूरो सर्जन</option>
+                <option>प्लास्टिक सर्जन</option>
+                <option>रेडियोलॉजिस्ट</option>
+                <option>एनेस्थीसियोलॉजिस्ट</option>
+                <option>इम्यूनोलॉजिस्ट</option>
+                <option>संक्रामक रोग विशेषज्ञ</option>
+                <option>आपातकालीन डॉक्टर</option>
+                <option>नियोनेटोलॉजिस्ट</option>
+                <option>वृद्ध रोग विशेषज्ञ</option>
+                <option>गठिया रोग विशेषज्ञ</option>
+                <option>नींद रोग विशेषज्ञ</option>
+                <option>खेल चिकित्सा विशेषज्ञ</option>
+                <option>फैमिली फिजिशियन</option>
+                <option>पेलिएटिव केयर डॉक्टर</option>
+                <option>फॉरेंसिक डॉक्टर</option>
+                <option>माइक्रोबायोलॉजिस्ट</option>
+                <option>जेनेटिक स्पेशलिस्ट</option>
+                <option>रिहैबिलिटेशन डॉक्टर</option>
+                <option>कम्युनिटी मेडिसिन डॉक्टर</option>
+            </select>
+
+            <button type="button" class="btn btn-success"
+                    onclick="addSpecialization(${doctorCount})">
+                OK
+            </button>
+        </div>
+
+
+
+
+        <div id="selectedSpecializations_${doctorCount}" class="mt-2"></div>
+ 
+        <input type="hidden"
+               name="doctor_specialization[]"
+               id="specializationInput_${doctorCount}">
+
+
+    `;
+    container.appendChild(div);
+}
+
+
+/* ===================== REMOVE DOCTOR ===================== */
+function removeDoctor(id) {
+    const el = document.getElementById(`doctor_${id}`);
+    if (el) el.remove();
+    delete doctorSpecializations[id];
+}
+
+/* ===================== SPECIALIZATION ===================== */
+function addSpecialization(id) {
+    const select = document.getElementById(`specializationSelect_${id}`);
+    const value = select.value;
+
+    if (!value) return;
+
+    if (!doctorSpecializations[id].includes(value)) {
+        doctorSpecializations[id].push(value);
+        updateSpecializationUI(id);
+    }
+
+    select.value = "";
+}
+
+function removeSpecialization(id, value) {
+    doctorSpecializations[id] =
+        doctorSpecializations[id].filter(v => v !== value);
+    updateSpecializationUI(id);
+}
+
+function updateSpecializationUI(id) {
+    const box = document.getElementById(`selectedSpecializations_${id}`);
+    const hidden = document.getElementById(`specializationInput_${id}`);
+
+    box.innerHTML = "";
+
+    doctorSpecializations[id].forEach(s => {
+        box.innerHTML += `
+            <span class="badge bg-info me-2">
+                ${s}
+                <i class="bi bi-x ms-1"
+                   style="cursor:pointer"
+                   onclick="removeSpecialization(${id}, '${s}')"></i>
+            </span>
+        `;
+    });
+
+    hidden.value = doctorSpecializations[id].join(",");
+}
+
+
+
+
+
+
+
+
+
+/* ===================== CAPTCHA ===================== */
+function generateCaptcha() {
+    const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ123456789";
+    captchaValue = "";
+    for (let i = 0; i < 5; i++) {
+        captchaValue += chars[Math.floor(Math.random() * chars.length)];
+    }
+    document.getElementById("captchaDisplay").innerText = captchaValue;
+    document.getElementById("captchaAnswer").value = captchaValue;
+}
+
+/* ===================== FORM VALIDATION ===================== */
+function validateForm(){
+
+    clearError();
+
+    const name = document.getElementById("name").value.trim();
+    const contact = document.getElementById("contact").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const pass = document.getElementById("password").value;
+    const cpass = document.getElementById("confirm_password").value;
+    const agree = document.getElementById("agreement").checked;
+
+    if(name.length < 3){
+        showError("❌ Hospital Name सही से भरें");
+        return false;
+    }
+
+    if(!/^[0-9]{10}$/.test(contact)){
+        showError("❌ Contact Number 10 अंकों का होना चाहिए");
+        return false;
+    }
+
+    if(!/^\S+@\S+\.\S+$/.test(email)){
+        showError("❌ Valid Email Address डालें");
+        return false;
+    }
+
+    if(pass !== cpass){
+        showError("❌ Password और Confirm Password match नहीं कर रहे");
+        return false;
+    }
+
+    if(!agree){
+        showError("❌ Terms & Conditions स्वीकार करें");
+        return false;
+    }
+
+    if(doctorCount === 0){
+        showError("❌ कम से कम 1 Doctor जोड़ना जरूरी है");
+        return false;
+    }
+
+    for(let id in doctorSpecializations){
+        if(doctorSpecializations[id].length === 0){
+            showError("❌ हर Doctor के लिए कम से कम 1 Specialization चुनें");
+            return false;
+        }
+    }
+
+    const user = document.getElementById("captchaInput").value.toUpperCase();
+    const real = document.getElementById("captchaAnswer").value;
+
+    if(user !== real){
+        showError("❌ Captcha गलत है, फिर से भरें");
+        generateCaptcha();
+        return false;
+    }
+
+    return true; // ✅ सब सही है → submit होगा
+}
+
+
+window.onload = generateCaptcha;
+</script>
+
+
+
+
+              
+
+
+
+
+
+{% endblock %}
+

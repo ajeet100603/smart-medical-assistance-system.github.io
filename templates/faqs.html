@@ -1,0 +1,361 @@
+{% extends "base.html" %} {% block title %} {% if session.get('lang') == 'hi' %}
+अक्सर पूछे जाने वाले प्रश्न {% else %} FAQs - Smart Medical System {% endif %}
+{% endblock %} {% block content %}
+<div class="main-container">
+  
+
+  <!-- ================= FAQ SECTION ================= -->
+  <h3 class="text-center mb-4 fw-bold">
+    {% if session.get('lang') == 'hi' %} अक्सर पूछे जाने वाले प्रश्न {% else %}
+    Frequently Asked Questions {% endif %}
+  </h3>
+
+  <div class="accordion mb-5" id="faqAccordion">
+    <!-- FAQ 1: Is service free? -->
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button
+          class="accordion-button"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#faq1"
+          aria-expanded="true"
+        >
+          {% if session.get('lang') == 'hi' %} क्या यह सेवा मुफ्त है? {% else %}
+          Is this service free? {% endif %}
+        </button>
+      </h2>
+      <div
+        id="faq1"
+        class="accordion-collapse collapse show"
+        data-bs-parent="#faqAccordion"
+      >
+        <div class="accordion-body">
+          {% if session.get('lang') == 'hi' %} हाँ, यह सेवा मरीजों के लिए पूरी
+          तरह निःशुल्क है। आप बिना किसी शुल्क के बीमारी खोज सकते हैं, अस्पताल
+          चुन सकते हैं और आपातकालीन सहायता प्राप्त कर सकते हैं। {% else %} Yes,
+          this service is completely free for patients. You can search for
+          diseases, select hospitals, and get emergency assistance without any
+          charges. {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- FAQ 2: Is data secure? -->
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button
+          class="accordion-button collapsed"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#faq2"
+        >
+          {% if session.get('lang') == 'hi' %} क्या मेरा डेटा सुरक्षित है? {%
+          else %} Is my data secure? {% endif %}
+        </button>
+      </h2>
+      <div
+        id="faq2"
+        class="accordion-collapse collapse"
+        data-bs-parent="#faqAccordion"
+      >
+        <div class="accordion-body">
+          {% if session.get('lang') == 'hi' %} हाँ, आपका सभी डेटा पूरी तरह
+          सुरक्षित है। आधार नंबर और मेडिकल रिपोर्ट्स एन्क्रिप्टेड हैं और केवल
+          सत्यापित अस्पतालों को ही पहुंच दी जाती है। {% else %} Yes, all your
+          data is fully secure. Aadhaar numbers and medical reports are
+          encrypted and only accessible to verified hospitals. {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- FAQ 3: How does platform work? -->
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button
+          class="accordion-button collapsed"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#faq3"
+        >
+          {% if session.get('lang') == 'hi' %} यह प्लेटफ़ॉर्म कैसे काम करता है?
+          {% else %} How does this platform work? {% endif %}
+        </button>
+      </h2>
+      <div
+        id="faq3"
+        class="accordion-collapse collapse"
+        data-bs-parent="#faqAccordion"
+      >
+        <div class="accordion-body">
+          {% if session.get('lang') == 'hi' %} पहले आप बीमारी खोजें या अस्पताल
+          चुनें, फिर अपने आधार और मेडिकल दस्तावेज़ अपलोड करें। अस्पताल आपके
+          अनुरोध को स्वीकार करने के बाद उपचार शुरू होता है। {% else %} First,
+          search for a disease or select a hospital, then upload your Aadhaar
+          and medical documents. Treatment begins after the hospital accepts
+          your request. {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- FAQ 4: Accident case process -->
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button
+          class="accordion-button collapsed"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#faq4"
+        >
+          {% if session.get('lang') == 'hi' %} दुर्घटना केस की प्रक्रिया क्या
+          है? {% else %} What is the accident case process? {% endif %}
+        </button>
+      </h2>
+      <div
+        id="faq4"
+        class="accordion-collapse collapse"
+        data-bs-parent="#faqAccordion"
+      >
+        <div class="accordion-body">
+          {% if session.get('lang') == 'hi' %} आपातकालीन स्थिति में, अस्पताल
+          चुनें, रोगी की जानकारी और दुर्घटना का विवरण भरें, फोटो अपलोड करें।
+          अस्पताल तुरंत प्रतिक्रिया देगा और उपचार शुरू करेगा। {% else %} In
+          emergency situations, select a hospital, fill in patient details and
+          accident information, upload photos. The hospital will respond
+          immediately and start treatment. {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- FAQ 5: Hospital response time -->
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button
+          class="accordion-button collapsed"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#faq5"
+        >
+          {% if session.get('lang') == 'hi' %} अस्पताल कितनी जल्दी जवाब देता है?
+          {% else %} How quickly does hospital respond? {% endif %}
+        </button>
+      </h2>
+      <div
+        id="faq5"
+        class="accordion-collapse collapse"
+        data-bs-parent="#faqAccordion"
+      >
+        <div class="accordion-body">
+          {% if session.get('lang') == 'hi' %} आपातकालीन मामलों में अस्पताल
+          15-30 मिनट के भीतर जवाब देता है। सामान्य मामलों में 1-2 घंटे के भीतर
+          प्रतिक्रिया मिलती है। {% else %} Hospitals respond within 15-30
+          minutes for emergency cases. For regular cases, you'll receive a
+          response within 1-2 hours. {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- FAQ 6: Track case status -->
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button
+          class="accordion-button collapsed"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#faq6"
+        >
+          {% if session.get('lang') == 'hi' %} क्या मैं अपने केस की स्थिति ट्रैक
+          कर सकता हूँ? {% else %} Can I track my case status? {% endif %}
+        </button>
+      </h2>
+      <div
+        id="faq6"
+        class="accordion-collapse collapse"
+        data-bs-parent="#faqAccordion"
+      >
+        <div class="accordion-body">
+          {% if session.get('lang') == 'hi' %} हाँ, आप Patient Panel में लॉगिन
+          करके अपने सीरियल नंबर या मोबाइल नंबर से उपचार और क्लेम की स्थिति आसानी
+          से ट्रैक कर सकते हैं। {% else %} Yes, you can easily track your
+          treatment and claim status by logging into the Patient Panel using
+          your serial number or mobile number. {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- FAQ 7: Claim process -->
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button
+          class="accordion-button collapsed"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#faq7"
+        >
+          {% if session.get('lang') == 'hi' %} क्लेम प्रक्रिया कैसे काम करती है?
+          {% else %} How does the claim process work? {% endif %}
+        </button>
+      </h2>
+      <div
+        id="faq7"
+        class="accordion-collapse collapse"
+        data-bs-parent="#faqAccordion"
+      >
+        <div class="accordion-body">
+          {% if session.get('lang') == 'hi' %} उपचार पूरा होने के बाद, मरीज
+          क्लेम फॉर्म भरता है और मेडिकल बिल, रिपोर्ट्स अपलोड करता है। एडमिन जांच
+          के बाद क्लेम को स्वीकृत या अस्वीकृत करता है। {% else %} After
+          treatment completion, patients fill out a claim form and upload
+          medical bills and reports. The admin reviews and approves or rejects
+          the claim. {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- FAQ 8: Get help -->
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button
+          class="accordion-button collapsed"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#faq8"
+        >
+          {% if session.get('lang') == 'hi' %} समस्या आने पर सहायता कैसे मिलेगी?
+          {% else %} How can I get help if I face an issue? {% endif %}
+        </button>
+      </h2>
+      <div
+        id="faq8"
+        class="accordion-collapse collapse"
+        data-bs-parent="#faqAccordion"
+      >
+        <div class="accordion-body">
+          {% if session.get('lang') == 'hi' %} किसी भी समस्या की स्थिति में आप
+          Footer में दिए गए Contact Support लिंक के माध्यम से सहायता टीम से 24×7
+          संपर्क कर सकते हैं या सीधे एडमिन को संदेश भेज सकते हैं। {% else %} If
+          you face any issues, you can contact the support team 24×7 through the
+          Contact Support link in the footer or send a message directly to the
+          admin. {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- FAQ 9: Better assistance -->
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button
+          class="accordion-button collapsed"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#faq9"
+        >
+          {% if session.get('lang') == 'hi' %} क्या इससे मरीज को बेहतर सहायता
+          मिल सकती है? {% else %} Can patients get better assistance through
+          this? {% endif %}
+        </button>
+      </h2>
+      <div
+        id="faq9"
+        class="accordion-collapse collapse"
+        data-bs-parent="#faqAccordion"
+      >
+        <div class="accordion-body">
+          {% if session.get('lang') == 'hi' %} हाँ, इस प्लेटफ़ॉर्म के माध्यम से
+          मरीज को सही अस्पताल चुनने, समय पर उपचार पाने और क्लेम प्रक्रिया के
+          जरिए सहायता प्राप्त करने में मदद मिलती है। {% else %} Yes, through
+          this platform, patients can get help in choosing the right hospital,
+          receiving timely treatment, and getting assistance through the claim
+          process. {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- FAQ 10: Claim form timing -->
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button
+          class="accordion-button collapsed"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#faq10"
+        >
+          {% if session.get('lang') == 'hi' %} क्लेम फॉर्म कितने दिनों के बाद
+          भरा जा सकता है? {% else %} After how many days can the claim form be
+          filled? {% endif %}
+        </button>
+      </h2>
+      <div
+        id="faq10"
+        class="accordion-collapse collapse"
+        data-bs-parent="#faqAccordion"
+      >
+        <div class="accordion-body">
+          {% if session.get('lang') == 'hi' %} क्लेम फॉर्म मरीज के उपचार पूरा
+          होने और अस्पताल से डिस्चार्ज मिलने के बाद 7 से 15 दिनों के बाद भरा जा
+          सकता है। {% else %} The claim form can be filled 7 to 15 days after
+          the patient's treatment is completed and discharge is received from
+          the hospital. {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- FAQ 11: Claim response time -->
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button
+          class="accordion-button collapsed"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#faq11"
+        >
+          {% if session.get('lang') == 'hi' %} क्लेम फॉर्म भरने के बाद कितने समय
+          में प्रतिक्रिया (ऑर्डर या पैसा) मिल जाएगा? {% else %} How long will it
+          take to get a response (order or payment) after filling the claim
+          form? {% endif %}
+        </button>
+      </h2>
+      <div
+        id="faq11"
+        class="accordion-collapse collapse"
+        data-bs-parent="#faqAccordion"
+      >
+        <div class="accordion-body">
+          {% if session.get('lang') == 'hi' %} क्लेम फॉर्म जमा करने के बाद
+          सामान्यतः 7 से 10 कार्य दिवसों के भीतर प्रतिक्रिया दी जाती है। {% else
+          %} Generally, a response is provided within 7 to 10 working days after
+          submitting the claim form. {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- FAQ 12: Government scheme benefits -->
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button
+          class="accordion-button collapsed"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#faq12"
+        >
+          {% if session.get('lang') == 'hi' %} क्या इसमें सरकारी योजना का लाभ
+          मिल सकता है? {% else %} Can I get benefits of government schemes
+          through this? {% endif %}
+        </button>
+      </h2>
+      <div
+        id="faq12"
+        class="accordion-collapse collapse"
+        data-bs-parent="#faqAccordion"
+      >
+        <div class="accordion-body">
+          {% if session.get('lang') == 'hi' %} हाँ, यदि मरीज का केस किसी सरकारी
+          योजना के अंतर्गत आता है, तो उसे सरकारी योजनाओं का लाभ दिया जा सकता है।
+          {% else %} Yes, if the patient's case comes under any government
+          scheme, they can receive benefits from government schemes. {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% if session.get('lang') == 'hi' %}
+        नियम और शर्तें - Smart Medical System
+    {% else %}
+        Terms & Conditions - Smart Medical System
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="main-container">
+    <div class="text-center mb-5">
+        <h1 class="display-4 mb-3">
+            <i class="bi bi-file-text text-primary"></i>
+            {% if session.get('lang') == 'hi' %}
+                नियम और शर्तें
+            {% else %}
+                Terms & Conditions
+            {% endif %}
+        </h1>
+        <p class="text-muted">
+            {% if session.get('lang') == 'hi' %}
+                अंतिम अपडेट: जनवरी 2026
+            {% else %}
+                Last Updated: January 2026
+            {% endif %}
+        </p>
+    </div>
+
+    <div class="card p-4">
+        <h3 class="mb-4">
+            {% if session.get('lang') == 'hi' %}
+                1. सेवा की शर्तें
+            {% else %}
+                1. Service Terms
+            {% endif %}
+        </h3>
+        <p>
+            {% if session.get('lang') == 'hi' %}
+                इस प्लेटफॉर्म का उपयोग करके, आप निम्नलिखित शर्तों से सहमत हैं:
+                <ul>
+                    <li>आप सही और सटीक जानकारी प्रदान करेंगे</li>
+                    <li>आप केवल अपने स्वयं के लिए सेवा का उपयोग करेंगे</li>
+                    <li>आप किसी भी गलत या धोखाधड़ी वाली जानकारी प्रदान नहीं करेंगे</li>
+                    <li>आप अस्पतालों और कर्मचारियों के साथ सम्मानजनक व्यवहार करेंगे</li>
+                </ul>
+            {% else %}
+                By using this platform, you agree to the following terms:
+                <ul>
+                    <li>You will provide accurate and correct information</li>
+                    <li>You will use the service only for yourself</li>
+                    <li>You will not provide any false or fraudulent information</li>
+                    <li>You will treat hospitals and staff with respect</li>
+                </ul>
+            {% endif %}
+        </p>
+
+        <h3 class="mb-4 mt-5">
+            {% if session.get('lang') == 'hi' %}
+                2. उपयोगकर्ता जिम्मेदारियां
+            {% else %}
+                2. User Responsibilities
+            {% endif %}
+        </h3>
+        <p>
+            {% if session.get('lang') == 'hi' %}
+                उपयोगकर्ता के रूप में आपकी जिम्मेदारियां:
+                <ul>
+                    <li>सही आधार नंबर और व्यक्तिगत जानकारी प्रदान करना</li>
+                    <li>मेडिकल रिपोर्ट्स और दस्तावेज़ सही तरीके से अपलोड करना</li>
+                    <li>अस्पताल के निर्देशों का पालन करना</li>
+                    <li>क्लेम फॉर्म में सही जानकारी भरना</li>
+                </ul>
+            {% else %}
+                Your responsibilities as a user:
+                <ul>
+                    <li>Providing correct Aadhaar number and personal information</li>
+                    <li>Uploading medical reports and documents correctly</li>
+                    <li>Following hospital instructions</li>
+                    <li>Filling claim forms with accurate information</li>
+                </ul>
+            {% endif %}
+        </p>
+
+        <h3 class="mb-4 mt-5">
+            {% if session.get('lang') == 'hi' %}
+                3. सेवा की उपलब्धता
+            {% else %}
+                3. Service Availability
+            {% endif %}
+        </h3>
+        <p>
+            {% if session.get('lang') == 'hi' %}
+                हम 24×7 सेवा प्रदान करने का प्रयास करते हैं, लेकिन:
+                <ul>
+                    <li>तकनीकी रखरखाव के दौरान सेवा अस्थायी रूप से बाधित हो सकती है</li>
+                    <li>हम सेवा की निरंतरता की गारंटी नहीं दे सकते</li>
+                    <li>आपातकालीन स्थितियों में अस्पताल की प्रतिक्रिया समय पर निर्भर करती है</li>
+                </ul>
+            {% else %}
+                We strive to provide 24×7 service, but:
+                <ul>
+                    <li>Service may be temporarily interrupted during technical maintenance</li>
+                    <li>We cannot guarantee continuous service availability</li>
+                    <li>Hospital response in emergencies depends on their availability</li>
+                </ul>
+            {% endif %}
+        </p>
+
+        <h3 class="mb-4 mt-5">
+            {% if session.get('lang') == 'hi' %}
+                4. क्लेम प्रक्रिया
+            {% else %}
+                4. Claim Process
+            {% endif %}
+        </h3>
+        <p>
+            {% if session.get('lang') == 'hi' %}
+                क्लेम प्रक्रिया के संबंध में:
+                <ul>
+                    <li>क्लेम फॉर्म उपचार पूरा होने के 7-15 दिनों के बाद भरा जा सकता है</li>
+                    <li>क्लेम जमा करने के बाद 7-10 कार्य दिवसों में प्रतिक्रिया दी जाती है</li>
+                    <li>क्लेम की स्वीकृति एडमिन की जांच पर निर्भर करती है</li>
+                    <li>गलत जानकारी के मामले में क्लेम अस्वीकृत किया जा सकता है</li>
+                </ul>
+            {% else %}
+                Regarding the claim process:
+                <ul>
+                    <li>Claim form can be filled 7-15 days after treatment completion</li>
+                    <li>Response is provided within 7-10 working days after claim submission</li>
+                    <li>Claim approval depends on admin review</li>
+                    <li>Claims may be rejected in case of false information</li>
+                </ul>
+            {% endif %}
+        </p>
+
+        <h3 class="mb-4 mt-5">
+            {% if session.get('lang') == 'hi' %}
+                5. सीमाएं और अस्वीकरण
+            {% else %}
+                5. Limitations & Disclaimer
+            {% endif %}
+        </h3>
+        <p>
+            {% if session.get('lang') == 'hi' %}
+                हम निम्नलिखित के लिए जिम्मेदार नहीं हैं:
+                <ul>
+                    <li>अस्पताल द्वारा प्रदान की गई चिकित्सा सेवाओं की गुणवत्ता</li>
+                    <li>उपचार के परिणाम</li>
+                    <li>अस्पताल की देरी या प्रतिक्रिया</li>
+                    <li>किसी भी तीसरे पक्ष की कार्रवाई</li>
+                </ul>
+            {% else %}
+                We are not responsible for:
+                <ul>
+                    <li>Quality of medical services provided by hospitals</li>
+                    <li>Treatment outcomes</li>
+                    <li>Hospital delays or responses</li>
+                    <li>Actions of any third party</li>
+                </ul>
+            {% endif %}
+        </p>
+
+        <div class="alert alert-warning mt-4">
+            <i class="bi bi-exclamation-triangle"></i>
+            {% if session.get('lang') == 'hi' %}
+                <strong>महत्वपूर्ण:</strong> यदि आप इन शर्तों से सहमत नहीं हैं, तो कृपया इस प्लेटफॉर्म का उपयोग न करें।
+            {% else %}
+                <strong>Important:</strong> If you do not agree to these terms, please do not use this platform.
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

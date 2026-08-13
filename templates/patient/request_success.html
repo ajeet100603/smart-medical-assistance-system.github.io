@@ -1,0 +1,194 @@
+{% extends "patient_base.html" %}
+
+{% block content %}
+<div class="main-container text-center">
+    <div class="card">
+        <div class="card-body p-5">
+
+            <i class="bi bi-check-circle-fill text-success" style="font-size: 80px;"></i>
+
+            <h2 class="mt-4 mb-3">
+                {% if session.get('lang') == 'hi' %}
+                    अनुरोध सफलतापूर्वक जमा किया गया!
+                {% else %}
+                    Request Submitted Successfully!
+                {% endif %}
+            </h2>
+
+            <p class="lead text-muted mb-4">
+                {% if session.get('lang') == 'hi' %}
+                    आपका अनुरोध <strong>{{ request.hospital.name }}</strong> अस्पताल को समीक्षा के लिए भेज दिया गया है।
+                {% else %}
+                    Your request has been sent to <strong>{{ request.hospital.name }}</strong> for review.
+                {% endif %}
+            </p>
+
+            <!-- SUCCESS ALERT -->
+            <div class="alert alert-success text-start">
+                <h5>
+                    <i class="bi bi-check-circle"></i>
+                    {% if session.get('lang') == 'hi' %}
+                        फॉर्म सफलतापूर्वक जमा हुआ
+                    {% else %}
+                        Form Submitted Successfully
+                    {% endif %}
+                </h5>
+
+                {% if request.patient_serial_number %}
+                <p class="mb-2 fs-5">
+                    <strong>
+                        {% if session.get('lang') == 'hi' %}
+                            आपका मरीज क्रमांक:
+                        {% else %}
+                            Your Patient Serial Number:
+                        {% endif %}
+                        <span class="text-primary">{{ request.patient_serial_number }}</span>
+                    </strong>
+                </p>
+                <p class="mb-3 text-muted">
+                    {% if session.get('lang') == 'hi' %}
+                        भविष्य के लिए इस नंबर को सुरक्षित रखें।
+                    {% else %}
+                        Please save this number for future use.
+                    {% endif %}
+                </p>
+                {% endif %}
+            </div>
+
+            <!-- REQUEST DETAILS -->
+            <div class="alert alert-info text-start">
+                <h5>
+                    <i class="bi bi-info-circle"></i>
+                    {% if session.get('lang') == 'hi' %}
+                        अनुरोध विवरण:
+                    {% else %}
+                        Request Details:
+                    {% endif %}
+                </h5>
+
+                <p class="mb-1">
+                    <strong>
+                        {% if session.get('lang') == 'hi' %}
+                            अनुरोध आईडी:
+                        {% else %}
+                            Request ID:
+                        {% endif %}
+                    </strong>
+                    #{{ request.request_id }}
+                </p>
+
+                {% if request.patient_serial_number %}
+                <p class="mb-1">
+                    <strong>
+                        {% if session.get('lang') == 'hi' %}
+                            मरीज क्रमांक:
+                        {% else %}
+                            Patient Serial Number:
+                        {% endif %}
+                    </strong>
+                    {{ request.patient_serial_number }}
+                </p>
+                {% endif %}
+
+                <p class="mb-1">
+                    <strong>
+                        {% if session.get('lang') == 'hi' %}
+                            बीमारी:
+                        {% else %}
+                            Disease:
+                        {% endif %}
+                    </strong>
+                    {{ request.disease.name }}
+                </p>
+
+                <p class="mb-1">
+                    <strong>
+                        {% if session.get('lang') == 'hi' %}
+                            अस्पताल:
+                        {% else %}
+                            Hospital:
+                        {% endif %}
+                    </strong>
+                    {{ request.hospital.name }}
+                </p>
+
+                <p class="mb-1">
+                    <strong>
+                        {% if session.get('lang') == 'hi' %}
+                            स्थिति:
+                        {% else %}
+                            Status:
+                        {% endif %}
+                    </strong>
+                    <span class="badge bg-warning">{{ request.status|title }}</span>
+                </p>
+
+                <p class="mb-0">
+                    <strong>
+                        {% if session.get('lang') == 'hi' %}
+                            जमा करने की तिथि:
+                        {% else %}
+                            Submitted:
+                        {% endif %}
+                    </strong>
+                    {{ request.created_at.strftime('%d %B %Y, %I:%M %p') }}
+                </p>
+            </div>
+
+            <p class="text-muted">
+                {% if session.get('lang') == 'hi' %}
+                    अस्पताल आपके दस्तावेज़ों की समीक्षा करेगा और जल्द ही आपसे संपर्क करेगा।
+                    आप सीधे अस्पताल से संपर्क करके अनुरोध की स्थिति जान सकते हैं।
+                {% else %}
+                    The hospital will review your documents and contact you soon.
+                    You can check your request status by contacting the hospital directly.
+                {% endif %}
+            </p>
+            <p class="text-muted mt-3">
+    {% if session.get('lang') == 'hi' %}
+        कृपया 20 से 30 मिनट तक प्रतीक्षा करें। इस समय के भीतर आपके अनुरोध की 
+        स्वीकृति (Accept) या अस्वीकृति (Reject) की जानकारी आपको भेज दी जाएगी।
+    {% else %}
+        Please wait for 20 to 30 minutes. Within this time, you will receive 
+        the response regarding acceptance or rejection of your request.
+    {% endif %}
+</p>
+
+
+            <!-- ACTION BUTTONS -->
+            <div class="mt-4">
+                <a href="/" class="btn btn-primary me-2">
+                    <i class="bi bi-house"></i>
+                    {% if session.get('lang') == 'hi' %} होम जाएँ {% else %} Go to Home {% endif %}
+                </a>
+
+                <a href="/search-disease" class="btn btn-outline-primary me-2">
+                    <i class="bi bi-search"></i>
+                    {% if session.get('lang') == 'hi' %} दूसरी बीमारी खोजें {% else %} Search Another Disease {% endif %}
+                </a>
+
+                
+            </div>
+
+            <!-- NOTE -->
+            <div class="alert alert-warning mt-4">
+                <i class="bi bi-info-circle"></i>
+                <strong>
+                    {% if session.get('lang') == 'hi' %}
+                        नोट:
+                    {% else %}
+                        Note:
+                    {% endif %}
+                </strong>
+                {% if session.get('lang') == 'hi' %}
+                    आप अनुरोध की स्थिति जानने के लिए सीधे अस्पताल से संपर्क कर सकते हैं:
+                {% else %}
+                    You can contact the hospital directly to check your request status:
+                {% endif %}
+                <strong>{{ request.hospital.contact }}</strong>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

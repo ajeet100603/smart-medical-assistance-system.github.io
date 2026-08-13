@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% if session.get('lang') == 'hi' %}
+        संपर्क सहायता - Smart Medical System
+    {% else %}
+        Contact Support - Smart Medical System
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="main-container">
+    <div class="text-center mb-5">
+        <h1 class="display-4 mb-3">
+            <i class="bi bi-headset text-primary"></i>
+            {% if session.get('lang') == 'hi' %}
+                संपर्क सहायता
+            {% else %}
+                Contact Support
+            {% endif %}
+        </h1>
+        <p class="lead text-muted">
+            {% if session.get('lang') == 'hi' %}
+                हम 24×7 आपकी सहायता के लिए उपलब्ध हैं
+            {% else %}
+                We are available 24×7 to help you
+            {% endif %}
+        </p>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="card p-4 h-100">
+                <h3 class="mb-4">
+                    <i class="bi bi-envelope-fill text-primary"></i>
+                    {% if session.get('lang') == 'hi' %}
+                        ईमेल सहायता
+                    {% else %}
+                        Email Support
+                    {% endif %}
+                </h3>
+                <p>
+                    {% if session.get('lang') == 'hi' %}
+                        किसी भी प्रश्न या समस्या के लिए हमें ईमेल करें:
+                    {% else %}
+                        Email us for any questions or issues:
+                    {% endif %}
+                </p>
+                <p class="fs-5">
+                    <strong>support@smartmedical.in</strong>
+                </p>
+                <p class="text-muted small">
+                    {% if session.get('lang') == 'hi' %}
+                        प्रतिक्रिया समय: 24-48 घंटे
+                    {% else %}
+                        Response Time: 24-48 hours
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card p-4 h-100">
+                <h3 class="mb-4">
+                    <i class="bi bi-telephone-fill text-success"></i>
+                    {% if session.get('lang') == 'hi' %}
+                        हेल्पलाइन
+                    {% else %}
+                        Helpline
+                    {% endif %}
+                </h3>
+                <p>
+                    {% if session.get('lang') == 'hi' %}
+                        आपातकालीन सहायता के लिए कॉल करें:
+                    {% else %}
+                        Call for emergency support:
+                    {% endif %}
+                </p>
+                <p class="fs-5">
+                    <strong>1800-XXX-XXXX</strong>
+                </p>
+                <p class="text-muted small">
+                    {% if session.get('lang') == 'hi' %}
+                        सोमवार से रविवार: 24×7
+                    {% else %}
+                        Monday to Sunday: 24×7
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <div class="card p-4">
+                <h3 class="mb-4">
+                    <i class="bi bi-chat-dots-fill text-warning"></i>
+                    {% if session.get('lang') == 'hi' %}
+                        सामान्य प्रश्न
+                    {% else %}
+                        Common Questions
+                    {% endif %}
+                </h3>
+                <div class="accordion" id="contactFAQ">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#contact1">
+                                {% if session.get('lang') == 'hi' %}
+                                    मुझे कब संपर्क करना चाहिए?
+                                {% else %}
+                                    When should I contact support?
+                                {% endif %}
+                            </button>
+                        </h2>
+                        <div id="contact1" class="accordion-collapse collapse" data-bs-parent="#contactFAQ">
+                            <div class="accordion-body">
+                                {% if session.get('lang') == 'hi' %}
+                                    आप निम्नलिखित स्थितियों में हमसे संपर्क कर सकते हैं: अस्पताल से प्रतिक्रिया न मिलना, क्लेम प्रक्रिया में समस्या, तकनीकी समस्याएं, या कोई अन्य सहायता।
+                                {% else %}
+                                    You can contact us in the following situations: No response from hospital, issues in claim process, technical problems, or any other assistance.
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#contact2">
+                                {% if session.get('lang') == 'hi' %}
+                                    क्या मुझे तुरंत प्रतिक्रिया मिलेगी?
+                                {% else %}
+                                    Will I get immediate response?
+                                {% endif %}
+                            </button>
+                        </h2>
+                        <div id="contact2" class="accordion-collapse collapse" data-bs-parent="#contactFAQ">
+                            <div class="accordion-body">
+                                {% if session.get('lang') == 'hi' %}
+                                    आपातकालीन मामलों में हम तुरंत प्रतिक्रिया देने का प्रयास करते हैं। सामान्य प्रश्नों के लिए 24-48 घंटों के भीतर प्रतिक्रिया दी जाती है।
+                                {% else %}
+                                    We try to respond immediately in emergency cases. For general queries, response is provided within 24-48 hours.
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <div class="card p-4 bg-light">
+                <h4 class="mb-3">
+                    <i class="bi bi-info-circle text-info"></i>
+                    {% if session.get('lang') == 'hi' %}
+                        महत्वपूर्ण जानकारी
+                    {% else %}
+                        Important Information
+                    {% endif %}
+                </h4>
+                <p>
+                    {% if session.get('lang') == 'hi' %}
+                        कृपया संपर्क करते समय अपना सीरियल नंबर, मोबाइल नंबर और समस्या का विवरण प्रदान करें ताकि हम आपकी बेहतर सहायता कर सकें।
+                    {% else %}
+                        Please provide your serial number, mobile number, and problem description when contacting us so we can assist you better.
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

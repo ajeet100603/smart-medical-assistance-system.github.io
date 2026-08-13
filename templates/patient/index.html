@@ -1,0 +1,247 @@
+{% extends "patient_base.html" %} {% block title %}Patient - Smart Medical
+System{% endblock %} {% block content %}
+<div class="main-container page-bg">
+  <!-- ================= HERO SECTION ================= -->
+  <div class="text-center mb-5 py-5">
+    <h1 class="display-4 mb-4 fw-bold">
+      <i class="bi bi-heart-pulse text-danger"></i>
+      {% if session.get('lang') == 'hi' %} तेज़, सुरक्षित और सत्यापित चिकित्सा
+      सहायता {% else %} Fast, Secure & Verified Medical Assistance {% endif %}
+    </h1>
+
+    <p class="lead text-muted mb-4">
+      {% if session.get('lang') == 'hi' %} मरीजों, अस्पतालों और आपातकालीन सेवाओं
+      के लिए एक ही प्लेटफॉर्म {% else %} One platform for patients, hospitals &
+      emergency care {% endif %}
+    </p>
+
+    <!-- ================= MAIN SERVICES SECTION (3 CARDS) ================= -->
+
+    <div class="row g-4 mb-5">
+      <!-- SEARCH DISEASE -->
+      <div class="col-md-4">
+        <div class="card h-100 text-center p-4 border-0 shadow-sm">
+          <div class="card-body">
+            <i class="bi bi-search display-1 text-primary mb-3"></i>
+            <h4 class="card-title fw-bold">
+              {% if session.get('lang') == 'hi' %} बीमारी खोजें {% else %}
+              Search Disease {% endif %}
+            </h4>
+            <p class="card-text text-muted">
+              {% if session.get('lang') == 'hi' %} बीमारी की जानकारी तुरंत
+              प्राप्त करें {% else %} Search for your disease and get instant
+              information {% endif %}
+            </p>
+            <a href="/search-disease" class="btn btn-primary">
+              {% if session.get('lang') == 'hi' %} खोजें {% else %} Search Now
+              {% endif %}
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- ACCIDENT / EMERGENCY CASE -->
+      <div class="col-md-4">
+        <div
+          class="card h-100 text-center p-4 border-danger border-2 shadow-lg"
+          style="transform: scale(1.05)"
+        >
+          <div class="card-body">
+            <i
+              class="bi bi-exclamation-triangle-fill display-1 text-danger mb-3"
+            ></i>
+            <h4 class="card-title fw-bold text-danger">
+              {% if session.get('lang') == 'hi' %} दुर्घटना / आपातकालीन केस {%
+              else %} Accident / Emergency Case {% endif %}
+            </h4>
+            <p class="card-text text-muted">
+              {% if session.get('lang') == 'hi' %} तुरंत अस्पताल चुनें और उपचार
+              प्राप्त करें {% else %} Select hospital immediately for emergency
+              treatment {% endif %}
+            </p>
+            <p class="text-[15px] leading-relaxed opacity-95">
+              {% if session.get('lang') == 'hi' %} 24×7 त्वरित आपातकालीन
+              चिकित्सा सेवाएं उपलब्ध हैं। {% else %} 24×7 fast and reliable
+              emergency medical services are available. {% endif %}
+            </p>
+            <a href="/accident-select-hospital" class="btn btn-danger btn-lg">
+              {% if session.get('lang') == 'hi' %} अस्पताल चुनें {% else %}
+              Select Hospital {% endif %}
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- UPLOAD DOCUMENTS -->
+      <div class="col-md-4">
+        <div class="card h-100 text-center p-4 border-0 shadow-sm">
+          <div class="card-body">
+            <i class="bi bi-capsule display-1 text-primary mb-3"></i>
+
+            <h4 class="card-title fw-bold">
+              {% if session.get('lang') == 'hi' %} दवाइयाँ {% else %} Medicines
+              {% endif %}
+            </h4>
+
+            <p class="card-text text-muted">
+              {% if session.get('lang') == 'hi' %} अपनी दवाइयों की जानकारी देखें
+              और समय पर लें {% else %} View your prescribed medicines and take
+              them on time {% endif %}
+            </p>
+
+            <a href="/patient/medicines" class="btn btn-primary">
+              {% if session.get('lang') == 'hi' %} दवाइयाँ देखें {% else %} View
+              Medicines {% endif %}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= HOW IT WORKS SECTION ================= -->
+  </div>
+
+  <div class="row g-4 mb-5">
+    <div class="col-md-4">
+      <div class="card h-100 text-center p-4 border-0 shadow-sm">
+        <div class="card-body">
+          <i class="bi bi-person-badge text-4xl text-primary mb-3"></i>
+          <h4 class="card-title fw-bold">
+            {% if session.get('lang') == 'hi' %} योग्य डॉक्टर {% else %}
+            Qualified Doctors {% endif %}
+          </h4>
+          <p class="card-text text-muted">
+            {% if session.get('lang') == 'hi' %} हमारे अनुभवी और प्रमाणित डॉक्टर
+            आपकी बेहतर देखभाल के लिए हमेशा तैयार रहते हैं। {% else %} Our
+            experienced and certified doctors are always ready to provide the
+            best care. {% endif %}
+          </p>
+          <a href="/search-disease" class="btn btn-primary">
+            {% if session.get('lang') == 'hi' %} खोजें {% else %} Search Now {%
+            endif %}
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div
+        class="card h-100 text-center p-4 border-danger border-2 shadow-lg"
+        
+      >
+        <div class="card-body">
+          <i
+            class="bi bi-heart-pulse text-4xl mb-3"
+          ></i>
+          <h4 class="card-title fw-bold">
+            {% if session.get('lang') == 'hi' %} बाहरी जांच {% else %} Outdoor
+            Checkup {% endif %}
+          </h4>
+          <p class="card-text text-muted">
+            {% if session.get('lang') == 'hi' %} घर पर या बाहर जाकर जांच और
+            परामर्श की सुविधा उपलब्ध है। {% else %} Medical checkups and
+            consultation services available at home or outdoor locations. {%
+            endif %}
+          </p>
+          <a href="/search-disease" class="btn btn-primary">
+            {% if session.get('lang') == 'hi' %} खोजें {% else %} Search Now {%
+            endif %}
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- UPLOAD DOCUMENTS -->
+    <div class="col-md-4">
+      <div class="card h-100 text-center p-4 border-0 shadow-sm">
+        <div class="card-body">
+          <i class="bi bi-clock-history text-4xl"></i>
+          <h3 class="text-[22px] font-semibold mb-4">
+            {% if session.get('lang') == 'hi' %} 24 घंटे सेवा {% else %} 24
+            Hours Service {% endif %}
+          </h3>
+
+          <p class="text-[15px] leading-relaxed opacity-95">
+            {% if session.get('lang') == 'hi' %} हमारी चिकित्सा सेवाएं दिन-रात
+            24 घंटे उपलब्ध रहती हैं। {% else %} Our medical services are
+            available 24 hours a day, 7 days a week. {% endif %}
+          </p>
+        </div>
+      </div>
+
+      {% endblock %} {% block homepage_content %}
+      <!-- ================= TRUST / SAFETY SECTION ================= -->
+      <div class="container mt-5 mb-5">
+        <div class="row text-center g-4 mb-5">
+          <div class="col-md-4">
+            <i class="bi bi-shield-lock-fill fs-1 text-primary"></i>
+            <h5 class="mt-3 fw-bold">
+              {% if session.get('lang') == 'hi' %} आधार सुरक्षित {% else %}
+              Aadhaar Secured {% endif %}
+            </h5>
+            <p class="text-muted">
+              {% if session.get('lang') == 'hi' %} आपका व्यक्तिगत और मेडिकल डेटा
+              पूरी तरह सुरक्षित है {% else %} Your personal and medical data is
+              fully protected {% endif %}
+            </p>
+          </div>
+
+          <div class="col-md-4">
+            <i class="bi bi-patch-check-fill fs-1 text-success"></i>
+            <h5 class="mt-3 fw-bold">
+              {% if session.get('lang') == 'hi' %} सत्यापित अस्पताल {% else %}
+              Verified Hospitals {% endif %}
+            </h5>
+            <p class="text-muted">
+              {% if session.get('lang') == 'hi' %} केवल सरकारी सत्यापित अस्पताल
+              सूचीबद्ध हैं {% else %} Only government verified hospitals are
+              listed {% endif %}
+            </p>
+          </div>
+
+          <div class="col-md-4">
+            <i class="bi bi-clock-fill fs-1 text-warning"></i>
+            <h5 class="mt-3 fw-bold">
+              {% if session.get('lang') == 'hi' %} 24×7 सहायता {% else %} 24×7
+              Support {% endif %}
+            </h5>
+            <p class="text-muted">
+              {% if session.get('lang') == 'hi' %} आपातकालीन और सहायता सेवाएं
+              हमेशा उपलब्ध {% else %} Emergency and support services available
+              anytime {% endif %}
+            </p>
+          </div>
+        </div>
+
+        <!-- ================= STATISTICS SECTION ================= -->
+        <div class="row text-center mb-5">
+          <div class="col-md-4">
+            <h2 class="fw-bold text-primary display-4">100+</h2>
+            <p class="text-muted fs-5">
+              {% if session.get('lang') == 'hi' %} जुड़े हुए अस्पताल {% else %}
+              Hospitals Connected {% endif %}
+            </p>
+          </div>
+
+          <div class="col-md-4">
+            <h2 class="fw-bold text-success display-4">5000+</h2>
+            <p class="text-muted fs-5">
+              {% if session.get('lang') == 'hi' %} सहायता प्राप्त मरीज {% else
+              %} Patients Helped {% endif %}
+            </p>
+          </div>
+
+          <div class="col-md-4">
+            <h2 class="fw-bold text-warning display-4">98%</h2>
+            <p class="text-muted fs-5">
+              {% if session.get('lang') == 'hi' %} सफलता दर {% else %} Success
+              Rate {% endif %}
+            </p>
+          </div>
+        </div>
+
+        {% endblock %}
+      </div>
+    </div>
+  </div>
+</div>

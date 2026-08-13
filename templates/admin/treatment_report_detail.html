@@ -1,0 +1,193 @@
+{% extends "admin_base.html" %}
+
+{% block title %}Treatment Report Details - Admin{% endblock %}
+
+{% block navbar %}
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+    <div class="container">
+        <a class="navbar-brand" href="/admin/dashboard">
+            <i class="bi bi-shield-lock"></i> Admin Panel
+        </a>
+        <div class="navbar-nav ms-auto">
+            <a class="nav-link" href="/admin/dashboard">Dashboard</a>
+            <a class="nav-link" href="/admin/treatment-reports">Treatment Reports</a>
+            <a class="nav-link" href="/admin/logout">Logout</a>
+        </div>
+    </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="main-container">
+    <div class="mb-3">
+        <a href="/admin/treatment-reports" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Reports
+        </a>
+    </div>
+    
+    <h2 class="mb-4">
+        <i class="bi bi-file-medical"></i> Treatment Report #{{ report.report_id }}
+    </h2>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between">
+                    <h5 class="mb-0">Report Status</h5>
+                    <span class="badge bg-{{ 'success' if report.status == 'approved' else 'danger' if report.status == 'rejected' else 'warning' }}">
+                        {{ report.status|title }}
+                    </span>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Patient:</strong> {{ report.patient.name }}</p>
+                            <p><strong>Hospital:</strong> {{ report.hospital.name }}</p>
+                            <p><strong>Disease / Injury:</strong>
+                                {% if report.request %}
+                                    {{ report.request.disease.name }}
+                                {% else %}
+                                    {{ report.disease_injury }}
+                                {% endif %}
+                            </p>
+                            
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Contact:</strong> {{ report.patient.phone }}</p>
+                            <p><strong>Address:</strong> {{ report.patient.address }}</p>
+                            <p><strong>Case Type:</strong> {{ report.case_type or 'N/A' }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Treatment Details</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Treatment Details:</strong></p>
+                    <p>{{ report.treatment_details }}</p>
+                    
+                    {% if report.work_done %}
+                    <hr>
+                    <p><strong>Work Done:</strong></p>
+                    <p>{{ report.work_done }}</p>
+                    {% endif %}
+                    
+                    {% if report.final_treatment_report %}
+                    <hr>
+                    <p><strong>Final Treatment Report:</strong></p>
+                    <p>{{ report.final_treatment_report }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Admission & Discharge</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Admission Date:</strong> {{ report.admission_date.strftime('%d %B %Y') if report.admission_date else 'N/A' }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Discharge Date:</strong> {{ report.discharge_date.strftime('%d %B %Y') if report.discharge_date else 'N/A' }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Financial Details</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Total Expense:</strong> ₹{{ report.total_expense if report.total_expense else 'N/A' }}</p>
+                    {% if report.payment_amount %}
+                    <p><strong>Payment Amount (10%):</strong> ₹{{ report.payment_amount }}</p>
+                    {% endif %}
+                    <p><strong>Payment Status:</strong> 
+                        <span class="badge bg-{{ 'success' if report.payment_status == 'paid' else 'warning' }}">
+                            {{ report.payment_status|title if report.payment_status else 'Pending' }}
+                        </span>
+                    </p>
+                    
+                    {% if report.bill_document_url %}
+                    <div class="mt-3">
+                        <a href="/{{ report.bill_document_url }}" target="_blank" class="btn btn-primary">
+                            <i class="bi bi-download"></i> View Bill Document
+                        </a>
+                    </div>
+                    {% endif %}
+                    
+                    {% if report.payment_screenshot_url %}
+                    <div class="mt-3">
+                        <a href="/{{ report.payment_screenshot_url }}" target="_blank" class="btn btn-success">
+                            <i class="bi bi-image"></i> View Payment Screenshot
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            {% if report.admin_notes %}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Admin Notes</h5>
+                </div>
+                <div class="card-body">
+                    <p>{{ report.admin_notes }}</p>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Update Report Status</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="/admin/treatment-report/{{ report.report_id }}/update-status">
+                        <div class="mb-3">
+                            <label for="status" class="form-label">Status</label>
+                            <select class="form-control" id="status" name="status" required>
+                                <option value="submitted" {% if report.status == 'submitted' %}selected{% endif %}>Submitted</option>
+                                <option value="approved" {% if report.status == 'approved' %}selected{% endif %}>Approve</option>
+                                <option value="rejected" {% if report.status == 'rejected' %}selected{% endif %}>Reject</option>
+                                <option value="closed" {% if report.status == 'closed' %}selected{% endif %}>Close Case</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="admin_notes" class="form-label">Admin Notes (Optional)</label>
+                            <textarea class="form-control" id="admin_notes" name="admin_notes" rows="3">{{ report.admin_notes or '' }}</textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle"></i> Update Status
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="bi bi-info-circle"></i> Report Information
+                    </h5>
+                    <p class="mb-1"><strong>Report ID:</strong> #{{ report.report_id }}</p>
+                    <p class="mb-1"><strong>Request ID:</strong> #{{ report.request_id }}</p>
+                    <p class="mb-1"><strong>Submitted:</strong></p>
+                    <p class="text-muted">{{ report.created_at.strftime('%d %B %Y, %I:%M %p') }}</p>
+                    {% if report.updated_at %}
+                    <p class="mb-1"><strong>Last Updated:</strong></p>
+                    <p class="text-muted">{{ report.updated_at.strftime('%d %B %Y, %I:%M %p') }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

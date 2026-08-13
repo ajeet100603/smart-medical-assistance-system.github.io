@@ -1,0 +1,150 @@
+ {% extends "base.html" %} {% block title %} {% if session.get('lang') == 'hi' %}
+हमारे बारे में - Smart Medical System {% else %} About Us - Smart Medical System
+{% endif %} {% endblock %} {% block content %}
+<div class="main-container">
+  <div class="text-center mb-5">
+    <h1 class="display-4 mb-3">
+      <i class="bi bi-info-circle text-primary"></i>
+      {% if session.get('lang') == 'hi' %} हमारे बारे में {% else %} About Us {%
+      endif %}
+    </h1>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-md-12">
+      <div class="card p-4">
+        <h3 class="mb-3">
+          {% if session.get('lang') == 'hi' %} स्मार्ट मेडिकल सहायता प्रणाली {%
+          else %} Smart Medical Assistance System {% endif %}
+        </h3>
+        <p class="lead">
+          {% if session.get('lang') == 'hi' %} स्मार्ट मेडिकल सहायता प्रणाली
+          मरीजों, अस्पतालों और आपातकालीन सेवाओं को जोड़ने वाला एक विश्वसनीय और
+          सुरक्षित प्लेटफॉर्म है। हमारा मिशन तेज़, सुरक्षित और सत्यापित चिकित्सा
+          सहायता प्रदान करना है। {% else %} Smart Medical Assistance System is a
+          trusted and secure platform connecting patients, hospitals, and
+          emergency services. Our mission is to provide fast, secure, and
+          verified medical assistance. {% endif %}
+        </p>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card p-4 h-100">
+        <h4 class="text-primary mb-3">
+          <i class="bi bi-bullseye"></i>
+          {% if session.get('lang') == 'hi' %} हमारा मिशन {% else %} Our Mission
+          {% endif %}
+        </h4>
+        <p>
+          {% if session.get('lang') == 'hi' %} हमारा मिशन है कि हर मरीज को सही
+          समय पर सही चिकित्सा सहायता मिले। हम सरकारी सत्यापित अस्पतालों के साथ
+          काम करते हैं ताकि मरीजों को गुणवत्तापूर्ण उपचार मिल सके। {% else %}
+          Our mission is to ensure every patient receives the right medical
+          assistance at the right time. We work with government-verified
+          hospitals to provide quality treatment to patients. {% endif %}
+        </p>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card p-4 h-100">
+        <h4 class="text-success mb-3">
+          <i class="bi bi-eye"></i>
+          {% if session.get('lang') == 'hi' %} हमारी दृष्टि {% else %} Our
+          Vision {% endif %}
+        </h4>
+        <p>
+          {% if session.get('lang') == 'hi' %} हम एक ऐसा भारत बनाना चाहते हैं
+          जहाँ हर नागरिक को आसानी से चिकित्सा सहायता मिले। हमारा लक्ष्य है कि
+          आपातकालीन स्थितियों में भी मरीजों को तुरंत सहायता मिले। {% else %} We
+          envision an India where every citizen can easily access medical
+          assistance. Our goal is to provide immediate help to patients even in
+          emergency situations. {% endif %}
+        </p>
+      </div>
+    </div>
+
+    <div class="col-md-12">
+      <div class="card p-4 mt-4 border-success">
+        <h4 class="mb-3 text-success">
+          <i class="bi bi-heart-fill"></i>
+          {% if session.get('lang') == 'hi' %} हमारा मुख्य उद्देश्य {% else %}
+          Our Core Purpose {% endif %}
+        </h4>
+
+        <p class="lead">
+          {% if session.get('lang') == 'hi' %} यह प्लेटफॉर्म विशेष रूप से गरीब,
+          असहाय और जरूरतमंद मरीजों की सहायता के लिए बनाया गया है। हमारा उद्देश्य
+          केवल इलाज तक सीमित नहीं है, बल्कि इलाज के बाद भी मरीजों की मदद करना
+          है। {% else %} This platform has been specially designed to support
+          poor, helpless, and needy patients. Our goal is not limited to medical
+          treatment alone, but also to help patients even after treatment. {%
+          endif %}
+        </p>
+
+        <p>
+          {% if session.get('lang') == 'hi' %} इलाज पूरा होने के बाद, जरूरतमंद
+          मरीज क्लेम फॉर्म के माध्यम से खाने-पीने का सामान और सीमित आर्थिक
+          सहायता प्राप्त कर सकते हैं, ताकि वे सम्मानपूर्वक अपने घर लौट सकें। यही
+          इस परियोजना को बनाने का मेरा मुख्य कारण है। {% else %} After
+          completing treatment, needy patients can receive food supplies and
+          limited financial assistance through a claim form, so that they can
+          return home with dignity. This is the main reason behind creating this
+          project. {% endif %}
+        </p>
+      </div>
+    </div>
+
+    <div class="col-md-12">
+      <div class="card p-4">
+        <h4 class="mb-3">
+          <i class="bi bi-star-fill text-warning"></i>
+          {% if session.get('lang') == 'hi' %} हमारी विशेषताएं {% else %} Our
+          Features {% endif %}
+        </h4>
+        <div class="row">
+          <div class="col-md-4 mb-3">
+            <h5>
+              <i class="bi bi-shield-check text-primary"></i>
+              {% if session.get('lang') == 'hi' %} सुरक्षित और सत्यापित {% else
+              %} Secure & Verified {% endif %}
+            </h5>
+            <p class="text-muted">
+              {% if session.get('lang') == 'hi' %} सभी अस्पताल सरकारी सत्यापित
+              हैं और आधार-आधारित सुरक्षा है। {% else %} All hospitals are
+              government verified with Aadhaar-based security. {% endif %}
+            </p>
+          </div>
+          <div class="col-md-4 mb-3">
+            <h5>
+              <i class="bi bi-lightning-charge text-warning"></i>
+              {% if session.get('lang') == 'hi' %} तेज़ प्रतिक्रिया {% else %}
+              Fast Response {% endif %}
+            </h5>
+            <p class="text-muted">
+              {% if session.get('lang') == 'hi' %} आपातकालीन मामलों में 15-30
+              मिनट में प्रतिक्रिया। {% else %} 15-30 minutes response time for
+              emergency cases. {% endif %}
+            </p>
+          </div>
+          <div class="col-md-4 mb-3">
+            <h5>
+              <i class="bi bi-currency-rupee text-success"></i>
+              {% if session.get('lang') == 'hi' %} निःशुल्क सेवा {% else %} Free
+              Service {% endif %}
+            </h5>
+            <p class="text-muted">
+              {% if session.get('lang') == 'hi' %} मरीजों के लिए पूरी तरह
+              निःशुल्क सेवा। {% else %} Completely free service for patients. {%
+              endif %}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+

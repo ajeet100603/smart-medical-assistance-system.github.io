@@ -1,0 +1,146 @@
+{% extends "patient_base.html" %}
+
+{% block title %}
+{% if session.get('lang') == 'hi' %}
+    मरीज लॉगिन - स्मार्ट मेडिकल सिस्टम
+{% else %}
+    Patient Login - Smart Medical System
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+  <div class="card shadow" style="width: 100%; max-width: 450px; margin-top: 100px">
+    <div class="card-body p-5">
+
+      <!-- Header -->
+      <div class="text-center mb-5">
+        <div class="display-4 text-success mb-3">
+          <i class="bi bi-person-heart"></i>
+        </div>
+
+        <h1 class="h3 mb-2">
+          {% if session.get('lang') == 'hi' %}
+            मरीज लॉगिन
+          {% else %}
+            Patient Login
+          {% endif %}
+        </h1>
+
+
+        <p class="text-muted small">
+          {% if session.get('lang') == 'hi' %}
+            Username, Security Image और Password से सीधे Login करें।
+          {% else %}
+            Login directly using Username, Security Image and Password.
+          {% endif %}
+        </p>
+      </div>
+
+      <!-- Flash Messages -->
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ 'danger' if category == 'danger' else 'warning' if category == 'warning' else 'success' }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+      {% endwith %}
+
+      <!-- Login Form -->
+      <form method="POST" action="{{ url_for('patient_login') }}" id="loginForm">
+
+        <!-- Username -->
+        <div class="mb-4">
+          <label for="username" class="form-label fw-bold">
+            <i class="bi bi-person-badge"></i>
+            {% if session.get('lang') == 'hi' %} Username {% else %} Username {% endif %}
+          </label>
+          <input type="text" class="form-control form-control-lg" id="username" name="username"
+            placeholder="{% if session.get('lang') == 'hi' %}अपना Username दर्ज करें{% else %}Enter your Username{% endif %}"
+            required>
+        </div>
+
+        <!-- Security Image -->
+        <div class="mb-4">
+          <label for="security_image" class="form-label fw-bold">
+            <i class="bi bi-image"></i>
+            {% if session.get('lang') == 'hi' %} सुरक्षा इमेज {% else %} Security Image {% endif %}
+          </label>
+          <select class="form-select form-select-lg" id="security_image" name="security_image" required>
+            <option value="">{% if session.get('lang') == 'hi' %}इमेज चुनें{% else %}Select image{% endif %}</option>
+            <option value="heart">Heart</option>
+            <option value="shield">Shield</option>
+            <option value="star">Star</option>
+            <option value="leaf">Leaf</option>
+            <option value="moon">Moon</option>
+            <option value="sun">Sun</option>
+          </select>
+        </div>
+
+        <!-- Password -->
+        <div class="mb-4">
+          <label for="password" class="form-label fw-bold">
+            <i class="bi bi-lock"></i>
+            {% if session.get('lang') == 'hi' %} पासवर्ड {% else %} Password {% endif %}
+          </label>
+          <input type="password" class="form-control form-control-lg" id="password" name="password"
+            placeholder="{% if session.get('lang') == 'hi' %}अपना Password दर्ज करें{% else %}Enter your Password{% endif %}"
+            required>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="btn btn-primary btn-lg w-100 mb-3">
+          <i class="bi bi-box-arrow-in-right"></i>
+          {% if session.get('lang') == 'hi' %}
+            Login करें
+          {% else %}
+            Login
+          {% endif %}
+        </button>
+      </form>
+
+      <!-- Divider -->
+      <hr class="my-4">
+
+      <!-- Buttons -->
+      <div class="text-center mt-4">
+        <a href="/patient/register" class="btn btn-outline-success btn-sm me-2">
+          <i class="bi bi-person-plus"></i>
+          {% if session.get('lang') == 'hi' %} नया खाता बनाएं {% else %} Create New Account {% endif %}
+        </a>
+        <a href="/" class="btn btn-outline-secondary btn-sm">
+          <i class="bi bi-house"></i>
+          {% if session.get('lang') == 'hi' %} होम पर जाएं {% else %} Back to Home {% endif %}
+        </a>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<style>
+.min-vh-100 { min-height: 100vh !important; }
+.alert-sm { padding: 0.5rem 0.75rem; font-size: 0.875rem; }
+
+
+</style>
+
+
+
+
+<script>
+document.getElementById("loginForm").addEventListener("submit", function (e) {
+  const selectedImage = document.getElementById("security_image").value;
+
+  if (!selectedImage) {
+    e.preventDefault();
+    alert("{% if session.get('lang') == 'hi' %}कृपया सुरक्षा इमेज चुनें{% else %}Please select security image{% endif %}");
+    return false;
+  }
+});
+</script>
+
+{% endblock %}
