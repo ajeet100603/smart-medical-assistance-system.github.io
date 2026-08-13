@@ -1,0 +1,348 @@
+{% extends "patient_base.html" %} {% block title %} {% if session.get('lang') == 'hi' %}
+मरीज पंजीकरण - स्मार्ट मेडिकल सिस्टम {% else %} Patient Registration - Smart
+Medical System {% endif %} {% endblock %} {% block content %}
+<div class="main-container">
+  <!-- TOP NAV BUTTONS -->
+  <div class="mb-3">
+    <a
+      href="/disease/{{ disease.disease_id }}"
+      class="btn btn-outline-secondary"
+    >
+      <i class="bi bi-arrow-left"></i>
+      {% if session.get('lang') == 'hi' %} बीमारी विवरण पर वापस जाएँ {% else %}
+      Back to Disease Details {% endif %}
+    </a>
+
+    <a href="/" class="btn btn-outline-primary ms-2">
+      <i class="bi bi-house"></i>
+      {% if session.get('lang') == 'hi' %} होम {% else %} Home {% endif %}
+    </a>
+  </div>
+
+  <!-- PAGE HEADING -->
+  <h2 class="mb-4">
+    <i class="bi bi-person-plus"></i>
+    {% if session.get('lang') == 'hi' %} मरीज पंजीकरण {% else %} Patient
+    Registration {% endif %}
+  </h2>
+
+  <div class="row">
+    <!-- LEFT FORM -->
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-body">
+          <!-- INFO -->
+          <div class="alert alert-info">
+            <strong
+              >{% if session.get('lang') == 'hi' %} बीमारी:{% else %} Disease:{%
+              endif %}</strong
+            >
+            {{ disease.name }}<br />
+            <strong
+              >{% if session.get('lang') == 'hi' %} अस्पताल:{% else %}
+              Hospital:{% endif %}</strong
+            >
+            {{ hospital.name }}
+          </div>
+
+          <form method="POST" enctype="multipart/form-data">
+            <!-- NAME -->
+            <div class="mb-3">
+              <label class="form-label">
+                {% if session.get('lang') == 'hi' %} पूरा नाम * {% else %} Full
+                Name * {% endif %}
+              </label>
+              <input type="text" class="form-control" name="name" required />
+            </div>
+
+            <!-- GENDER -->
+            <div class="mb-3">
+              <label class="form-label">
+                {% if session.get('lang') == 'hi' %} लिंग * {% else %} Gender *
+                {% endif %}
+              </label>
+              <select name="gender" class="form-control" required>
+                <option value="">
+                  {% if session.get('lang') == 'hi' %} चुनें {% else %} Select
+                  {% endif %}
+                </option>
+                <option>Male</option>
+                <option>Female</option>
+                <option>Other</option>
+              </select>
+            </div>
+
+            <!-- PHONE -->
+            <div class="mb-3">
+              <label class="form-label">
+                {% if session.get('lang') == 'hi' %} फोन नंबर * {% else %} Phone
+                Number * {% endif %}
+              </label>
+              <input
+                type="tel"
+                class="form-control"
+                name="phone"
+                pattern="[6-9]{1}[0-9]{9}"
+                required
+              />
+            </div>
+
+            <!-- EMAIL -->
+            <div class="mb-3">
+              <label class="form-label">
+                {% if session.get('lang') == 'hi' %} ईमेल पता * {% else %} Email
+                Address * {% endif %}
+              </label>
+
+              <input
+                type="email"
+                class="form-control"
+                name="email"
+                required
+                placeholder="{% if session.get('lang') == 'hi' %}उदाहरण: name@gmail.com{% else %}e.g. name@gmail.com{% endif %}"
+              />
+            </div>
+
+            <!-- DOB + AGE -->
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">
+                  {% if session.get('lang') == 'hi' %} जन्म तिथि * {% else %}
+                  Date of Birth * {% endif %}
+                </label>
+                <input
+                  type="date"
+                  class="form-control"
+                  id="dob"
+                  name="dob"
+                  onchange="calculateAge()"
+                  required
+                />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">
+                  {% if session.get('lang') == 'hi' %} उम्र {% else %} Age {%
+                  endif %}
+                </label>
+                <input type="text" class="form-control" id="age" readonly />
+              </div>
+            </div>
+
+            <!-- ADDRESS -->
+            <div class="mb-3">
+              <label class="form-label">
+                {% if session.get('lang') == 'hi' %} पता * {% else %} Address *
+                {% endif %}
+              </label>
+              <textarea
+                class="form-control"
+                name="address"
+                rows="3"
+                required
+              ></textarea>
+            </div>
+
+            <!-- AADHAAR -->
+            <div class="mb-3">
+              <label class="form-label">
+                {% if session.get('lang') == 'hi' %} आधार नंबर * {% else %}
+                Aadhaar Number * {% endif %}
+              </label>
+              <input
+                type="text"
+                class="form-control"
+                name="aadhar_no"
+                pattern="[0-9]{12}"
+                maxlength="12"
+                required
+              />
+            </div>
+
+            <!-- AADHAAR DOC -->
+            <div class="mb-3">
+              <label class="form-label">
+                {% if session.get('lang') == 'hi' %} जन आधार दस्तावेज़ * {% else
+                %} Jan Aadhaar Document * {% endif %}
+              </label>
+              <input
+                type="file"
+                class="form-control"
+                name="aadhar_document"
+                accept=".pdf,.jpg,.jpeg,.png"
+                required
+              />
+            </div>
+
+            <!-- AYUSHMAN -->
+            <div class="mb-3">
+              <label class="form-label">
+                {% if session.get('lang') == 'hi' %} क्या आपके पास आयुष्मान
+                कार्ड है? {% else %} Do you have Ayushman Card? {% endif %}
+              </label>
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="has_ayushman"
+                  value="yes"
+                  onclick="toggleAyushman(true)"
+                />
+                <label class="form-check-label">Yes</label>
+              </div>
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="has_ayushman"
+                  value="no"
+                  checked
+                  onclick="toggleAyushman(false)"
+                />
+                <label class="form-check-label">No</label>
+              </div>
+            </div>
+
+            <div class="mb-3" id="ayushmanBox" style="display: none">
+              <label class="form-label">Ayushman Card Document</label>
+              <input
+                type="file"
+                class="form-control"
+                name="ayushman_document"
+                accept=".jpg,.jpeg,.png,.pdf"
+              />
+            </div>
+
+            <!-- DISEASE DURATION -->
+            <div class="mb-3">
+              <label class="form-label">
+                {% if session.get('lang') == 'hi' %} बीमारी को कितना समय हो गया
+                है? * {% else %} Since how long have you had this disease? * {%
+                endif %}
+              </label>
+              <input
+                type="text"
+                class="form-control"
+                name="disease_duration"
+                required
+                placeholder="{% if session.get('lang') == 'hi' %}
+           जैसे: 3 दिन, 2 महीने, 1 साल
+           {% else %}
+           e.g. 3 days, 2 months, 1 year
+           {% endif %}"
+              />
+            </div>
+
+            <!-- CURRENT CONDITION -->
+            <div class="mb-3">
+              <label class="form-label">
+                {% if session.get('lang') == 'hi' %} वर्तमान स्थिति / हालत * {%
+                else %} Current Condition * {% endif %}
+              </label>
+              <textarea
+                class="form-control"
+                name="current_condition"
+                rows="3"
+                required
+                placeholder="{% if session.get('lang') == 'hi' %}
+              अभी मरीज की हालत कैसी है (जैसे: स्थिर, गंभीर, ठीक हो रही है)
+              {% else %}
+              Describe current condition (stable, critical, improving etc.)
+              {% endif %}"
+              ></textarea>
+            </div>
+            <!-- PROBLEM -->
+            <div class="mb-3">
+              <label class="form-label">
+                {% if session.get('lang') == 'hi' %} समस्या विवरण * {% else %}
+                Problem Description * {% endif %}
+              </label>
+              <textarea
+                class="form-control"
+                name="problem_description"
+                rows="3"
+                required
+              ></textarea>
+            </div>
+
+            <!-- CONSENT -->
+            <div class="form-check mb-3">
+              <input class="form-check-input" type="checkbox" required />
+              <label class="form-check-label">
+                {% if session.get('lang') == 'hi' %} मैं दी गई जानकारी को सही
+                घोषित करता/करती हूँ {% else %} I declare the information
+                provided is correct {% endif %}
+              </label>
+            </div>
+
+            <!-- BUTTONS -->
+            <button type="submit" class="btn btn-primary btn-lg">
+              {% if session.get('lang') == 'hi' %} सबमिट करें {% else %} Submit
+              {% endif %}
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT INFO -->
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-body">
+          <h5>
+            {% if session.get('lang') == 'hi' %} महत्वपूर्ण जानकारी {% else %}
+            Important Notes {% endif %}
+          </h5>
+          <ul class="list-unstyled">
+            <li>
+              ✔ {% if session.get('lang') == 'hi' %} सभी * फ़ील्ड अनिवार्य {%
+              else %} All * fields are required {% endif %}
+            </li>
+            <li>
+              ✔ {% if session.get('lang') == 'hi' %} अस्पताल समीक्षा करेगा {%
+              else %} Hospital will review {% endif %}
+            </li>
+            <li>
+              🔒 {% if session.get('lang') == 'hi' %} डेटा सुरक्षित {% else %}
+              Data is secure {% endif %}
+            </li>
+            
+         
+
+
+
+            
+
+
+
+
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function calculateAge() {
+    const dob = document.getElementById("dob").value;
+    if (!dob) return;
+    const birth = new Date(dob);
+    const today = new Date();
+    let age = today.getFullYear() - birth.getFullYear();
+    if (
+      today.getMonth() < birth.getMonth() ||
+      (today.getMonth() === birth.getMonth() &&
+        today.getDate() < birth.getDate())
+    )
+      age--;
+    document.getElementById("age").value = age + " Years";
+  }
+
+  function toggleAyushman(show) {
+    document.getElementById("ayushmanBox").style.display = show
+      ? "block"
+      : "none";
+  }
+</script>
+
+{% endblock %}

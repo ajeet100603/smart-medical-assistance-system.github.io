@@ -1,0 +1,186 @@
+<!-- Footer with FAQs -->
+<footer class="bg-dark text-light mt-5 py-5">
+    <div class="container">
+        <div class="row g-4">
+            <!-- Quick Links -->
+            <div class="col-md-3">
+                <h5>
+                    {% if session.get('lang') == 'hi' %}
+                        त्वरित लिंक
+                    {% else %}
+                        Quick Links
+                    {% endif %}
+                </h5>
+                <ul class="list-unstyled">
+                    <li><a href="/about" class="text-light text-decoration-none">
+                        {% if session.get('lang') == 'hi' %}हमारे बारे में{% else %}About Us{% endif %}
+                    </a></li>
+                    <li><a href="/contact" class="text-light text-decoration-none">
+                        {% if session.get('lang') == 'hi' %}संपर्क करें{% else %}Contact{% endif %}
+                    </a></li>
+                    <li><a href="/privacy" class="text-light text-decoration-none">
+                        {% if session.get('lang') == 'hi' %}गोपनीयता नीति{% else %}Privacy Policy{% endif %}
+                    </a></li>
+                    <li><a href="/terms" class="text-light text-decoration-none">
+                        {% if session.get('lang') == 'hi' %}नियम और शर्तें{% else %}Terms & Conditions{% endif %}
+                    </a></li>
+                </ul>
+            </div>
+
+            <!-- Patient FAQs -->
+            {% if session.get('user_role') == 'patient' or not session.get('user_role') %}
+            <div class="col-md-3">
+                <h5>
+                    {% if session.get('lang') == 'hi' %}
+                        रोगी FAQs
+                    {% else %}
+                        Patient FAQs
+                    {% endif %}
+                </h5>
+                <div class="accordion accordion-flush" id="patientFAQs">
+                    <div class="accordion-item bg-transparent border-0">
+                        <h6 class="accordion-header">
+                            <button class="accordion-button collapsed bg-transparent text-light" type="button" data-bs-toggle="collapse" data-bs-target="#patientFAQ1">
+                                {% if session.get('lang') == 'hi' %}कैसे रजिस्टर करें?{% else %}How to register?{% endif %}
+                            </button>
+                        </h6>
+                        <div id="patientFAQ1" class="accordion-collapse collapse" data-bs-parent="#patientFAQs">
+                            <div class="accordion-body text-light small">
+                                {% if session.get('lang') == 'hi' %}
+                                    बीमारी खोजें, अस्पताल चुनें, और फॉर्म भरें।
+                                {% else %}
+                                    Search disease, select hospital, and fill the form.
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item bg-transparent border-0">
+                        <h6 class="accordion-header">
+                            <button class="accordion-button collapsed bg-transparent text-light" type="button" data-bs-toggle="collapse" data-bs-target="#patientFAQ2">
+                                {% if session.get('lang') == 'hi' %}क्लेम कैसे करें?{% else %}How to claim?{% endif %}
+                            </button>
+                        </h6>
+                        <div id="patientFAQ2" class="accordion-collapse collapse" data-bs-parent="#patientFAQs">
+                            <div class="accordion-body text-light small">
+                                {% if session.get('lang') == 'hi' %}
+                                    उपचार पूरा होने के बाद क्लेम फॉर्म जमा करें।
+                                {% else %}
+                                    Submit claim form after treatment completion.
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Hospital FAQs -->
+            {% if session.get('user_role') == 'hospital' or not session.get('user_role') %}
+            <div class="col-md-3">
+                <h5>
+                    {% if session.get('lang') == 'hi' %}
+                        अस्पताल FAQs
+                    {% else %}
+                        Hospital FAQs
+                    {% endif %}
+                </h5>
+                <div class="accordion accordion-flush" id="hospitalFAQs">
+                    <div class="accordion-item bg-transparent border-0">
+                        <h6 class="accordion-header">
+                            <button class="accordion-button collapsed bg-transparent text-light" type="button" data-bs-toggle="collapse" data-bs-target="#hospitalFAQ1">
+                                {% if session.get('lang') == 'hi' %}उपचार रिपोर्ट कैसे जमा करें?{% else %}How to submit treatment report?{% endif %}
+                            </button>
+                        </h6>
+                        <div id="hospitalFAQ1" class="accordion-collapse collapse" data-bs-parent="#hospitalFAQs">
+                            <div class="accordion-body text-light small">
+                                {% if session.get('lang') == 'hi' %}
+                                    अनुरोध विवरण पेज पर "उपचार रिपोर्ट भरें" बटन पर क्लिक करें।
+                                {% else %}
+                                    Click "Fill Treatment Form" button on request detail page.
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item bg-transparent border-0">
+                        <h6 class="accordion-header">
+                            <button class="accordion-button collapsed bg-transparent text-light" type="button" data-bs-toggle="collapse" data-bs-target="#hospitalFAQ2">
+                                {% if session.get('lang') == 'hi' %}अस्पताल जानकारी कैसे अपडेट करें?{% else %}How to update hospital info?{% endif %}
+                            </button>
+                        </h6>
+                        <div id="hospitalFAQ2" class="accordion-collapse collapse" data-bs-parent="#hospitalFAQs">
+                            <div class="accordion-body text-light small">
+                                {% if session.get('lang') == 'hi' %}
+                                    Account मेनू से "Hospital Info" पर जाएं और अपडेट करें।
+                                {% else %}
+                                    Go to Account menu → Hospital Info and update.
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Admin FAQs -->
+            {% if session.get('user_role') == 'admin' or not session.get('user_role') %}
+            <div class="col-md-3">
+                <h5>
+                    {% if session.get('lang') == 'hi' %}
+                        एडमिन FAQs
+                    {% else %}
+                        Admin FAQs
+                    {% endif %}
+                </h5>
+                <div class="accordion accordion-flush" id="adminFAQs">
+                    <div class="accordion-item bg-transparent border-0">
+                        <h6 class="accordion-header">
+                            <button class="accordion-button collapsed bg-transparent text-light" type="button" data-bs-toggle="collapse" data-bs-target="#adminFAQ1">
+                                {% if session.get('lang') == 'hi' %}अस्पताल को कैसे approve करें?{% else %}How to approve hospital?{% endif %}
+                            </button>
+                        </h6>
+                        <div id="adminFAQ1" class="accordion-collapse collapse" data-bs-parent="#adminFAQs">
+                            <div class="accordion-body text-light small">
+                                {% if session.get('lang') == 'hi' %}
+                                    Hospitals पेज पर pending hospitals देखें और approve करें।
+                                {% else %}
+                                    View pending hospitals on Hospitals page and approve.
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item bg-transparent border-0">
+                        <h6 class="accordion-header">
+                            <button class="accordion-button collapsed bg-transparent text-light" type="button" data-bs-toggle="collapse" data-bs-target="#adminFAQ2">
+                                {% if session.get('lang') == 'hi' %}बीमारी को कैसे approve करें?{% else %}How to approve disease?{% endif %}
+                            </button>
+                        </h6>
+                        <div id="adminFAQ2" class="accordion-collapse collapse" data-bs-parent="#adminFAQs">
+                            <div class="accordion-body text-light small">
+                                {% if session.get('lang') == 'hi' %}
+                                    Diseases पेज पर pending diseases देखें और approve करें।
+                                {% else %}
+                                    View pending diseases on Diseases page and approve.
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <hr class="bg-light my-4">
+
+        <div class="row">
+            <div class="col-12 text-center">
+                <p class="mb-0">
+                    {% if session.get('lang') == 'hi' %}
+                        © 2026 स्मार्ट मेडिकल सहायता प्रणाली। सर्वाधिकार सुरक्षित।
+                    {% else %}
+                        © 2026 Smart Medical Assistance System. All rights reserved.
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>

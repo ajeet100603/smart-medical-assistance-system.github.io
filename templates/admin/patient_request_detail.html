@@ -1,0 +1,51 @@
+{% extends "admin_base.html" %}
+
+{% block title %}Patient Request Detail{% endblock %}
+
+{% block navbar %}
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+    <div class="container">
+        <a class="navbar-brand" href="/admin/dashboard">
+            <i class="bi bi-shield-lock"></i> Admin Panel
+        </a>
+        <div class="navbar-nav ms-auto">
+            <a class="nav-link" href="/admin/dashboard">Dashboard</a>
+            <a class="nav-link" href="/admin/patient-requests">Patient Requests</a>
+            <a class="nav-link" href="/admin/logout">Logout</a>
+        </div>
+    </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="main-container">
+    <a href="/admin/patient-requests" class="btn btn-outline-secondary btn-sm mb-3">
+        <i class="bi bi-arrow-left"></i> Back
+    </a>
+
+    <h3>Patient Request Details</h3>
+    <hr>
+
+    <p><strong>Request ID:</strong> #{{ request.request_id }}</p>
+    <p><strong>Patient Name:</strong> {{ request.patient.name }}</p>
+    <p><strong>Phone:</strong> {{ request.patient.phone }}</p>
+    <p><strong>Disease:</strong> {{ request.disease.name }}</p>
+    <p><strong>Hospital:</strong> {{ request.hospital.name }}</p>
+    <p><strong>Status:</strong> {{ request.status }}</p>
+    <p><strong>Submitted On:</strong> {{ request.created_at.strftime('%d %b %Y, %I:%M %p') }}</p>
+
+    {% if treatment_report %}
+        <hr>
+        <h4>Treatment Report</h4>
+        <p><strong>Total Expense:</strong> ₹{{ treatment_report.total_expense }}</p>
+        <p><strong>Report Status:</strong> {{ treatment_report.status }}</p>
+        <a href="/admin/treatment-report/{{ treatment_report.report_id }}" class="btn btn-sm btn-primary">
+            View Treatment Report
+        </a>
+    {% else %}
+        <p class="text-warning mt-3">
+            Treatment report not submitted yet.
+        </p>
+    {% endif %}
+</div>
+{% endblock %}

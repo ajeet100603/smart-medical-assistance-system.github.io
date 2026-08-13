@@ -1,0 +1,414 @@
+{% extends "patient_base.html" %} {% block title %} {% if session.get('lang') ==
+'hi' %} बीमारी खोजें - स्मार्ट मेडिकल सिस्टम {% else %} Search Disease - Smart
+Medical System {% endif %} {% endblock %} {% block extra_css %}
+<style>
+  .search-container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .suggestions-list {
+    position: absolute;
+    z-index: 1000;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    max-height: 300px;
+    overflow-y: auto;
+    width: 100%;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .suggestion-item {
+    padding: 10px 15px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+  }
+
+  .suggestion-item:hover {
+    background: #f8f9fa;
+  }
+</style>
+{% endblock %} {% block content %}
+<div class="main-container">
+  <div class="mb-3">
+    <a href="/" class="btn btn-outline-primary">
+      <i class="bi bi-house"></i>
+      {% if session.get('lang') == 'hi' %}होम{% else %}Home{% endif %}
+    </a>
+  </div>
+
+  <div class="search-container">
+    <h2 class="text-center mb-4">
+      <i class="bi bi-search"></i>
+      {% if session.get('lang') == 'hi' %} अपनी बीमारी खोजें {% else %} Search
+      for Your Disease {% endif %}
+    </h2>
+
+    <form method="POST" action="/search-disease" class="mb-3" id="searchForm">
+      <div class="input-group input-group-lg position-relative">
+        <input
+          type="text"
+          class="form-control"
+          id="diseaseSearch"
+          name="query"
+          value="{{ request.args.get('query', '') }}"
+          placeholder="{% if session.get('lang') == 'hi' %}
+                                   बीमारी का नाम लिखें (जैसे: डेंगू, कैंसर, हृदय रोग)
+                                   {% else %}
+                                   Type disease name (e.g., Dengue, Cancer, Heart Problem)
+                                   {% endif %}"
+          autocomplete="off"
+          required
+        />
+        <button class="btn btn-primary" type="submit">
+          <i class="bi bi-search"></i>
+          {% if session.get('lang') == 'hi' %}खोजें{% else %}Search{% endif %}
+        </button>
+      </div>
+      <div
+        id="suggestions"
+        class="suggestions-list"
+        style="display: none"
+      ></div>
+    </form>
+
+    <div class="text-center mb-4">
+      <p class="text-muted">
+        {% if session.get('lang') == 'hi' %} या नीचे दी गई लोकप्रिय बीमारियों पर
+        क्लिक करें {% else %} Or click on popular diseases below to get started
+        {% endif %}
+      </p>
+    </div>
+
+    <!-- All Available Diseases -->
+    {% if all_diseases %}
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title">
+          <i class="bi bi-list-check"></i>
+          {% if session.get('lang') == 'hi' %} सभी उपलब्ध बीमारियाँ ({{ all_diseases|length }}) {% else %}
+          All Available Diseases ({{ all_diseases|length }}) {% endif %}
+        </h5>
+        <div class="d-flex flex-wrap gap-2">
+          {% for disease in all_diseases %}
+            <a href="/disease/{{ disease.disease_id }}" class="badge bg-primary p-2 text-decoration-none">
+              {{ disease.name }}
+            </a>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">
+          <i class="bi bi-info-circle"></i>
+          {% if session.get('lang') == 'hi' %} लोकप्रिय बीमारियाँ {% else %}
+          Popular Diseases {% endif %}
+        </h5>
+
+        <div class="row">
+          <!-- LEFT COLUMN -->
+          <div class="col-md-6">
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">
+                <a href="/search-disease?query=General Physician">
+                  {% if session.get('lang') == 'hi' %} सामान्य चिकित्सक {% else
+                  %} General Physician {% endif %}
+                </a>
+              </li>
+
+              <li class="list-group-item">
+                <a href="/search-disease?query=Cardiologist">
+                  {% if session.get('lang') == 'hi' %} हृदय रोग विशेषज्ञ {% else
+                  %} Cardiologist {% endif %}
+                </a>
+              </li>
+
+              <li class="list-group-item">
+                <a href="/search-disease?query=Neurologist">
+                  {% if session.get('lang') == 'hi' %} न्यूरोलॉजिस्ट {% else %}
+                  Neurologist {% endif %}
+                </a>
+              </li>
+
+              <li class="list-group-item">
+                <a href="/search-disease?query=Orthopedic">
+                  {% if session.get('lang') == 'hi' %} हड्डी रोग विशेषज्ञ {%
+                  else %} Orthopedic disease {% endif %}
+                </a>
+              </li>
+
+              <li class="list-group-item">
+                <a href="/search-disease?query=Pediatrician">
+                  {% if session.get('lang') == 'hi' %} बाल रोग विशेषज्ञ {% else
+                  %} Pediatrician {% endif %}
+                </a>
+              </li>
+
+              <li class="list-group-item">
+                <a href="/search-disease?query=Gynecologist">
+                  {% if session.get('lang') == 'hi' %} स्त्री रोग विशेषज्ञ {%
+                  else %} Gynecologist {% endif %}
+                </a>
+              </li>
+
+              <li class="list-group-item">
+                <a href="/search-disease?query=Dermatologist">
+                  {% if session.get('lang') == 'hi' %} त्वचा रोग विशेषज्ञ {%
+                  else %} Dermatologist {% endif %}
+                </a>
+              </li>
+
+              <li class="list-group-item">
+                <a href="/search-disease?query=ENT">
+                  {% if session.get('lang') == 'hi' %} कान-नाक-गला विशेषज्ञ {%
+                  else %} ENT disease {% endif %}
+                </a>
+              </li>
+
+              <li class="list-group-item">
+                <a href="/search-disease?query=Psychiatrist">
+                  {% if session.get('lang') == 'hi' %} मनोचिकित्सक {% else %}
+                  Psychiatrist {% endif %}
+                </a>
+              </li>
+
+              <li class="list-group-item">
+                <a href="/search-disease?query=Oncologist">
+                  {% if session.get('lang') == 'hi' %} कैंसर विशेषज्ञ {% else %}
+                  Oncologist {% endif %}
+                </a>
+              </li>
+
+              <li class="list-group-item">
+                <a href="/search-disease?query=Nephrologist">
+                  {% if session.get('lang') == 'hi' %} किडनी रोग विशेषज्ञ {%
+                  else %} Nephrologist {% endif %}
+                </a>
+              </li>
+
+              <li class="list-group-item">
+                <a href="/search-disease?query=Pulmonologist">
+                  {% if session.get('lang') == 'hi' %} फेफड़े रोग विशेषज्ञ {%
+                  else %} Pulmonologist {% endif %}
+                </a>
+              </li>
+
+              <li class="list-group-item">
+                <a href="/search-disease?query=Gastroenterologist">
+                  {% if session.get('lang') == 'hi' %} पाचन रोग विशेषज्ञ {% else
+                  %} Gastroenterologist {% endif %}
+                </a>
+              </li>
+
+              <li class="list-group-item">
+                <a href="/search-disease?query=Urologist">
+                  {% if session.get('lang') == 'hi' %} मूत्र रोग विशेषज्ञ {%
+                  else %} Urologist {% endif %}
+                </a>
+              </li>
+
+              <li class="list-group-item">
+                <a href="/search-disease?query=Radiologist">
+                  {% if session.get('lang') == 'hi' %} रेडियोलॉजिस्ट {% else %}
+                  Radiologist {% endif %}
+                </a>
+              </li>
+
+              <li class="list-group-item">
+                <a href="/search-disease?query=Surgeon">
+                  {% if session.get('lang') == 'hi' %} सर्जन {% else %} Surgeon
+                  {% endif %}
+                </a>
+              </li>
+
+              <li class="list-group-item">
+                <a href="/search-disease?query=Physiotherapist">
+                  {% if session.get('lang') == 'hi' %} फिजियोथेरेपिस्ट {% else
+                  %} Physiotherapist {% endif %}
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- RIGHT COLUMN -->
+          <div class="col-md-6">
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">
+                <a href="/search-disease?query=Emergency Doctor">
+                  {% if session.get('lang') == 'hi' %} आपातकालीन डॉक्टर {% else
+                  %} Emergency Doctor {% endif %}
+                </a>
+              </li>
+
+              <li class="list-group-item">
+                <a href="/search-disease?query=Neurosurgeon">
+                  {% if session.get('lang') == 'hi' %} न्यूरो सर्जन {% else %}
+                  Neurosurgeon {% endif %}
+                </a>
+              </li>
+
+              <li class="list-group-item">
+                <a href="/search-disease?query=Plastic Surgeon">
+                  {% if session.get('lang') == 'hi' %} प्लास्टिक सर्जन {% else
+                  %} Plastic Surgeon {% endif %}
+                </a>
+              </li>
+
+              <li class="list-group-item">
+                <a href="/search-disease?query=Anesthesiologist">
+                  {% if session.get('lang') == 'hi' %} एनेस्थीसियोलॉजिस्ट {%
+                  else %} Anesthesiologist {% endif %}
+                </a>
+              </li>
+
+              <li class="list-group-item">
+                <a href="/search-disease?query=Immunologist">
+                  {% if session.get('lang') == 'hi' %} इम्यूनोलॉजिस्ट {% else %}
+                  Immunologist {% endif %}
+                </a>
+              </li>
+
+              <li class="list-group-item">
+                <a href="/search-disease?query=Infectious Disease disease">
+                  {% if session.get('lang') == 'hi' %} संक्रामक रोग विशेषज्ञ {%
+                  else %} Infectious Disease disease {% endif %}
+                </a>
+              </li>
+
+              <li class="list-group-item">
+                <a href="/search-disease?query=Neonatologist">
+                  {% if session.get('lang') == 'hi' %} नियोनेटोलॉजिस्ट {% else
+                  %} Neonatologist {% endif %}
+                </a>
+              </li>
+
+              <li class="list-group-item">
+                <a href="/search-disease?query=Geriatrician">
+                  {% if session.get('lang') == 'hi' %} वृद्ध रोग विशेषज्ञ {%
+                  else %} Geriatrician {% endif %}
+                </a>
+              </li>
+
+              <li class="list-group-item">
+                <a href="/search-disease?query=Rheumatologist">
+                  {% if session.get('lang') == 'hi' %} गठिया रोग विशेषज्ञ {%
+                  else %} Rheumatologist {% endif %}
+                </a>
+              </li>
+
+              <li class="list-group-item">
+                <a href="/search-disease?query=Sleep disease">
+                  {% if session.get('lang') == 'hi' %} नींद रोग विशेषज्ञ {% else
+                  %} Sleep disease {% endif %}
+                </a>
+              </li>
+
+              <li class="list-group-item">
+                <a href="/search-disease?query=Sports Medicine disease">
+                  {% if session.get('lang') == 'hi' %} खेल चिकित्सा विशेषज्ञ {%
+                  else %} Sports Medicine disease {% endif %}
+                </a>
+              </li>
+
+              <li class="list-group-item">
+                <a href="/search-disease?query=Family Physician">
+                  {% if session.get('lang') == 'hi' %} फैमिली फिजिशियन {% else
+                  %} Family Physician {% endif %}
+                </a>
+              </li>
+
+              <li class="list-group-item">
+                <a href="/search-disease?query=Palliative Care Doctor">
+                  {% if session.get('lang') == 'hi' %} पेलिएटिव केयर डॉक्टर {%
+                  else %} Palliative Care Doctor {% endif %}
+                </a>
+              </li>
+
+              <li class="list-group-item">
+                <a href="/search-disease?query=Forensic Doctor">
+                  {% if session.get('lang') == 'hi' %} फॉरेंसिक डॉक्टर {% else
+                  %} Forensic Doctor {% endif %}
+                </a>
+              </li>
+
+              <li class="list-group-item">
+                <a href="/search-disease?query=Microbiologist">
+                  {% if session.get('lang') == 'hi' %} माइक्रोबायोलॉजिस्ट {%
+                  else %} Microbiologist {% endif %}
+                </a>
+              </li>
+
+              <li class="list-group-item">
+                <a href="/search-disease?query=Genetic disease">
+                  {% if session.get('lang') == 'hi' %} जेनेटिक स्पेशलिस्ट {%
+                  else %} Genetic disease {% endif %}
+                </a>
+              </li>
+
+              <li class="list-group-item">
+                <a href="/search-disease?query=Rehabilitation Doctor">
+                  {% if session.get('lang') == 'hi' %} रिहैबिलिटेशन डॉक्टर {%
+                  else %} Rehabilitation Doctor {% endif %}
+                </a>
+              </li>
+
+              <li class="list-group-item">
+                <a href="/search-disease?query=Community Medicine Doctor">
+                  {% if session.get('lang') == 'hi' %} कम्युनिटी मेडिसिन डॉक्टर
+                  {% else %} Community Medicine Doctor {% endif %}
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document
+    .getElementById("diseaseSearch")
+    .addEventListener("input", function (e) {
+      const query = e.target.value.trim();
+      const suggestionsDiv = document.getElementById("suggestions");
+
+      if (query.length < 2) {
+        suggestionsDiv.style.display = "none";
+        return;
+      }
+
+      fetch(`/api/disease-suggestions?q=${encodeURIComponent(query)}`)
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.length > 0) {
+            suggestionsDiv.innerHTML = data
+              .map(
+                (item) =>
+                  `<div class="suggestion-item" onclick="selectDisease(${item.id}, '${item.name}')">${item.name}</div>`,
+              )
+              .join("");
+            suggestionsDiv.style.display = "block";
+          } else {
+            suggestionsDiv.style.display = "none";
+          }
+        });
+    });
+
+  function selectDisease(id, name) {
+    window.location.href = `/disease/${id}`;
+  }
+
+  document.addEventListener("click", function (e) {
+    const suggestions = document.getElementById("suggestions");
+    const searchInput = document.getElementById("diseaseSearch");
+    if (!suggestions.contains(e.target) && e.target !== searchInput) {
+      suggestions.style.display = "none";
+    }
+  });
+</script>
+{% endblock %}

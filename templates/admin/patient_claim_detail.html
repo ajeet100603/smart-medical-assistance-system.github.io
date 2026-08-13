@@ -1,0 +1,170 @@
+{% extends "admin_base.html" %}
+
+{% block title %}Patient Claim Details - Admin{% endblock %}
+
+{% block navbar %}
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+    <div class="container">
+        <a class="navbar-brand" href="/admin/dashboard">
+            <i class="bi bi-shield-lock"></i> Admin Panel
+        </a>
+        <div class="navbar-nav ms-auto">
+            <a class="nav-link" href="/admin/patient-claims">Back to Claims</a>
+            <a class="nav-link" href="/admin/dashboard">Dashboard</a>
+            <a class="nav-link" href="/admin/logout">Logout</a>
+        </div>
+    </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="main-container">
+    <div class="mb-3">
+        <a href="/admin/patient-claims" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Claims
+        </a>
+    </div>
+
+    <h2 class="mb-4">
+        <i class="bi bi-file-earmark-check"></i> Patient Claim #{{ claim.claim_id }}
+    </h2>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5>Claim Status / क्लेम स्थिति</h5>
+        </div>
+        <div class="card-body">
+            <span class="badge 
+                {% if claim.status == 'pending' %}bg-warning
+                {% elif claim.status == 'payment_sent' %}bg-success
+                {% elif claim.status == 'order_placed' %}bg-info
+                {% elif claim.status == 'completed' %}bg-success
+                {% endif %} fs-6">
+                {{ claim.status|title }}
+            </span>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5>Patient Confirmation Details / रोगी पुष्टिकरण विवरण</h5>
+        </div>
+        <div class="card-body">
+            <p><strong>Patient Serial Number / रोगी सीरियल नंबर:</strong> {{ claim.patient_serial_number }}</p>
+            <p><strong>Name / नाम:</strong> {{ claim.patient_name }}</p>
+            <p><strong>Address / पता:</strong> {{ claim.address }}</p>
+            <p><strong>Disease / Injury / बीमारी / चोट:</strong> {{ claim.disease_injury }}</p>
+            <p><strong>Treatment Period / उपचार अवधि:</strong> 
+                {{ claim.treatment_from_date.strftime('%d %b %Y') if claim.treatment_from_date else 'N/A' }} - 
+                {{ claim.treatment_to_date.strftime('%d %b %Y') if claim.treatment_to_date else 'N/A' }}
+            </p>
+            <p><strong>Current Condition / वर्तमान स्थिति:</strong> {{ claim.current_condition or 'N/A' }}</p>
+            {% if claim.medical_report_url %}
+            <p><strong>Medical Report / चिकित्सा रिपोर्ट:</strong> 
+                <a href="/{{ claim.medical_report_url }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                    <i class="bi bi-download"></i> View Report
+                </a>
+            </p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5>Claim Type / क्लेम प्रकार</h5>
+        </div>
+        <div class="card-body">
+            {% if claim.claim_type == 'paisa_claim' %}
+                <span class="badge bg-primary fs-6">💰 Paisa Claim / पैसा क्लेम (Financial Help / वित्तीय सहायता)</span>
+                <hr>
+                {% if claim.payment_method == 'bank' %}
+                <h6>Bank Details / बैंक विवरण:</h6>
+                <p><strong>Bank Name / बैंक का नाम:</strong> {{ claim.bank_name or 'N/A' }}</p>
+                <p><strong>Account Holder / खाता धारक:</strong> {{ claim.account_holder_name or 'N/A' }}</p>
+                <p><strong>Account Number / खाता संख्या:</strong> {{ claim.account_number or 'N/A' }}</p>
+                <p><strong>IFSC Code / IFSC कोड:</strong> {{ claim.ifsc_code or 'N/A' }}</p>
+                {% elif claim.payment_method == 'upi' %}
+                <h6>UPI Details:</h6>
+                <p><strong>UPI ID:</strong> {{ claim.upi_id or 'N/A' }}</p>
+                <p><strong>Name / नाम:</strong> {{ claim.upi_name or 'N/A' }}</p>
+                {% elif claim.payment_method == 'qr_code' %}
+                <h6>QR Code / QR कोड:</h6>
+                {% if claim.qr_code_url %}
+                <img src="/{{ claim.qr_code_url }}" alt="QR Code" class="img-thumbnail" style="max-width: 200px;">
+                {% else %}
+                <p>QR Code not available</p>
+                {% endif %}
+                {% endif %}
+            {% elif claim.claim_type == 'samaan_claim' %}
+                <span class="badge bg-info fs-6">🧺 Food / Essentials / खाना / आवश्यक सामान</span>
+                <hr>
+                <h6>Delivery Details / डिलीवरी विवरण:</h6>
+                <p><strong>Receiver Name / प्राप्तकर्ता का नाम:</strong> {{ claim.receiver_name or 'N/A' }}</p>
+                <p><strong>Mobile Number / मोबाइल नंबर:</strong> {{ claim.receiver_mobile or 'N/A' }}</p>
+                <p><strong>Delivery Address / डिलीवरी का पता:</strong> {{ claim.delivery_address or 'N/A' }}</p>
+                <p><strong>Pincode / पिनकोड:</strong> {{ claim.pincode or 'N/A' }}</p>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if claim.admin_notes %}
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5>Admin Notes</h5>
+        </div>
+        <div class="card-body">
+            <p>{{ claim.admin_notes }}</p>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if claim.status == 'pending' %}
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">Process Claim / क्लेम प्रोसेस करें</h5>
+        </div>
+        <div class="card-body">
+            <form method="POST" action="/admin/patient-claim/{{ claim.claim_id }}/process">
+                {% if claim.claim_type == 'paisa_claim' %}
+                <div class="mb-3">
+                    <label for="transaction_id" class="form-label">Transaction ID / लेनदेन ID</label>
+                    <input type="text" class="form-control" id="transaction_id" name="transaction_id" 
+                           placeholder="Enter transaction ID / लेनदेन ID दर्ज करें">
+                </div>
+                <button type="submit" name="action" value="payment" class="btn btn-success btn-lg" 
+                        onclick="return confirm('Are you sure you want to mark payment as sent?');">
+                    <i class="bi bi-check-circle"></i> Mark Payment Sent / भुगतान भेजा गया मार्क करें
+                </button>
+                {% elif claim.claim_type == 'samaan_claim' %}
+                <div class="mb-3">
+                    <label for="order_id" class="form-label">Order ID / ऑर्डर ID</label>
+                    <input type="text" class="form-control" id="order_id" name="order_id" 
+                           placeholder="Enter order ID / ऑर्डर ID दर्ज करें">
+                </div>
+                <button type="submit" name="action" value="order" class="btn btn-info btn-lg" 
+                        onclick="return confirm('Are you sure you want to mark order as placed?');">
+                    <i class="bi bi-check-circle"></i> Mark Order Placed / ऑर्डर रखा गया मार्क करें
+                </button>
+                {% endif %}
+                
+                <div class="mb-3 mt-3">
+                    <label for="admin_notes" class="form-label">Admin Notes (Optional) / एडमिन नोट्स (वैकल्पिक)</label>
+                    <textarea class="form-control" id="admin_notes" name="admin_notes" rows="3" 
+                              placeholder="Add any notes / कोई नोट्स जोड़ें"></textarea>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-success">
+        <i class="bi bi-check-circle"></i> Claim has been processed.
+        {% if claim.transaction_id %}
+        <br><strong>Transaction ID:</strong> {{ claim.transaction_id }}
+        {% endif %}
+        {% if claim.order_id %}
+        <br><strong>Order ID:</strong> {{ claim.order_id }}
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

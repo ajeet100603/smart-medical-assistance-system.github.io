@@ -1,0 +1,136 @@
+{% extends "hospital_base.html" %}
+
+{% block title %}
+{% if session.get('lang') == 'hi' %}
+अस्पताल जानकारी - अस्पताल डैशबोर्ड
+{% else %}
+Hospital Info - Hospital Dashboard
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="main-container">
+    <h2 class="mb-4">
+        <i class="bi bi-hospital"></i>
+        {% if session.get('lang') == 'hi' %}
+        अस्पताल जानकारी
+        {% else %}
+        Hospital Information
+        {% endif %}
+    </h2>
+
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">
+                <i class="bi bi-info-circle"></i>
+                {% if session.get('lang') == 'hi' %}
+                अस्पताल विवरण
+                {% else %}
+                Hospital Details
+                {% endif %}
+            </h5>
+        </div>
+        <div class="card-body">
+            <form method="POST">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">
+                            {% if session.get('lang') == 'hi' %}अस्पताल का नाम{% else %}Hospital Name{% endif %} *
+                        </label>
+                        <input type="text" class="form-control" name="name" value="{{ hospital.name }}" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">
+                            {% if session.get('lang') == 'hi' %}संपर्क नंबर{% else %}Contact Number{% endif %} *
+                        </label>
+                        <input type="tel" class="form-control" name="contact" value="{{ hospital.contact }}" required>
+                    </div>
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label">
+                            {% if session.get('lang') == 'hi' %}पता{% else %}Address{% endif %} *
+                        </label>
+                        <textarea class="form-control" name="address" rows="3" required>{{ hospital.address }}</textarea>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">
+                            {% if session.get('lang') == 'hi' %}विशेषज्ञता{% else %}Speciality{% endif %}
+                        </label>
+                        <input type="text" class="form-control" name="speciality" value="{{ hospital.speciality or '' }}">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">
+                            {% if session.get('lang') == 'hi' %}ईमेल{% else %}Email{% endif %} *
+                        </label>
+                        <input type="email" class="form-control" name="email" value="{{ hospital.email }}" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">
+                            {% if session.get('lang') == 'hi' %}नया पासवर्ड (वैकल्पिक){% else %}New Password (Optional){% endif %}
+                        </label>
+                        <input type="password" class="form-control" name="new_password" placeholder="{% if session.get('lang') == 'hi' %}केवल बदलने के लिए{% else %}Only if changing{% endif %}">
+                        <small class="text-muted">{% if session.get('lang') == 'hi' %}न्यूनतम 6 अक्षर{% else %}Minimum 6 characters{% endif %}</small>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-save"></i>
+                    {% if session.get('lang') == 'hi' %}अपडेट करें{% else %}Update{% endif %}
+                </button>
+                <a href="/hospital/dashboard" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i>
+                    {% if session.get('lang') == 'hi' %}वापस जाएं{% else %}Back{% endif %}
+                </a>
+            </form>
+        </div>
+    </div>
+
+    <!-- Doctors Section -->
+    {% if doctors %}
+    <div class="card">
+        <div class="card-header bg-info text-white">
+            <h5 class="mb-0">
+                <i class="bi bi-person-badge"></i>
+                {% if session.get('lang') == 'hi' %}
+                डॉक्टर जानकारी
+                {% else %}
+                Doctor Information
+                {% endif %}
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                {% for doctor in doctors %}
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-start">
+                                {% if doctor.image_url %}
+                                <img src="/{{ doctor.image_url }}" alt="{{ doctor.name }}" class="img-thumbnail me-3" style="width: 80px; height: 80px; object-fit: cover;">
+                                {% else %}
+                                <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center me-3" style="width: 80px; height: 80px;">
+                                    <i class="bi bi-person-circle" style="font-size: 40px;"></i>
+                                </div>
+                                {% endif %}
+                                <div class="flex-grow-1">
+                                    <h6 class="card-title">{{ doctor.name }}</h6>
+                                    {% if doctor.qualification %}
+                                    <p class="text-muted small mb-1">
+                                        <i class="bi bi-award"></i> {{ doctor.qualification }}
+                                    </p>
+                                    {% endif %}
+                                    {% if doctor.specialization %}
+                                    <p class="text-muted small">
+                                        <i class="bi bi-heart-pulse"></i> {{ doctor.specialization }}
+                                    </p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

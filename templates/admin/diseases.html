@@ -1,0 +1,65 @@
+{% extends "admin_base.html" %}
+
+{% block title %}Manage Diseases - Admin{% endblock %}
+
+{% block navbar %}
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+    <div class="container">
+        <a class="navbar-brand" href="/admin/dashboard">
+            <i class="bi bi-shield-lock"></i> Admin Panel
+        </a>
+        <div class="navbar-nav ms-auto">
+            <a class="nav-link" href="/">
+                <i class="bi bi-house"></i> Home
+            </a>
+            <a class="nav-link" href="/admin/dashboard">Dashboard</a>
+            <a class="nav-link" href="/admin/hospitals">Hospitals</a>
+            <a class="nav-link" href="/admin/logout">Logout</a>
+        </div>
+    </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="main-container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <a href="/admin/dashboard" class="btn btn-outline-secondary btn-sm mb-2">
+                <i class="bi bi-arrow-left"></i> Back to Dashboard
+            </a>
+            <h2 class="mt-2"><i class="bi bi-activity"></i> Manage Diseases</h2>
+            <p class="text-muted small">Note: Diseases are added by hospitals during registration. Admin can only approve/reject them.</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Speciality</th>
+                            <th>Symptoms</th>
+                            <th>Treatment</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for disease in diseases %}
+                        <tr>
+                            <td>{{ disease.disease_id }}</td>
+                            <td><strong>{{ disease.name }}</strong></td>
+                            <td>{{ disease.speciality or 'N/A' }}</td>
+                            <td>{{ disease.symptoms[:50] + '...' if disease.symptoms and disease.symptoms|length > 50 else (disease.symptoms or 'N/A') }}</td>
+                            <td>{{ disease.treatment[:50] + '...' if disease.treatment and disease.treatment|length > 50 else (disease.treatment or 'N/A') }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

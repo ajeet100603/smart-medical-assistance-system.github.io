@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="{{ session.get('lang','en') }}">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      http-equiv="Cache-Control"
+      content="no-cache, no-store, must-revalidate"
+    />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+
+    <title>
+      {% if session.get('lang') == 'hi' %} स्मार्ट मेडिकल सहायता प्रणाली {% else
+      %} Smart Medical Assistance System {% endif %}
+    </title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css"
+    />
+
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #a6adcc 0%, #b1e3b1 100%);
+        min-height: 100vh;
+      }
+      .main-container {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        margin: 20px auto;
+        padding: 30px;
+      }
+      .navbar-custom {
+        background: linear-gradient(135deg, #fafffc, #fbfafc) !important;
+      }
+      .navbar-brand {
+        color: #4b0082 !important;
+        font-weight: 600;
+      }
+      .navbar-nav .nav-link {
+        color: #1b1b1d !important;
+        font-weight: 500;
+      }
+      .navbar-nav .nav-link:hover {
+        color: #764ba2 !important;
+      }
+      .navbar-toggler {
+        border-color: #764ba2;
+      }
+      .navbar-toggler-icon {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28118, 75, 162, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+      }
+      .dropdown-menu {
+        background: white !important;
+        border: 1px solid #ddd;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        min-width: 150px;
+        z-index: 1050;
+      }
+      .dropdown-item {
+        color: #1b1b1d !important;
+        padding: 8px 15px !important;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .dropdown-item:hover {
+        background: #f8f9fa !important;
+        color: #764ba2 !important;
+      }
+      .dropdown-toggle::after {
+        display: inline-block;
+        margin-left: 0.255em;
+        vertical-align: 0.255em;
+        content: "";
+        border-top: 0.3em solid;
+        border-right: 0.3em solid transparent;
+        border-bottom: 0;
+        border-left: 0.3em solid transparent;
+      }
+      .btn-primary {
+        background: linear-gradient(135deg, #1b1b1d, #764ba2);
+        border: none;
+      }
+      .btn-primary:hover {
+        background: linear-gradient(135deg, #764ba2, #667eea);
+        transform: translateY(-2px);
+      }
+      .card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+    </style>
+
+    {% block extra_css %}{% endblock %}
+  </head>
+
+  <body>
+    <!-- ================= NAVBAR ================= -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+      <div class="container">
+        <a class="navbar-brand" href="/">
+          <i class="bi bi-hospital"></i>
+          {% if session.get('lang') == 'hi' %} स्मार्ट मेडिकल सिस्टम {% else %}
+          Smart Medical System {% endif %}
+        </a>
+
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li>
+              <a class="dropdown-item" href="/">
+                <i class="bi bi-house-door"></i>
+                {% if session.get('lang') == 'hi' %} होम पेज {% else %} Home
+                Page {% endif %}
+              </a>
+            </li>
+
+            <!-- LANGUAGE -->
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="languageDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                style="cursor: pointer"
+              >
+                <i class="bi bi-globe"></i>
+                <span
+                  >{% if session.get('lang') == 'hi' %} भाषा {% else %} Language
+                  {% endif %}</span
+                >
+              </a>
+              <ul
+                class="dropdown-menu dropdown-menu-end"
+                aria-labelledby="languageDropdown"
+              >
+                <li>
+                  <a class="dropdown-item" href="/set-language/en">
+                    <i class="bi bi-flag-fill text-primary"></i> English
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="/set-language/hi">
+                    <i class="bi bi-flag-fill text-danger"></i> हिन्दी
+                  </a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ================= FLASH ================= -->
+    <div class="container mt-4">
+      {% with messages = get_flashed_messages(with_categories=true) %} {% for
+      category, message in messages %}
+      <div class="alert alert-{{ category }} alert-dismissible fade show">
+        {{ message }}
+        <button class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+      {% endfor %} {% endwith %} {% block content %}{% endblock %}
+    </div>
+
+    
+    <!-- ================= FOOTER ================= -->
+    <footer class="bg-light border-top mt-5 pt-5 pb-4">
+      <div class="container">
+        <div class="row g-4">
+          <!-- PART 1: ABOUT US -->
+          <div class="col-md-4">
+            <h5 class="fw-bold mb-3">
+              {% if session.get('lang') == 'hi' %} हमारे बारे में {% else %}
+              About Us {% endif %}
+            </h5>
+            <p class="text-muted small">
+              {% if session.get('lang') == 'hi' %} स्मार्ट मेडिकल सहायता प्रणाली
+              मरीजों, अस्पतालों और आपातकालीन सेवाओं को जोड़ने वाला एक विश्वसनीय
+              प्लेटफॉर्म है। हमारा मिशन तेज़, सुरक्षित और सत्यापित चिकित्सा
+              सहायता प्रदान करना है। {% else %} Smart Medical Assistance System
+              is a trusted platform connecting patients, hospitals, and
+              emergency services. Our mission is to provide fast, secure, and
+              verified medical assistance. {% endif %}
+            </p>
+          </div>
+
+          <!-- PART 2: IMPORTANT LINKS -->
+          <div class="col-md-4">
+            <h5 class="fw-bold mb-3">
+              {% if session.get('lang') == 'hi' %} महत्वपूर्ण लिंक {% else %}
+              Important Links {% endif %}
+            </h5>
+            <ul class="list-unstyled">
+              <li class="mb-2">
+                <a href="/about" class="text-muted text-decoration-none">
+                  {% if session.get('lang') == 'hi' %} हमारे बारे में {% else %}
+                  About Us {% endif %}
+                </a>
+              </li>
+              <li class="mb-2">
+                <a href="/privacy" class="text-muted text-decoration-none">
+                  {% if session.get('lang') == 'hi' %} गोपनीयता नीति {% else %}
+                  Privacy Policy {% endif %}
+                </a>
+              </li>
+              <li class="mb-2">
+                <a href="/terms" class="text-muted text-decoration-none">
+                  {% if session.get('lang') == 'hi' %} नियम और शर्तें {% else %}
+                  Terms & Conditions {% endif %}
+                </a>
+              </li>
+              <li class="mb-2">
+                <a href="/contact" class="text-muted text-decoration-none">
+                  {% if session.get('lang') == 'hi' %} सहायता से संपर्क करें {%
+                  else %} Contact Support {% endif %}
+                </a>
+              </li>
+
+              <li class="mb-2">
+                <a href="/faqs" class="text-muted text-decoration-none">
+                  {% if session.get('lang') == 'hi' %} सामान्य प्रश्न (FAQs) {%
+                  else %} FAQS {% endif %}
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- PART 3: SUPPORT & COPYRIGHT -->
+          <div class="col-md-4">
+            <h5 class="fw-bold mb-3">
+              {% if session.get('lang') == 'hi' %} सहायता {% else %} Support {%
+              endif %}
+            </h5>
+
+            <p class="text-muted small mb-3">
+              <i class="bi bi-clock-fill text-warning"></i>
+              {% if session.get('lang') == 'hi' %} 24×7 सहायता उपलब्ध {% else %}
+              24×7 Support Available {% endif %}
+            </p>
+            <p class="text-muted small mb-0">
+              {% if session.get('lang') == 'hi' %} © 2026 स्मार्ट मेडिकल सहायता
+              प्रणाली। सर्वाधिकार सुरक्षित। {% else %} © 2026 Smart Medical
+              Assistance System. All rights reserved. {% endif %}
+            </p>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    {% block extra_js %}{% endblock %}
+  </body>
+</html>

@@ -1,0 +1,509 @@
+<!doctype html>
+<html lang="{{ session.get('lang','en') }}">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      http-equiv="Cache-Control"
+      content="no-cache, no-store, must-revalidate"
+    />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+
+    <title>
+      {% if session.get('lang') == 'hi' %} रोगी पैनल - स्मार्ट मेडिकल सिस्टम {%
+      else %} Patient Panel - Smart Medical System {% endif %}
+    </title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css"
+    />
+
+    <style>
+      html,
+      body {
+        height: 100%;
+      }
+
+      body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+
+  background:
+    linear-gradient(
+      rgba(247, 223, 223, 0.85),
+      rgba(172, 230, 166, 0.85)
+    );
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+
+  display: flex;
+  flex-direction: column;
+}
+.main-container {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(232, 245, 233, 0.92));
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  margin: 20px auto;
+  padding: 30px;
+}
+      .navbar-custom {
+        background: linear-gradient(
+          135deg,
+          #d2f4d4 0%,
+          #c8e6c9 100%
+        ) !important;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      .navbar-brand {
+        color: #2e7d32 !important;
+        font-weight: 700;
+        font-size: 1.3rem;
+      }
+      .navbar-nav .nav-link {
+        color: #1b5e20 !important;
+        font-weight: 600;
+        margin: 0 5px;
+      }
+      .navbar-nav .nav-link:hover {
+        color: #00695c !important;
+        transform: translateY(-2px);
+        transition: all 0.3s ease;
+      }
+      .navbar-toggler {
+        border-color: #2e7d32;
+      }
+      .navbar-toggler-icon {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28046, 125, 050, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+      }
+      .dropdown-menu {
+        background: white !important;
+        border: 2px solid #c8e6c9;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+        min-width: 150px;
+        z-index: 1050;
+      }
+      .dropdown-item {
+        color: #1b5e20 !important;
+        padding: 10px 15px !important;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 500;
+      }
+      .dropdown-item:hover {
+        background: #e8f5e9 !important;
+        color: #00695c !important;
+        border-left: 4px solid #2e7d32;
+      }
+      .dropdown-toggle::after {
+        display: inline-block;
+        margin-left: 0.255em;
+        vertical-align: 0.255em;
+        content: "";
+        border-top: 0.3em solid;
+        border-right: 0.3em solid transparent;
+        border-bottom: 0;
+        border-left: 0.3em solid transparent;
+      }
+      .btn-primary {
+        background: linear-gradient(135deg, #2e7d32, #00695c);
+        border: none;
+        font-weight: 600;
+      }
+      .btn-primary:hover {
+        background: linear-gradient(135deg, #00695c, #004d40);
+        transform: translateY(-2px);
+      }
+      .card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+      .card-header {
+        background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+        border-bottom: 2px solid #2e7d32;
+      }
+      .alert-success {
+        border-left: 4px solid #2e7d32;
+        background: #f1f8e9;
+      }
+      .alert-warning {
+        border-left: 4px solid #f57c00;
+        background: #fff3e0;
+      }
+      .alert-danger {
+        border-left: 4px solid #d32f2f;
+        background: #ffebee;
+      }
+
+
+
+
+      
+      /* ================= SERVICE STRIP ================= */
+
+
+    </style>
+
+    {% block extra_css %}{% endblock %}
+  </head>
+
+  <body>
+    <!-- ================= PATIENT NAVBAR ================= -->
+    <nav class="navbar navbar-expand-lg navbar-light navbar-custom">
+      <div class="container">
+        <a
+          class="navbar-brand"
+          href="{% if session.get('patient_logged_in') and session.get('user_role') == 'patient' %}/patient/panel{% else %}/patient{% endif %}"
+        >
+          <i class="bi bi-person-heart"></i>
+          {% if session.get('lang') == 'hi' %} रोगी पैनल {% else %} Patient
+          Panel {% endif %}
+        </a>
+
+
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#patientNav"
+          aria-controls="patientNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="patientNav">
+          <ul class="navbar-nav ms-auto">
+            {% if session.get('patient_logged_in') and session.get('user_role')
+            == 'patient' %}
+            <li class="nav-item">
+              <a class="nav-link" href="/patient/panel">
+                <i class="bi bi-speedometer2"></i>
+                {% if session.get('lang') == 'hi' %} डैशबोर्ड {% else %}
+                Dashboard {% endif %}
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="/search-disease">
+                <i class="bi bi-search"></i>
+                {% if session.get('lang') == 'hi' %} बीमारी खोजें {% else %}
+                Search Disease {% endif %}
+              </a>
+            </li>
+
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                data-bs-toggle="dropdown"
+              >
+                <i class="bi bi-person-circle"></i>
+                {% if session.get('lang') == 'hi' %} खाता {% else %} Account {%
+                endif %}
+              </a>
+              <ul class="dropdown-menu">
+                <li>
+                  <a class="dropdown-item" href="/patient/panel">
+                    <i class="bi bi-person"></i>
+                    {% if session.get('lang') == 'hi' %} मेरा प्रोफाइल {% else
+                    %} My Profile {% endif %}
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="/set-language/en">
+                    <i class="bi bi-globe"></i>
+                    English
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="/set-language/hi">
+                    <i class="bi bi-globe"></i>
+                    हिन्दी
+                  </a>
+                </li>
+                <li><hr class="dropdown-divider" /></li>
+                <li>
+                  <a class="dropdown-item text-danger" href="/patient/logout">
+                    <i class="bi bi-box-arrow-right"></i>
+                    {% if session.get('lang') == 'hi' %} लॉग आउट {% else %}
+                    Logout {% endif %}
+                  </a>
+                </li>
+              </ul>
+            </li>
+            {% else %}
+
+<li class="nav-item">
+  <a class="nav-link" href="/patient/login">
+    <i class="bi bi-box-arrow-in-right"></i>
+    {% if session.get('lang') == 'hi' %} लॉगिन {% else %} Login {% endif %}
+  </a>
+</li>
+
+<li class="nav-item dropdown">
+  <a
+    class="nav-link dropdown-toggle"
+    href="#"
+    id="homeDropdown"
+    role="button"
+    data-bs-toggle="dropdown"
+    aria-expanded="false"
+  >
+    <i class="bi bi-house"></i>
+    {% if session.get('lang') == 'hi' %} मेन होम {% else %} Main Home {% endif %}
+  </a>
+
+  <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="homeDropdown">
+    <li>
+      <a class="dropdown-item" href="/">
+        <i class="bi bi-house-door"></i>
+        {% if session.get('lang') == 'hi' %} होम पेज {% else %} Home Page {% endif %}
+      </a>
+    </li>
+
+    <li><hr class="dropdown-divider"></li>
+
+    <li>
+      <a class="dropdown-item" href="/set-language/en">
+        <i class="bi bi-globe"></i> English
+      </a>
+    </li>
+
+    <li>
+      <a class="dropdown-item" href="/set-language/hi">
+        <i class="bi bi-globe"></i> हिन्दी
+      </a>
+    </li>
+  </ul>
+</li>
+
+{% endif %}
+
+        
+        </div>
+      </div>
+    </nav>
+
+    <!-- ================= FLASH ================= -->
+    <main class="flex-fill">
+      <div class="container mt-4">
+        {% with messages = get_flashed_messages(with_categories=true) %} {% for
+        category, message in messages %}
+        <div class="alert alert-{{ category }} alert-dismissible fade show">
+          {{ message }}
+          <button class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %} {% endwith %} {% block content %}{% endblock %}
+      </div>
+
+      {% block homepage_content %}
+      <div class="container mt-5">
+        <div class="row text-center mb-5">
+          <div class="col-md-4">
+            <i class="bi bi-shield-lock-fill fs-1 text-primary"></i>
+            <h5 class="mt-3">
+              {% if session.get('lang') == 'hi' %} आधार सुरक्षित {% else %}
+              Aadhaar Secured {% endif %}
+            </h5>
+            <p class="text-muted">
+              {% if session.get('lang') == 'hi' %} आपका व्यक्तिगत और मेडिकल डेटा
+              पूरी तरह सुरक्षित है {% else %} Your personal and medical data is
+              fully protected {% endif %}
+            </p>
+          </div>
+
+          <div class="col-md-4">
+            <i class="bi bi-patch-check-fill fs-1 text-success"></i>
+            <h5 class="mt-3">
+              {% if session.get('lang') == 'hi' %} सत्यापित अस्पताल {% else %}
+              Verified Hospitals {% endif %}
+            </h5>
+            <p class="text-muted">
+              {% if session.get('lang') == 'hi' %} केवल सरकारी सत्यापित अस्पताल
+              सूचीबद्ध हैं {% else %} Only government verified hospitals are
+              listed {% endif %}
+            </p>
+          </div>
+
+          <div class="col-md-4">
+            <i class="bi bi-clock-fill fs-1 text-warning"></i>
+            <h5 class="mt-3">
+              {% if session.get('lang') == 'hi' %} 24×7 सहायता {% else %} 24×7
+              Support {% endif %}
+            </h5>
+            <p class="text-muted">
+              {% if session.get('lang') == 'hi' %} आपातकालीन और सहायता सेवाएं
+              हमेशा उपलब्ध {% else %} Emergency and support services available
+              anytime {% endif %}
+            </p>
+          </div>
+        </div>
+        <div class="row text-center mb-5">
+          <div class="col-md-4">
+            <h2 class="fw-bold text-primary">100+</h2>
+            <p class="text-muted">
+              {% if session.get('lang') == 'hi' %} जुड़े हुए अस्पताल {% else %}
+              Hospitals Connected {% endif %}
+            </p>
+          </div>
+
+          <div class="col-md-4">
+            <h2 class="fw-bold text-success">5000+</h2>
+            <p class="text-muted">
+              {% if session.get('lang') == 'hi' %} सहायता प्राप्त मरीज {% else
+              %} Patients Helped {% endif %}
+            </p>
+          </div>
+
+          <div class="col-md-4">
+            <h2 class="fw-bold text-warning">98%</h2>
+            <p class="text-muted">
+              {% if session.get('lang') == 'hi' %} सफलता दर {% else %} Success
+              Rate {% endif %}
+            </p>
+          </div>
+        </div>
+      </div>
+      {% endblock %}
+    </main>
+
+    <!-- ================= FOOTER ================= -->
+    <footer
+    
+    
+  
+ 
+     class="border-top mt-auto pt-5 pb-4 position-relative text-white"
+  style="
+    background-image: linear-gradient(135deg, #0d6f3e, #1f8f5f);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  "
+   
+
+    style="
+      position:absolute;
+      inset:0;
+      background: rgba(255, 249, 249, 0.47);
+    "
+  >
+  <!-- WHITE OVERLAY -->
+  
+
+  <!-- FOOTER CONTENT -->
+  <div class="container position-relative">
+    <!-- आपका पूरा footer content यहां रहेगा -->
+    
+    
+    
+    
+    
+   
+      
+        <div class="row g-4  ">
+          <!-- PART 1: ABOUT US -->
+          <div class="col-md-4 ">
+            <h5 class="fw-bold mb-3">
+              {% if session.get('lang') == 'hi' %} हमारे बारे में {% else %}
+              About Us {% endif %}
+            </h5>
+            <p class="text-muted small  ">
+              {% if session.get('lang') == 'hi' %} स्मार्ट मेडिकल सहायता प्रणाली
+              मरीजों, अस्पतालों और आपातकालीन सेवाओं को जोड़ने वाला एक विश्वसनीय
+              प्लेटफॉर्म है। हमारा मिशन तेज़, सुरक्षित और सत्यापित चिकित्सा
+              सहायता प्रदान करना है। {% else %} Smart Medical Assistance System
+              is a trusted platform connecting patients, hospitals, and
+              emergency services. Our mission is to provide fast, secure, and
+              verified medical assistance. {% endif %}
+            </p>
+          </div>
+
+          <!-- PART 2: IMPORTANT LINKS -->
+          <div class="col-md-4">
+            <h5 class="fw-bold mb-3">
+              {% if session.get('lang') == 'hi' %} महत्वपूर्ण लिंक {% else %}
+              Important Links {% endif %}
+            </h5>
+            <ul class="list-unstyled">
+              <li class="mb-2">
+                <a href="/about" class="text-muted text-decoration-none">
+                  {% if session.get('lang') == 'hi' %} हमारे बारे में {% else %}
+                  About Us {% endif %}
+                </a>
+              </li>
+              <li class="mb-2">
+                <a href="/privacy" class="text-muted text-decoration-none">
+                  {% if session.get('lang') == 'hi' %} गोपनीयता नीति {% else %}
+                  Privacy Policy {% endif %}
+                </a>
+              </li>
+              <li class="mb-2">
+                <a href="/terms" class="text-muted text-decoration-none">
+                  {% if session.get('lang') == 'hi' %} नियम और शर्तें {% else %}
+                  Terms & Conditions {% endif %}
+                </a>
+              </li>
+              <li class="mb-2">
+                <a href="/contact" class="text-muted text-decoration-none">
+                  {% if session.get('lang') == 'hi' %} सहायता से संपर्क करें {%
+                  else %} Contact Support {% endif %}
+                </a>
+              </li>
+
+              <li class="mb-2">
+                <a href="/faqs" class="text-muted text-decoration-none">
+                  {% if session.get('lang') == 'hi' %} सामान्य प्रश्न (FAQs) {%
+                  else %} FAQS {% endif %}
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- PART 3: SUPPORT & COPYRIGHT -->
+          <div class="col-md-4">
+            <h5 class="fw-bold mb-3">
+              {% if session.get('lang') == 'hi' %} सहायता {% else %} Support {%
+              endif %}
+            </h5>
+            <p class="text-muted small mb-3">
+              <i class="bi bi-clock-fill text-warning"></i>
+              {% if session.get('lang') == 'hi' %} 24×7 सहायता उपलब्ध {% else %}
+              24×7 Support Available {% endif %}
+            </p>
+            <p class="text-muted small mb-0">
+              {% if session.get('lang') == 'hi' %} © 2026 स्मार्ट मेडिकल सहायता
+              प्रणाली। सर्वाधिकार सुरक्षित। {% else %} © 2026 Smart Medical
+              Assistance System. All rights reserved. {% endif %}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+     
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    {% block extra_js %}{% endblock %}
+  </body>
+</html>

@@ -1,0 +1,89 @@
+{% extends "admin_base.html" %}
+
+{% block title %}Patient Claims - Admin{% endblock %}
+
+{% block navbar %}
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+    <div class="container">
+        <a class="navbar-brand" href="/admin/dashboard">
+            <i class="bi bi-shield-lock"></i> Admin Panel
+        </a>
+        <div class="navbar-nav ms-auto">
+            <a class="nav-link" href="/admin/dashboard">Dashboard</a>
+            <a class="nav-link" href="/admin/patient-requests">Patient Requests</a>
+            <a class="nav-link" href="/admin/treatment-reports">Treatment Reports</a>
+            <a class="nav-link" href="/admin/logout">Logout</a>
+        </div>
+    </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="main-container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <a href="/admin/dashboard" class="btn btn-outline-secondary btn-sm mb-2">
+                <i class="bi bi-arrow-left"></i> Back to Dashboard
+            </a>
+            <h2 class="mt-2"><i class="bi bi-file-earmark-check"></i> Patient Claims</h2>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Claim ID</th>
+                            <th>Patient Name</th>
+                            <th>Serial Number</th>
+                            <th>Claim Type</th>
+                            <th>Hospital</th>
+                            <th>Status</th>
+                            <th>Submitted</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for claim in claims %}
+                        <tr>
+                            <td>#{{ claim.claim_id }}</td>
+                            <td><strong>{{ claim.patient_name }}</strong></td>
+                            <td>{{ claim.patient_serial_number }}</td>
+                            <td>
+                                {% if claim.claim_type == 'paisa_claim' %}
+                                    <span class="badge bg-primary">💰 Paisa Claim</span>
+                                {% elif claim.claim_type == 'samaan_claim' %}
+                                    <span class="badge bg-info">🧺 Samaan Claim</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">{{ claim.claim_type }}</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ claim.hospital.name }}</td>
+                            <td>
+                                {% if claim.status == 'pending' %}
+                                    <span class="badge bg-warning">Pending</span>
+                                {% elif claim.status == 'payment_sent' %}
+                                    <span class="badge bg-success">Payment Sent</span>
+                                {% elif claim.status == 'order_placed' %}
+                                    <span class="badge bg-info">Order Placed</span>
+                                {% elif claim.status == 'completed' %}
+                                    <span class="badge bg-success">Completed</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ claim.created_at.strftime('%d %b %Y, %I:%M %p') }}</td>
+                            <td>
+                                <a href="/admin/patient-claim/{{ claim.claim_id }}" class="btn btn-sm btn-primary">
+                                    <i class="bi bi-eye"></i> View
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

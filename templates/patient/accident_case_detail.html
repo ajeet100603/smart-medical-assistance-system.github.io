@@ -1,0 +1,96 @@
+{% extends "patient_base.html" %}
+
+{% block title %}Accident Case Details{% endblock %}
+
+{% block content %}
+<div class="main-container">
+    <div class="mb-3">
+        <a href="/patient/panel?aadhar_no={{ accident_case.aadhar_no }}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Panel / पैनल पर वापस जाएं
+        </a>
+    </div>
+
+    <h2 class="mb-4">
+        <i class="bi bi-exclamation-triangle text-danger"></i> Accident Case #{{ accident_case.accident_id }}
+    </h2>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5>Case Status / केस स्थिति</h5>
+        </div>
+        <div class="card-body">
+            <span class="badge 
+                {% if accident_case.status == 'approved' %}bg-success
+                {% elif accident_case.status == 'rejected' %}bg-danger
+                {% elif accident_case.status == 'discharged' %}bg-info
+                {% else %}bg-warning{% endif %} fs-6">
+                {{ accident_case.status|title }}
+            </span>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5>Hospital Information / अस्पताल की जानकारी</h5>
+        </div>
+        <div class="card-body">
+            <p><strong>Hospital Name / अस्पताल का नाम:</strong> {{ accident_case.hospital.name }}</p>
+            <p><strong>Address / पता:</strong> {{ accident_case.hospital.address }}</p>
+            <p><strong>Contact / संपर्क:</strong> {{ accident_case.hospital.contact }}</p>
+            {% if accident_case.patient_serial_number %}
+            <p><strong>Patient Serial Number / रोगी सीरियल नंबर:</strong> {{ accident_case.patient_serial_number }}</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5>Accident Details / दुर्घटना विवरण</h5>
+        </div>
+        <div class="card-body">
+            <p><strong>Accident Date / दुर्घटना की तारीख:</strong> 
+                {{ accident_case.accident_date.strftime('%d %b %Y') if accident_case.accident_date else 'N/A' }}</p>
+            <p><strong>Location / स्थान:</strong> {{ accident_case.accident_location or 'N/A' }}</p>
+            <p><strong>Description / विवरण:</strong></p>
+            <p>{{ accident_case.accident_description }}</p>
+            <p><strong>Current Condition / वर्तमान स्थिति:</strong></p>
+            <p>{{ accident_case.current_condition }}</p>
+        </div>
+    </div>
+
+    {% if accident_case.admission_date or accident_case.discharge_date %}
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5>Treatment Details / उपचार विवरण</h5>
+        </div>
+        <div class="card-body">
+            {% if accident_case.admission_date %}
+            <p><strong>Admission Date / भर्ती की तारीख:</strong> {{ accident_case.admission_date.strftime('%d %b %Y') }}</p>
+            {% endif %}
+            {% if accident_case.discharge_date %}
+            <p><strong>Discharge Date / छुट्टी की तारीख:</strong> {{ accident_case.discharge_date.strftime('%d %b %Y') }}</p>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+
+    {% set treatment_report = accident_case.treatment_reports[0] if accident_case.treatment_reports else None %}
+    {% if treatment_report and treatment_report.status == 'submitted' %}
+    <div class="alert alert-success">
+        <i class="bi bi-check-circle"></i> <strong>Treatment Completed!</strong>
+        <br>You can now submit a claim form for financial help or food/essentials.
+        <br><small>उपचार पूरा! अब आप वित्तीय सहायता या खाद्य/आवश्यक सामान के लिए क्लेम फॉर्म जमा कर सकते हैं।</small>
+        <div class="mt-3">
+            <a href="/patient-claim/{{ treatment_report.report_id }}" class="btn btn-success">
+                <i class="bi bi-file-earmark-check"></i> Submit Claim Form / क्लेम फॉर्म जमा करें
+            </a>
+        </div>
+    </div>
+    {% elif accident_case.status == 'approved' %}
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle"></i> Treatment report not yet submitted by hospital.
+        <br><small>अस्पताल द्वारा अभी तक उपचार रिपोर्ट जमा नहीं की गई है।</small>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

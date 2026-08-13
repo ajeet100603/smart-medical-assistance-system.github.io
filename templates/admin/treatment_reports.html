@@ -1,0 +1,96 @@
+{% extends "admin_base.html" %}
+
+{% block title %}Treatment Reports - Admin{% endblock %}
+
+{% block navbar %}
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+    <div class="container">
+        <a class="navbar-brand" href="/admin/dashboard">
+            <i class="bi bi-shield-lock"></i> Admin Panel
+        </a>
+        <div class="navbar-nav ms-auto">
+            <a class="nav-link" href="/admin/dashboard">Dashboard</a>
+            <a class="nav-link" href="/admin/patient-requests">Patient Requests</a>
+            <a class="nav-link" href="/admin/logout">Logout</a>
+        </div>
+    </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="main-container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <a href="/admin/dashboard" class="btn btn-outline-secondary btn-sm mb-2">
+                <i class="bi bi-arrow-left"></i> Back to Dashboard
+            </a>
+            <h2 class="mt-2"><i class="bi bi-file-medical"></i> All Treatment Reports</h2>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Report ID</th>
+                            <th>Patient Name</th>
+                            <th>Hospital</th>
+                            <th>Disease</th>
+                            <th>Total Expense</th>
+                            <th>Payment Status</th>
+                            <th>Status</th>
+                            <th>Submitted</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for report in reports %}
+                        <tr>
+                            <td>#{{ report.report_id }}</td>
+                            <td><strong>{{ report.patient.name }}</strong></td>
+                            <td>{{ report.hospital.name }}</td>
+                            <td>
+                                {% if report.request %}
+                                    {{ report.request.disease.name }}
+                                {% else %}
+                                    {{ report.disease_injury }}
+                                {% endif %}
+                            </td>
+                            
+                            <td>₹{{ report.total_expense if report.total_expense else 'N/A' }}</td>
+                            <td>
+                                {% if report.payment_status == 'paid' %}
+                                    <span class="badge bg-success">Paid</span>
+                                {% else %}
+                                    <span class="badge bg-warning">Pending</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if report.status == 'approved' %}
+                                    <span class="badge bg-success">{{ report.status|title }}</span>
+                                {% elif report.status == 'rejected' %}
+                                    <span class="badge bg-danger">{{ report.status|title }}</span>
+                                {% elif report.status == 'closed' %}
+                                    <span class="badge bg-secondary">{{ report.status|title }}</span>
+                                {% else %}
+                                    <span class="badge bg-warning">{{ report.status|title }}</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ report.created_at.strftime('%d %b %Y, %I:%M %p') }}</td>
+                            <td>
+                                <a href="/admin/treatment-report/{{ report.report_id }}" class="btn btn-sm btn-primary">
+                                    <i class="bi bi-eye"></i> View
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}Home - Smart Medical System{% endblock %}
+
+{% block content %}
+<div class="main-container">
+  <div class="text-center py-4">
+    <h1 class="fw-bold mb-2">
+      <i class="bi bi-heart-pulse text-danger"></i>
+      {% if session.get('lang') == 'hi' %}
+        स्मार्ट मेडिकल सहायता प्रणाली
+      {% else %}
+        Smart Medical Assistance System
+      {% endif %}
+    </h1>
+    <p class="text-muted mb-4">
+      {% if session.get('lang') == 'hi' %}
+        कृपया अपना पैनल चुनें
+      {% else %}
+        Please choose your panel
+      {% endif %}
+    </p>
+
+    <div class="row g-4 justify-content-center">
+      <div class="col-md-4">
+        <div class="card h-100 text-center p-4 border-0 shadow-sm">
+          <div class="card-body">
+            <i class="bi bi-person-heart display-4 text-success mb-3"></i>
+            <h4 class="fw-bold mb-2">
+              {% if session.get('lang') == 'hi' %} रोगी (Patient) {% else %} Patient {% endif %}
+            </h4>
+            <p class="text-muted">
+              {% if session.get('lang') == 'hi' %}
+                बीमारी खोजें, अनुरोध करें, क्लेम करें
+              {% else %}
+                Search disease, submit requests, file claims
+              {% endif %}
+            </p>
+            <a class="btn btn-success w-100" href="/patient">
+              {% if session.get('lang') == 'hi' %} रोगी पेज खोलें {% else %} Open Patient Page {% endif %}
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card h-100 text-center p-4 border-0 shadow-sm">
+          <div class="card-body">
+            <i class="bi bi-hospital display-4 text-primary mb-3"></i>
+            <h4 class="fw-bold mb-2">
+              {% if session.get('lang') == 'hi' %} अस्पताल (Hospital) {% else %} Hospital {% endif %}
+            </h4>
+            <p class="text-muted">
+              {% if session.get('lang') == 'hi' %}
+                रिक्वेस्ट स्वीकारें, ट्रीटमेंट रिपोर्ट दें
+              {% else %}
+                Approve requests, submit treatment reports
+              {% endif %}
+            </p>
+            <a class="btn btn-primary w-100" href="/hospital">
+              {% if session.get('lang') == 'hi' %} अस्पताल पेज खोलें {% else %} Open Hospital Page {% endif %}
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card h-100 text-center p-4 border-0 shadow-sm">
+          <div class="card-body">
+            <i class="bi bi-shield-lock display-4 text-warning mb-3"></i>
+            <h4 class="fw-bold mb-2">
+              {% if session.get('lang') == 'hi' %} एडमिन (Admin) {% else %} Admin {% endif %}
+            </h4>
+            <p class="text-muted">
+              {% if session.get('lang') == 'hi' %}
+                अस्पताल/बीमारी/क्लेम मैनेज करें
+              {% else %}
+                Manage hospitals, diseases, claims
+              {% endif %}
+            </p>
+            <a class="btn btn-warning w-100" href="/admin">
+              {% if session.get('lang') == 'hi' %} एडमिन पेज खोलें {% else %} Open Admin Page {% endif %}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

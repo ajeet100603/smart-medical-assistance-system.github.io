@@ -1,0 +1,91 @@
+{% extends "admin_base.html" %} {% block title %}Admin Login - Smart Medical System{%
+endblock %} {% block content %}
+<div class="main-container" style="max-width: 500px">
+  <!-- ========== ADMIN-SPECIFIC HEADER ========== -->
+  <div class="alert">
+    
+    
+    <hr />
+   
+  </div>
+  <style>
+body {
+  background: url('https://images.unsplash.com/photo-1580281658629-1b0c6c8f6f5c?q=80&w=1200&auto=format&fit=crop') no-repeat center center fixed;
+  background-size: cover;
+}
+</style>
+
+
+  <div class="card">
+    <div class="card-body p-5">
+      <div class="text-center mb-4">
+        <i class="bi bi-shield-lock display-1 text-danger"></i>
+        <h2 class="mt-3">
+          {% if session.get('lang') == 'hi' %} प्रशासक पैनल {% else %} Admin
+          Panel {% endif %}
+        </h2>
+        <p class="text-muted">
+          {% if session.get('lang') == 'hi' %} सिस्टम प्रबंधन के लिए लॉगिन करें
+          {% else %} Sign in for system administration {% endif %}
+        </p>
+      </div>
+
+      <form method="POST">
+        <div class="mb-3">
+          <label for="username" class="form-label">
+            {% if session.get('lang') == 'hi' %} उपयोगकर्ता नाम {% else %}
+            Username {% endif %}
+          </label>
+          <input
+            type="text"
+            class="form-control"
+            id="username"
+            name="username"
+            required
+          />
+        </div>
+
+        <div class="mb-3">
+          <label for="password" class="form-label">
+            {% if session.get('lang') == 'hi' %} पासवर्ड {% else %} Password {%
+            endif %}
+          </label>
+          <input
+            type="password"
+            class="form-control"
+            id="password"
+            name="password"
+            required
+          />
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100 btn-lg">
+          <i class="bi bi-box-arrow-in-right"></i>
+          {% if session.get('lang') == 'hi' %} लॉगिन {% else %} Login {% endif
+          %}
+        </button>
+      </form>
+
+      <div class="mt-4 text-center">
+        <p class="text-muted">
+          {% if session.get('lang') == 'hi' %} डिफ़ॉल्ट क्रेडेंशियल: {% else %}
+          Default Credentials: {% endif %}
+        </p>
+        <small class="text-muted">
+          {% if session.get('lang') == 'hi' %} उपयोगकर्ता नाम: admin<br />
+          पासवर्ड: admin123 {% else %} Username: admin<br />
+          Password: admin123 {% endif %}
+        </small>
+      </div>
+
+      <div class="mt-3 text-center">
+        <a href="/admin" class="btn btn-outline-secondary btn-sm">
+          <i class="bi bi-house"></i>
+          {% if session.get('lang') == 'hi' %} होम पर वापस {% else %} Back to
+          Home {% endif %}
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

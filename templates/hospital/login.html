@@ -1,0 +1,92 @@
+{% extends "hospital_base.html" %} {% block title %}Hospital Login - Smart Medical
+System{% endblock %} {% block content %}
+<div class="main-container" style="max-width: 500px">
+ 
+
+  <div class="card">
+    <div class="card-body p-5">
+      <div class="text-center mb-4">
+        <i class="bi bi-hospital display-1 text-primary"></i>
+        <h2 class="mt-3">
+          {% if session.get('lang') == 'hi' %} अस्पताल डैशबोर्ड {% else %}
+          Hospital Dashboard {% endif %}
+        </h2>
+        <p class="text-muted">
+          {% if session.get('lang') == 'hi' %} अपने ईमेल से लॉगिन करें {% else
+          %} Sign in with your email {% endif %}
+        </p>
+      </div>
+
+      <form method="POST">
+        <div class="mb-3">
+          <label for="email" class="form-label">
+            {% if session.get('lang') == 'hi' %} ईमेल पता {% else %} Email
+            Address {% endif %}
+          </label>
+          <input
+            type="email"
+            class="form-control"
+            id="email"
+            name="email"
+            placeholder="{% if session.get('lang') == 'hi' %}अपना ईमेल दर्ज करें{% else %}Enter your email{% endif %}"
+            required
+          />
+        </div>
+
+        <div class="mb-3">
+          <label for="password" class="form-label">
+            {% if session.get('lang') == 'hi' %} पासवर्ड {% else %} Password {%
+            endif %}
+          </label>
+          <input
+            type="password"
+            class="form-control"
+            id="password"
+            name="password"
+            placeholder="{% if session.get('lang') == 'hi' %}अपना पासवर्ड दर्ज करें{% else %}Enter your password{% endif %}"
+            required
+          />
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100 btn-lg">
+          <i class="bi bi-box-arrow-in-right"></i>
+          {% if session.get('lang') == 'hi' %} लॉगिन {% else %} Login {% endif
+          %}
+        </button>
+      </form>
+
+      <div class="mt-4 text-center">
+        <p class="text-muted">
+          {% if session.get('lang') == 'hi' %} खाता नहीं है? {% else %} Don't
+          have an account? {% endif %}
+        </p>
+        <a href="/hospital/register" class="btn btn-success">
+          <i class="bi bi-person-plus"></i>
+          {% if session.get('lang') == 'hi' %} अस्पताल खाता बनाएं {% else %}
+          Create Hospital Account {% endif %}
+        </a>
+      </div>
+
+      <div class="mt-3 text-center">
+        <p class="text-muted small">
+          {% if session.get('lang') == 'hi' %} नमूना क्रेडेंशियल: {% else %}
+          Sample Credentials: {% endif %}
+        </p>
+        <small class="text-muted">
+          apollo@hospital.com / hospital123<br />
+          fortis@hospital.com / hospital123
+        </small>
+      </div>
+
+      <div class="mt-3 text-center">
+                 
+        <a href="/hospital/login" class="btn btn-outline-secondary btn-sm">
+          <i class="bi bi-house"></i>
+          {% if session.get('lang') == 'hi' %} होम पर वापस {% else %} Back to
+          Home {% endif %}
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

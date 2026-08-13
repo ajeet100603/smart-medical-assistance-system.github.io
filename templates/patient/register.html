@@ -1,0 +1,221 @@
+{% extends "patient_base.html" %}
+{% block title %}Create Patient Account - Smart Medical System{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+  <div class="main-container" style="max-width: 800px;">
+    <h2 class="mb-4 text-center">
+      <i class="bi bi-person-plus text-success"></i>
+      {% if session.get('lang') == 'hi' %} रोगी खाता बनाएं {% else %} Create Patient Account {% endif %}
+    </h2>
+
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST" id="patientRegisterForm" novalidate>
+      <div class="row g-3">
+        <!-- Name -->
+        <div class="col-md-6">
+          <label class="form-label fw-bold">
+            {% if session.get('lang') == 'hi' %} नाम {% else %} Name {% endif %} *
+          </label>
+          <input type="text" name="name" class="form-control" required />
+        </div>
+
+        <!-- Date of Birth -->
+        <div class="col-md-6">
+          <label class="form-label fw-bold">
+            {% if session.get('lang') == 'hi' %} जन्म तिथि {% else %} Date of Birth {% endif %} *
+          </label>
+          <input type="date" name="dob" id="dob" class="form-control" required />
+          <small class="text-muted" id="ageDisplay"></small>
+        </div>
+
+        <!-- Gender -->
+        <div class="col-md-4">
+          <label class="form-label fw-bold">
+            {% if session.get('lang') == 'hi' %} लिंग {% else %} Gender {% endif %} *
+          </label>
+          <select name="gender" class="form-select" required>
+            <option value="">{% if session.get('lang') == 'hi' %} चयन करें {% else %} Select {% endif %}</option>
+            <option value="male">{% if session.get('lang') == 'hi' %} पुरुष {% else %} Male {% endif %}</option>
+            <option value="female">{% if session.get('lang') == 'hi' %} महिला {% else %} Female {% endif %}</option>
+            <option value="other">{% if session.get('lang') == 'hi' %} अन्य {% else %} Other {% endif %}</option>
+          </select>
+        </div>
+
+        <!-- Mobile -->
+        <div class="col-md-4">
+          <label class="form-label fw-bold">
+            {% if session.get('lang') == 'hi' %} मोबाइल {% else %} Mobile {% endif %} *
+          </label>
+          <input type="tel" name="phone" class="form-control" maxlength="15" required />
+        </div>
+
+        <!-- Email -->
+        <div class="col-md-4">
+          <label class="form-label fw-bold">
+            Email *
+          </label>
+          <input type="email" name="email" class="form-control" required />
+        </div>
+
+        <!-- Address -->
+        <div class="col-12">
+          <label class="form-label fw-bold">
+            {% if session.get('lang') == 'hi' %} पता {% else %} Address {% endif %} *
+          </label>
+          <textarea name="address" rows="2" class="form-control" required></textarea>
+        </div>
+
+        <!-- Username -->
+        <div class="col-md-6">
+          <label class="form-label fw-bold">
+            Username *
+          </label>
+          <input type="text" name="username" class="form-control" minlength="4" maxlength="50" required />
+          <small class="text-muted">
+            {% if session.get('lang') == 'hi' %}
+              एक यूनिक Username चुनें। अगर पहले से मौजूद होगा तो सिस्टम बताएगा।
+            {% else %}
+              Choose a unique username. System will tell if already taken.
+            {% endif %}
+          </small>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-bold">
+            {% if session.get('lang') == 'hi' %} Security Image {% else %} Security Image {% endif %} *
+          </label>
+          <select name="security_image" class="form-select" required>
+            <option value="">{% if session.get('lang') == 'hi' %} चयन करें {% else %} Select image {% endif %}</option>
+            {% for option in security_image_options %}
+              <option value="{{ option }}">{{ option|title }}</option>
+            {% endfor %}
+          </select>
+          <small class="text-muted">
+            {% if session.get('lang') == 'hi' %}
+              Login के समय यही image चुननी होगी।
+            {% else %}
+              Use the same image during login.
+            {% endif %}
+          </small>
+        </div>
+
+        <!-- Password -->
+        <div class="col-md-3">
+          <label class="form-label fw-bold">
+            Password *
+          </label>
+          <input type="password" name="password" id="password" class="form-control" minlength="6" required />
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="col-md-3">
+          <label class="form-label fw-bold">
+            Confirm Password *
+          </label>
+          <input type="password" name="confirm_password" id="confirm_password" class="form-control" minlength="6" required />
+        </div>
+
+        <!-- Simple condition text -->
+        <div class="col-12">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="termsCheck" required />
+            <label class="form-check-label" for="termsCheck">
+              {% if session.get('lang') == 'hi' %}
+                मैं पुष्टि करता/करती हूँ कि दी गई जानकारी सही है।
+              {% else %}
+                I confirm that the above information is correct.
+              {% endif %}
+            </label>
+          </div>
+        </div>
+
+        <!-- Captcha (5 digits) -->
+        <div class="col-md-4">
+          <label class="form-label fw-bold">
+            Captcha (5 digits) *
+          </label>
+          <div class="d-flex align-items-center gap-2">
+            <div class="form-control text-center fw-bold" readonly style="background:#f1f8e9;">
+              {{ captcha }}
+            </div>
+          </div>
+          <small class="text-muted">
+            {% if session.get('lang') == 'hi' %}
+              ऊपर दिख रहे 5 अंकों को नीचे बॉक्स में लिखें।
+            {% else %}
+              Type the 5 digits shown above.
+            {% endif %}
+          </small>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label fw-bold">
+            Captcha Input *
+          </label>
+          <input type="text" name="captcha" class="form-control" maxlength="5" required />
+        </div>
+      </div>
+
+      <div class="mt-4 d-flex justify-content-between">
+        <a href="/patient/login" class="btn btn-outline-secondary">
+          <i class="bi bi-box-arrow-in-right"></i>
+          {% if session.get('lang') == 'hi' %} पहले से खाता है? Login करें {% else %} Already have account? Login {% endif %}
+        </a>
+
+        <button type="submit" class="btn btn-success btn-lg">
+          <i class="bi bi-check-circle"></i>
+          {% if session.get('lang') == 'hi' %} खाता बनाएं {% else %} Create Account {% endif %}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  // Age calculation based on DOB
+  const dobInput = document.getElementById("dob");
+  const ageDisplay = document.getElementById("ageDisplay");
+  if (dobInput && ageDisplay) {
+    dobInput.addEventListener("change", function () {
+      const dob = new Date(this.value);
+      if (!isNaN(dob.getTime())) {
+        const today = new Date();
+        let age = today.getFullYear() - dob.getFullYear();
+        const m = today.getMonth() - dob.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+          age--;
+        }
+        ageDisplay.textContent = age >= 0 ? `Age: ${age} years` : "";
+      } else {
+        ageDisplay.textContent = "";
+      }
+    });
+  }
+
+  // Simple client-side password match check
+  const form = document.getElementById("patientRegisterForm");
+  if (form) {
+    form.addEventListener("submit", function (e) {
+      const p1 = document.getElementById("password").value;
+      const p2 = document.getElementById("confirm_password").value;
+      if (p1 !== p2) {
+        e.preventDefault();
+        alert("Password और Confirm Password एक जैसे होने चाहिए");
+      }
+    });
+  }
+</script>
+
+{% endblock %}
+

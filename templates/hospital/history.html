@@ -1,0 +1,200 @@
+{% extends "hospital_base.html" %}
+
+{% block title %}Hospital History - Smart Medical System{% endblock %}
+
+{% block content %}
+<div class="main-container">
+    <div class="mb-3">
+        <a href="/hospital/dashboard" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
+
+    <h2 class="mb-4">
+        <i class="bi bi-clock-history"></i> Hospital History
+    </h2>
+
+    <!-- Completed Requests -->
+    <div class="card mb-4">
+        <div class="card-header bg-success text-white">
+            <h5 class="mb-0">
+                <i class="bi bi-check-circle"></i> Completed Patient Requests ({{ completed_requests|length }})
+            </h5>
+        </div>
+        <div class="card-body">
+            {% if completed_requests %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Request ID</th>
+                                <th>Patient Name</th>
+                                <th>Disease</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for req in completed_requests %}
+                                <tr>
+                                    <td>#{{ req.request_id }}</td>
+                                    <td>{{ req.patient.name }}</td>
+                                    <td>{{ req.disease.name }}</td>
+                                    <td>
+                                        <span class="badge 
+                                            {% if req.status == 'completed' or req.status == 'closed' %}bg-success
+                                            {% elif req.status == 'treatment_submitted' %}bg-info
+                                            {% else %}bg-primary{% endif %}">
+                                            {{ req.status|title }}
+                                        </span>
+                                    </td>
+                                    <td>{{ req.created_at.strftime('%d %b %Y') }}</td>
+                                    <td>
+                                        <a href="/hospital/request/{{ req.request_id }}" class="btn btn-sm btn-primary">
+                                            <i class="bi bi-eye"></i> View
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-muted">No completed requests yet</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Completed Accident Cases -->
+    <div class="card mb-4">
+        <div class="card-header bg-info text-white">
+            <h5 class="mb-0">
+                <i class="bi bi-exclamation-triangle"></i> Completed Accident Cases ({{ completed_accidents|length }})
+            </h5>
+        </div>
+        <div class="card-body">
+            {% if completed_accidents %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Accident ID</th>
+                                <th>Patient Name</th>
+                                <th>Accident Date</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for acc in completed_accidents %}
+                                <tr>
+                                    <td>#{{ acc.accident_id }}</td>
+                                    <td>{{ acc.patient_name }}</td>
+                                    <td>{{ acc.accident_date.strftime('%d %b %Y') if acc.accident_date else 'N/A' }}</td>
+                                    <td>
+                                        <span class="badge bg-success">{{ acc.status|title }}</span>
+                                    </td>
+                                    <td>{{ acc.created_at.strftime('%d %b %Y') }}</td>
+                                    <td>
+                                        <a href="/hospital/accident-case/{{ acc.accident_id }}" class="btn btn-sm btn-primary">
+                                            <i class="bi bi-eye"></i> View
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-muted">No completed accident cases yet</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Treatment Reports -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">
+                <i class="bi bi-file-medical"></i> Treatment Reports ({{ treatment_reports|length }})
+            </h5>
+        </div>
+        <div class="card-body">
+            {% if treatment_reports %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Report ID</th>
+                                <th>Patient Name</th>
+                                <th>Disease/Injury</th>
+                                <th>Admission Date</th>
+                                <th>Discharge Date</th>
+                                <th>Total Expense</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for report in treatment_reports %}
+                                <tr>
+                                    <td>#{{ report.report_id }}</td>
+                                    <td>{{ report.patient_name }}</td>
+                                    <td>{{ report.disease_injury }}</td>
+                                    <td>{{ report.admission_date.strftime('%d %b %Y') if report.admission_date else 'N/A' }}</td>
+                                    <td>{{ report.discharge_date.strftime('%d %b %Y') if report.discharge_date else 'N/A' }}</td>
+                                    <td>₹{{ report.total_expense if report.total_expense else 'N/A' }}</td>
+                                    <td>
+                                        <span class="badge bg-secondary">{{ report.status|title }}</span>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-muted">No treatment reports yet</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Past Patients -->
+    <div class="card mb-4">
+        <div class="card-header bg-secondary text-white">
+            <h5 class="mb-0">
+                <i class="bi bi-people"></i> Past Patients ({{ patients|length }})
+            </h5>
+        </div>
+        <div class="card-body">
+            {% if patients %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Patient ID</th>
+                                <th>Name</th>
+                                <th>Phone</th>
+                                <th>Email</th>
+                                <th>Aadhar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for patient in patients %}
+                                <tr>
+                                    <td>#{{ patient.patient_id }}</td>
+                                    <td>{{ patient.name }}</td>
+                                    <td>{{ patient.phone }}</td>
+                                    <td>{{ patient.email or 'N/A' }}</td>
+                                    <td>{{ patient.aadhar_no }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-muted">No past patients yet</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

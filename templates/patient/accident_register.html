@@ -1,0 +1,464 @@
+{% extends "patient_base.html" %} {% block title %} {% if session.get('lang') == 'hi' %}
+दुर्घटना पंजीकरण – {{ hospital.name }} {% else %} Accident Registration – {{
+hospital.name }} {% endif %} {% endblock %} {% block content %}
+<div class="main-container">
+  <!-- BACK BUTTONS -->
+  <div class="mb-3">
+    <a href="/accident-select-hospital" class="btn btn-outline-secondary">
+      <i class="bi bi-arrow-left"></i>
+      {% if session.get('lang') == 'hi' %} वापस जाएं {% else %} Back {% endif %}
+    </a>
+    <a href="/" class="btn btn-outline-primary ms-2">
+      <i class="bi bi-house"></i>
+      {% if session.get('lang') == 'hi' %} होम {% else %} Home {% endif %}
+    </a>
+  </div>
+
+  <!-- HEADING -->
+  <h2 class="mb-4">
+    <i class="bi bi-exclamation-triangle text-danger"></i>
+    {% if session.get('lang') == 'hi' %} दुर्घटना केस पंजीकरण {% else %}
+    Accident Case Registration {% endif %}
+  </h2>
+
+  <!-- HOSPITAL INFO -->
+  <div class="alert alert-danger">
+    <strong>
+      {% if session.get('lang') == 'hi' %} चुना गया अस्पताल: {% else %} Hospital
+      Selected: {% endif %}
+    </strong>
+    {{ hospital.name }}
+  </div>
+
+  <div class="row">
+    <!-- FORM -->
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-body">
+          <form method="POST" enctype="multipart/form-data">
+            <!-- CASE TYPE -->
+            <div class="mb-3">
+              <label class="form-label fw-bold">
+                {% if session.get('lang') == 'hi' %} रोगी का मामला प्रकार {%
+                else %} Patient Case Type {% endif %}
+              </label>
+
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="case_type"
+                  value="accident"
+                  required
+                  onclick="toggleCaseType('accident')"
+                />
+                <label class="form-check-label">
+                  {% if session.get('lang') == 'hi' %} 🚑 दुर्घटना मामला (Road /
+                  Fall / Injury) {% else %} 🚑 Accident Case (Road / Fall /
+                  Injury) {% endif %}
+                </label>
+              </div>
+
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="case_type"
+                  value="emergency"
+                  onclick="toggleCaseType('emergency')"
+                />
+                <label class="form-check-label">
+                  {% if session.get('lang') == 'hi' %} 🏥 आपातकालीन बीमारी
+                  (Heart, Pain, Breath etc.) {% else %} 🏥 Emergency Medical
+                  Case {% endif %}
+                </label>
+              </div>
+            </div>
+
+            <!-- PATIENT DETAILS -->
+            <h5 class="mb-3">
+              <i class="bi bi-person"></i>
+              {% if session.get('lang') == 'hi' %} रोगी विवरण {% else %} Patient
+              Details {% endif %}
+            </h5>
+
+            <div class="mb-3">
+              <label class="form-label">
+                {% if session.get('lang') == 'hi' %} रोगी का नाम * {% else %}
+                Patient Name * {% endif %}
+              </label>
+              <input
+                type="text"
+                class="form-control"
+                name="patient_name"
+                required
+              />
+            </div>
+
+
+<!-- GENDER -->
+            <div class="mb-3">
+              <label class="form-label">
+                {% if session.get('lang') == 'hi' %} लिंग * {% else %} Gender *
+                {% endif %}
+              </label>
+              <select name="gender" class="form-control" required>
+                <option value="">
+                  {% if session.get('lang') == 'hi' %} चुनें {% else %} Select
+                  {% endif %}
+                </option>
+                <option>Male</option>
+                <option>Female</option>
+                <option>Other</option>
+              </select>
+            </div>
+
+
+
+            <div class="mb-3">
+              <label class="form-label">
+                {% if session.get('lang') == 'hi' %} जन्म तिथि * {% else %} Date
+                of Birth * {% endif %}
+              </label>
+              <input
+                type="date"
+                class="form-control"
+                id="date_of_birth"
+                name="date_of_birth"
+                onchange="calculateAge()"
+                required
+              />
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">
+                {% if session.get('lang') == 'hi' %} उम्र {% else %} Age {%
+                endif %}
+              </label>
+              <input type="text" class="form-control" id="age" readonly />
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">
+                {% if session.get('lang') == 'hi' %} आधार नंबर * {% else %}
+                Aadhaar Number * {% endif %}
+              </label>
+              <input
+                type="text"
+                class="form-control"
+                name="aadhar_no"
+                pattern="[0-9]{12}"
+                maxlength="12"
+                required
+              />
+            </div>
+
+
+            <div class="mb-3">
+              <label class="form-label">
+                {% if session.get('lang') == 'hi' %} मोबाइल नंबर * {% else %}
+                Mobile Number * {% endif %}
+              </label>
+              <input
+                type="tel"
+                class="form-control"
+                name="patient_mobile"
+                pattern="[6-9]{1}[0-9]{9}"
+                maxlength="10"
+                required
+              />
+            </div>
+
+            <!-- EMAIL -->
+            <div class="mb-3">
+              <label class="form-label">
+                {% if session.get('lang') == 'hi' %} ईमेल पता * {% else %} Email
+                Address * {% endif %}
+              </label>
+
+              <input
+                type="email"
+                class="form-control"
+                name="email"
+                required
+                placeholder="{% if session.get('lang') == 'hi' %}उदाहरण: name@gmail.com{% else %}e.g. name@gmail.com{% endif %}"
+              />
+            </div>
+
+
+
+            
+            <div class="mb-3">
+              <label class="form-label">
+                {% if session.get('lang') == 'hi' %} जन आधार फोटो अपलोड करें *
+                {% else %} Jan Aadhaar Image Upload * {% endif %}
+              </label>
+              <input
+                type="file"
+                class="form-control"
+                name="patient_image"
+                accept=".jpg,.jpeg,.png"
+                required
+              />
+            </div>
+
+            <!-- AYUSHMAN -->
+            <div class="mb-3">
+              <label class="form-label">
+                {% if session.get('lang') == 'hi' %} क्या आपके पास आयुष्मान
+                कार्ड है? {% else %} Do you have Ayushman Card? {% endif %}
+              </label>
+
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="has_ayushman"
+                  value="yes"
+                  onclick="toggleAyushman(true)"
+                />
+                <label class="form-check-label">
+                  {% if session.get('lang') == 'hi' %} हाँ {% else %} Yes {%
+                  endif %}
+                </label>
+              </div>
+
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="has_ayushman"
+                  value="no"
+                  onclick="toggleAyushman(false)"
+                  checked
+                />
+                <label class="form-check-label">
+                  {% if session.get('lang') == 'hi' %} नहीं {% else %} No {%
+                  endif %}
+                </label>
+              </div>
+            </div>
+
+            <div class="mb-3" id="ayushmanUploadBox" style="display: none">
+              <label class="form-label">
+                {% if session.get('lang') == 'hi' %} आयुष्मान कार्ड फोटो {% else
+                %} Ayushman Card Image {% endif %}
+              </label>
+              <input
+                type="file"
+                class="form-control"
+                name="ayushman_card_image"
+                accept=".jpg,.jpeg,.png"
+              />
+            </div>
+
+            <hr />
+
+            <!-- ACCIDENT DESCRIPTION -->
+
+            <div id="accidentSection" style="display: none">
+              <div class="mb-3">
+                <label class="form-label">
+                  {% if session.get('lang') == 'hi' %} दुर्घटना का विवरण (क्या
+                  हुआ?) {% else %} Accident Description (What happened?) {%
+                  endif %}
+                </label>
+                <textarea
+                  class="form-control"
+                  name="accident_description"
+                  rows="3"
+                  required
+                  placeholder="{% if session.get('lang') == 'hi' %}
+                  यहाँ दुर्घटना कैसे और किस कारण से हुई, लिखें
+              {% else %}
+                  Write how and why the accident happened
+              {% endif %}"
+                >
+                </textarea>
+              </div>
+
+              <!-- ACCIDENT DATE -->
+              <div class="mb-3">
+                <label class="form-label">
+                  {% if session.get('lang') == 'hi' %} दुर्घटना की तिथि {% else
+                  %} Accident Date {% endif %}
+                </label>
+                <input
+                  type="date"
+                  class="form-control"
+                  name="accident_date"
+                  required
+                />
+              </div>
+
+              <!-- ACCIDENT LOCATION -->
+              <div class="mb-3">
+                <label class="form-label">
+                  {% if session.get('lang') == 'hi' %} दुर्घटना का स्थान {% else
+                  %} Accident Location {% endif %}
+                </label>
+                <div class="input-group">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="accident_location"
+                    name="accident_location"
+                    placeholder="{% if session.get('lang') == 'hi' %}
+                   स्थान लिखें 
+               {% else %}
+                   Enter location 
+               {% endif %}"
+                    required
+                  />
+                </div>
+              </div>
+
+              <!-- CURRENT CONDITION -->
+              <div class="mb-3">
+                <label class="form-label">
+                  {% if session.get('lang') == 'hi' %} घायल की वर्तमान स्थिति {%
+                  else %} Current Condition of Patient {% endif %}
+                </label>
+                <textarea
+                  class="form-control"
+                  name="current_condition"
+                  rows="3"
+                  required
+                  placeholder="{% if session.get('lang') == 'hi' %}
+                  मरीज की वर्तमान स्थिति लिखें
+              {% else %}
+                  Describe current condition of patient
+              {% endif %}"
+                >
+                </textarea>
+              </div>
+
+              <!-- IMAGE UPLOAD -->
+              <div class="mb-3">
+                <label class="form-label">
+                  {% if session.get('lang') == 'hi' %} मरीज की स्थिति की फोटो
+                  अपलोड करें {% else %} Upload Patient Condition Image {% endif
+                  %}
+                </label>
+                <input
+                  type="file"
+                  class="form-control"
+                  name="patient_condition_image"
+                  accept=".jpg,.jpeg,.png"
+                />
+                <small class="text-muted">
+                  {% if session.get('lang') == 'hi' %} (केवल JPG, JPEG या PNG
+                  फाइल) {% else %} (Only JPG, JPEG or PNG files) {% endif %}
+                </small>
+              </div>
+            </div>
+<div class="form-check mb-3">
+              <input class="form-check-input" type="checkbox" required />
+              <label class="form-check-label">
+                {% if session.get('lang') == 'hi' %} मैं दी गई जानकारी को सही
+                घोषित करता/करती हूँ {% else %} I declare the information
+                provided is correct {% endif %}
+              </label>
+            </div>
+
+            
+            <div class="d-flex gap-2">
+              <button type="submit" class="btn btn-danger btn-lg">
+                <i class="bi bi-check-circle"></i>
+                {% if session.get('lang') == 'hi' %} सबमिट करें {% else %}
+                Submit {% endif %}
+              </button>
+
+              <a
+                href="/accident-select-hospital"
+                class="btn btn-outline-secondary btn-lg"
+              >
+                {% if session.get('lang') == 'hi' %} रद्द करें {% else %} Cancel
+                {% endif %}
+              </a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- NOTES -->
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-body">
+          <h5>
+            <i class="bi bi-info-circle"></i>
+            {% if session.get('lang') == 'hi' %} महत्वपूर्ण नोट्स {% else %}
+            Important Notes {% endif %}
+          </h5>
+
+          <ul class="list-unstyled">
+            <li>
+              ✔ {% if session.get('lang') == 'hi' %} सभी * फ़ील्ड आवश्यक {% else
+              %} All * fields required {% endif %}
+            </li>
+            <li>
+              ✔ {% if session.get('lang') == 'hi' %} अस्पताल समीक्षा करेगा {%
+              else %} Hospital will review {% endif %}
+            </li>
+            <li>
+              ✔ {% if session.get('lang') == 'hi' %} सूचना मिलेगी {% else %} You
+              will get notification {% endif %}
+            </li>
+            <li>
+              🔒 {% if session.get('lang') == 'hi' %} डेटा सुरक्षित {% else %}
+              Data is secure {% endif %}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- JS -->
+<script>
+  function calculateAge() {
+    const dob = document.getElementById("date_of_birth").value;
+    if (!dob) return;
+    const birth = new Date(dob);
+    const today = new Date();
+    let age = today.getFullYear() - birth.getFullYear();
+    if (
+      today.getMonth() < birth.getMonth() ||
+      (today.getMonth() === birth.getMonth() &&
+        today.getDate() < birth.getDate())
+    )
+      age--;
+    document.getElementById("age").value = age + " Years";
+  }
+
+  function toggleAyushman(show) {
+    document.getElementById("ayushmanUploadBox").style.display = show
+      ? "block"
+      : "none";
+  }
+</script>
+
+<script>
+  function toggleCaseType(type) {
+    const accidentSection = document.getElementById("accidentSection");
+
+    const accidentFields = accidentSection.querySelectorAll(
+      "textarea, input[type='date'], input[type='text'], input[type='file']"
+    );
+
+    if (type === "accident") {
+      accidentSection.style.display = "block";
+      accidentFields.forEach((f) => (f.required = true));
+    } else {
+      accidentSection.style.display = "none";
+      accidentFields.forEach((f) => {
+        f.required = false;
+        f.value = "";
+      });
+    }
+  }
+</script>
+
+{% endblock %}
